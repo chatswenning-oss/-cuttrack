@@ -18,8 +18,12 @@
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}label{font-size:13px;color:#777;display:block;margin-bottom:5px}input,select{width:100%;min-height:48px;border:1px solid #ddd;border-radius:13px;padding:10px 12px;font-size:16px;background:#fff;color:inherit}.hidden{display:none}.photo{width:100%;max-height:250px;object-fit:cover;border-radius:16px;margin:12px 0}
 .segment{display:grid;grid-template-columns:repeat(3,1fr);background:#e9e9ed;border-radius:12px;padding:3px;margin-bottom:12px}.seg{border:0;border-radius:10px;background:transparent;padding:9px;font-weight:600;color:#777}.seg.active{background:#fff;color:#111}
 .stat{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee}.stat:last-child{border:0}.calendarHead{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:12px;color:#777;margin:8px 0}.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.day{aspect-ratio:1;border:0;border-radius:50%;background:transparent;color:inherit;font-size:14px;position:relative}.day.has:after{content:"";width:5px;height:5px;background:#111;border-radius:50%;position:absolute;bottom:3px;left:50%;transform:translateX(-50%)}.day.selected{background:#111;color:#fff}.day.blank{visibility:hidden}.calNav{display:flex;justify-content:space-between;align-items:center}.calNav button{border:0;background:#eeeef2;color:inherit;border-radius:10px;width:40px;height:40px}
-.tabs{position:fixed;bottom:0;left:0;right:0;background:rgba(248,248,250,.94);backdrop-filter:blur(20px);border-top:1px solid #ddd;padding:8px 12px calc(8px + env(safe-area-inset-bottom));z-index:20}.tabsInner{max-width:560px;margin:auto;display:grid;grid-template-columns:repeat(3,1fr)}.tab{border:0;background:transparent;min-height:48px;font-weight:650;color:#777;font-size:14px}.tab.active{color:#111}
+.tabs{position:fixed;bottom:0;left:0;right:0;background:rgba(248,248,250,.94);backdrop-filter:blur(20px);border-top:1px solid #ddd;padding:8px 12px calc(8px + env(safe-area-inset-bottom));z-index:20}.tabsInner{max-width:560px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr)}.tab{border:0;background:transparent;min-height:48px;font-weight:650;color:#777;font-size:14px}.tab.active{color:#111}
 @media(prefers-color-scheme:dark){:root,body{background:#000;color:#f5f5f7}.card,.meal,input,select,.seg.active{background:#1c1c1e;color:#fff}.targetBtn,.secondary,.segment,.calNav button{background:#2c2c2e;color:#fff}.track{background:#3a3a3c}.fill,.day.has:after{background:#f5f5f7}.day.selected{background:#f5f5f7;color:#000}.tabs{background:rgba(20,20,22,.94);border-color:#333}.tab.active{color:#fff}.mealWrap,.stat{border-color:#333}input,select{border-color:#3a3a3c}.muted,.metric-sub,label,.meal small,.empty{color:#98989f}}
+
+.performanceDrop{margin-top:24px;border-top:1px solid #eee;padding-top:16px}.performanceDrop summary{list-style:none;cursor:pointer;font-size:18px;font-weight:750;display:flex;justify-content:space-between;align-items:center}.performanceDrop summary::-webkit-details-marker{display:none}.performanceDrop[open] summary span{transform:rotate(90deg)}.performanceDrop summary span{transition:transform .2s;font-size:24px}
+.editCircle,.deleteCircle{width:44px;height:44px;border-radius:50%;border:0;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700}.editCircle{background:#0a84ff;color:#fff}.deleteCircle{background:#ff453a;color:#fff;font-size:21px}.deleteBg{width:76px;background:transparent}.meal{padding-right:2px}.mealWrap{touch-action:pan-y}.targetBox{padding:10px;border-radius:14px;background:#f5f5f7}.targetBox small{display:block;color:#777;margin-top:5px;font-size:11px}.toggleLabel{display:flex;align-items:center;gap:7px;color:inherit;font-weight:650}.targetToggle{width:20px;height:20px;min-height:0}.healthHero{display:flex;gap:14px;align-items:center}.healthIcon{width:52px;height:52px;border-radius:14px;background:#fff0f0;color:#ff2d55;display:flex;align-items:center;justify-content:center;font-size:28px}.signBtn{width:100%;height:50px;border:0;border-radius:14px;background:#111;color:#fff;font-size:16px;font-weight:650;margin-top:9px;opacity:.6}
+@media(prefers-color-scheme:dark){.performanceDrop{border-color:#333}.targetBox{background:#2c2c2e}.healthIcon{background:#2c2c2e}.signBtn{background:#f5f5f7;color:#000}}
 </style></head><body>
 <div class="wrap">
 <section id="todayView">
@@ -48,12 +52,17 @@
 <div id="progressContent"></div>
 </section>
 
+<section id="healthView" class="hidden">
+<div class="top"><div><h1>Health</h1><div class="muted">Activity & health data</div></div></div>
+<div class="card"><h2>Apple Health</h2><div class="healthHero"><div class="healthIcon">♥</div><div><b>Health connection</b><div class="muted">Steps, active energy, workouts, weight and other permitted data.</div></div></div><button class="secondary" disabled style="margin-top:14px">Apple Health · Native iOS connection required</button></div>
+<div class="card"><h2>Account & Sync</h2><p class="muted">Account sign-in and cloud sync are being prepared so your CutTrack history can follow you across devices.</p><button class="signBtn" disabled> Continue with Apple</button><button class="signBtn" disabled>G&nbsp;&nbsp; Continue with Google</button></div>
+</section>
 <section id="settingsView" class="hidden">
 <div class="top"><div><h1>Daily Targets</h1><div class="muted">Choose the goals you want CutTrack to regulate</div></div></div>
 <div class="card"><div class="grid" id="targetInputs"></div><button id="saveTargets" class="primary" style="margin-top:14px">Save Daily Targets</button></div>
 </section>
 </div>
-<nav class="tabs"><div class="tabsInner"><button class="tab active" data-view="todayView">Today</button><button class="tab" data-view="mealView">＋ Meal</button><button class="tab" data-view="progressView">Progress</button></div></nav>
+<nav class="tabs"><div class="tabsInner"><button class="tab active" data-view="todayView">Today</button><button class="tab" data-view="mealView">＋ Meal</button><button class="tab" data-view="progressView">Progress</button><button class="tab" data-view="healthView">Health</button></div></nav>
 <script>
 const KEY='cuttrack-v4';
 const nutrients={
@@ -62,7 +71,11 @@ const nutrients={
 };
 const v3=JSON.parse(localStorage.getItem('cuttrack-v3')||'null');
 let db=JSON.parse(localStorage.getItem(KEY)||'null')||{targets:{},days:v3?.days||{}};
-for(const [k,n] of Object.entries(nutrients)) if(!db.targets[k]) db.targets[k]=v3?.targets?.[k]||n.def;
+for(const [k,n] of Object.entries(nutrients)){
+ const existing=db.targets[k] ?? v3?.targets?.[k];
+ if(existing && typeof existing==='object' && 'value' in existing) db.targets[k]=existing;
+ else db.targets[k]={enabled:existing!=null,value:+existing||n.def};
+}
 let editing=null, progMode='week', calCursor=new Date(), selectedDate=null;
 const $=id=>document.getElementById(id), keyDate=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 const today=()=>keyDate(new Date());
@@ -71,16 +84,18 @@ function save(){localStorage.setItem(KEY,JSON.stringify(db))}
 function total(d){return (d?.foods||[]).reduce((a,x)=>{for(const k of Object.keys(nutrients))a[k]+=(+x[k]||0);return a},Object.fromEntries(Object.keys(nutrients).map(k=>[k,0])))}
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function metric(k){
- const n=nutrients[k],used=total(getDay())[k],tar=+db.targets[k],exceeded=n.type==='limit'&&used>tar,pct=Math.min(100,tar?used/tar*100:0);
+ const n=nutrients[k],used=total(getDay())[k],tar=+db.targets[k].value,exceeded=n.type==='limit'&&used>tar,pct=Math.min(100,tar?used/tar*100:0);
  let msg=n.type==='limit'?(exceeded?`${Math.round(used-tar)} ${n.unit} over`:`${Math.round(tar-used)} ${n.unit} remaining`):(used>=tar?'Goal reached ✓':`${Math.round(tar-used)} ${n.unit} to goal`);
  return `<div class="metric ${exceeded?'over':''}"><div class="metric-head"><span>${n.label}</span><span>${Math.round(used)} / ${tar} ${n.unit}</span></div><div class="track"><div class="fill" style="width:${pct}%"></div></div><div class="metric-sub">${msg}</div></div>`
 }
 function renderToday(){
  $('todayDate').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'});
- $('mainMetrics').innerHTML=['cal','p','c','f','fiber'].map(metric).join('');
- $('performanceMetrics').innerHTML='<h2 style="margin-top:26px">Performance</h2>'+['water','sodium','potassium'].map(metric).join('');
- const d=getDay(); $('mealList').innerHTML=d.foods.length?d.foods.map((x,i)=>`<div class="mealWrap" data-i="${i}"><div class="deleteBg">Delete</div><div class="meal" data-edit="${i}"><div><b>${esc(x.name||'Meal')}</b><small>${Math.round(+x.p||0)}P · ${Math.round(+x.c||0)}C · ${Math.round(+x.f||0)}F · ${(+x.fiber||0).toFixed(1)} fibre</small></div><div style="display:flex;align-items:center;gap:8px"><b>${Math.round(+x.cal||0)} kcal</b><span class="chev">›</span></div></div></div>`).join(''):'<div class="empty">No meals yet.</div>';
- document.querySelectorAll('[data-edit]').forEach(el=>el.addEventListener('click',()=>openEdit(+el.dataset.edit)));
+ $('mainMetrics').innerHTML=['cal','p','c'].filter(k=>db.targets[k]?.enabled).map(metric).join('') || '<div class="empty">No primary targets set.</div>';
+ const perf=['f','fiber','water','sodium','potassium'].filter(k=>db.targets[k]?.enabled);
+ $('performanceMetrics').innerHTML=perf.length?`<details class="performanceDrop"><summary>Performance <span>›</span></summary><div>${perf.map(metric).join('')}</div></details>`:'';
+ const d=getDay(); $('mealList').innerHTML=d.foods.length?d.foods.map((x,i)=>`<div class="mealWrap" data-i="${i}"><div class="deleteBg"><button class="deleteCircle" aria-label="Delete meal">⌫</button></div><div class="meal" data-edit="${i}"><div><b>${esc(x.name||'Meal')}</b><small>${Math.round(+x.p||0)}P · ${Math.round(+x.c||0)}C · ${Math.round(+x.f||0)}F · ${(+x.fiber||0).toFixed(1)} fibre</small></div><div style="display:flex;align-items:center;gap:10px"><b>${Math.round(+x.cal||0)} kcal</b><button class="editCircle" data-editbtn="${i}" aria-label="Edit meal">✎</button></div></div></div>`).join(''):'<div class="empty">No meals yet.</div>';
+ document.querySelectorAll('[data-edit]').forEach(el=>el.addEventListener('click',e=>{if(!e.target.closest('.editCircle'))openEdit(+el.dataset.edit)}));
+ document.querySelectorAll('[data-editbtn]').forEach(el=>el.addEventListener('click',e=>{e.stopPropagation();openEdit(+el.dataset.editbtn)}));
  setupSwipes();
 }
 function setupSwipes(){
@@ -93,10 +108,10 @@ function setupSwipes(){
 }
 function openEdit(i){editing=i;let x=getDay().foods[i]; $('mealTitle').textContent='Edit Meal'; const map={Name:'name',Cal:'cal',P:'p',C:'c',F:'f',Fiber:'fiber',Water:'water',Sodium:'sodium',Potassium:'potassium',Sugar:'sugar',Satfat:'satfat'};for(const [id,k] of Object.entries(map))$('m'+id).value=x[k]??'';$('saveMeal').textContent='Save Changes';$('cancelEdit').classList.remove('hidden');show('mealView')}
 function resetMeal(){editing=null;$('mealTitle').textContent='Add Meal';['Name','Cal','P','C','F','Fiber','Water','Sodium','Potassium','Sugar','Satfat'].forEach(x=>$('m'+x).value='');$('saveMeal').textContent='Add to Today';$('cancelEdit').classList.add('hidden');$('preview').classList.add('hidden');$('photoInput').value=''}
-function show(id){['todayView','mealView','progressView','settingsView'].forEach(x=>$(x).classList.toggle('hidden',x!==id));document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.view===id));if(id==='progressView')renderProgress();scrollTo(0,0)}
+function show(id){['todayView','mealView','progressView','healthView','settingsView'].forEach(x=>$(x).classList.toggle('hidden',x!==id));document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.view===id));if(id==='progressView')renderProgress();scrollTo(0,0)}
 function dateRange(days){let a=[];for(let i=days-1;i>=0;i--){let d=new Date();d.setDate(d.getDate()-i);a.push(keyDate(d))}return a}
 function stats(keys){
- let rows=Object.keys(nutrients).map(k=>{let vals=keys.map(x=>total(db.days[x])[k]),avg=vals.reduce((a,b)=>a+b,0)/keys.length,n=nutrients[k],hit=vals.filter(v=>n.type==='limit'?v<=db.targets[k]&&v>0:v>=db.targets[k]).length;return `<div class="stat"><span><b>${n.label}</b><div class="muted">${hit}/${keys.length} days on target</div></span><span><b>${Math.round(avg)} ${n.unit}</b><div class="muted">daily avg</div></span></div>`}).join('');return `<div class="card"><h2>${keys.length===7?'Last 7 days':'This month'}</h2>${rows}</div>`
+ let rows=Object.keys(nutrients).map(k=>{let vals=keys.map(x=>total(db.days[x])[k]),avg=vals.reduce((a,b)=>a+b,0)/keys.length,n=nutrients[k],hit=vals.filter(v=>n.type==='limit'?v<=db.targets[k].value&&v>0:v>=db.targets[k].value).length;return `<div class="stat"><span><b>${n.label}</b><div class="muted">${hit}/${keys.length} days on target</div></span><span><b>${Math.round(avg)} ${n.unit}</b><div class="muted">daily avg</div></span></div>`}).join('');return `<div class="card"><h2>${keys.length===7?'Last 7 days':'This month'}</h2>${rows}</div>`
 }
 function renderProgress(){
  document.querySelectorAll('.seg').forEach(x=>x.classList.toggle('active',x.dataset.prog===progMode));
@@ -114,7 +129,8 @@ function renderCalendar(){
  document.querySelectorAll('[data-date]').forEach(b=>b.onclick=()=>{selectedDate=b.dataset.date;renderCalendar()});
 }
 function renderTargets(){
- $('targetInputs').innerHTML=Object.entries(nutrients).map(([k,n])=>`<div><label>${n.label} (${n.unit})</label><input id="t_${k}" type="number" min="1" value="${db.targets[k]}"></div>`).join('')
+ $('targetInputs').innerHTML=Object.entries(nutrients).map(([k,n])=>`<div class="targetBox"><label class="toggleLabel"><input class="targetToggle" id="e_${k}" type="checkbox" ${db.targets[k].enabled?'checked':''}> <span>${n.label}</span></label><input id="t_${k}" type="number" min="1" value="${db.targets[k].value}" ${db.targets[k].enabled?'':'disabled'}><small>${n.unit} · ${n.type==='limit'?'maximum':'goal'}</small></div>`).join('');
+ document.querySelectorAll('.targetToggle').forEach(x=>x.onchange=()=>{let k=x.id.slice(2);$('t_'+k).disabled=!x.checked})
 }
 function renderAll(){renderToday();renderTargets();if(!$('progressView').classList.contains('hidden'))renderProgress()}
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{if(b.dataset.view==='mealView')resetMeal();show(b.dataset.view)});
@@ -122,7 +138,7 @@ $('targetsShortcut').onclick=()=>show('settingsView');$('addMeal').onclick=()=>{
 $('photoInput').onchange=()=>{let f=$('photoInput').files[0];if(f){$('preview').src=URL.createObjectURL(f);$('preview').classList.remove('hidden')}};
 $('cancelEdit').onclick=()=>{resetMeal();show('todayView')};
 $('saveMeal').onclick=()=>{let x={name:$('mName').value.trim()||'Meal',cal:+$('mCal').value||0,p:+$('mP').value||0,c:+$('mC').value||0,f:+$('mF').value||0,fiber:+$('mFiber').value||0,water:+$('mWater').value||0,sodium:+$('mSodium').value||0,potassium:+$('mPotassium').value||0,sugar:+$('mSugar').value||0,satfat:+$('mSatfat').value||0};if(Object.values(x).slice(1).every(v=>v===0))return alert('Enter nutrition values first.');if(editing===null)getDay().foods.push(x);else getDay().foods[editing]=x;save();resetMeal();renderAll();show('todayView')};
-$('saveTargets').onclick=()=>{for(const k of Object.keys(nutrients)){let v=+$('t_'+k).value;if(!v||v<0)return alert('Enter a target above 0 for every displayed target.');db.targets[k]=v}save();renderAll();show('todayView')};
+$('saveTargets').onclick=()=>{for(const k of Object.keys(nutrients)){let enabled=$('e_'+k).checked,v=+$('t_'+k).value;if(enabled&&(!v||v<0))return alert('Enter a value above 0 for each enabled target.');db.targets[k]={enabled,value:v||nutrients[k].def}}save();renderAll();show('todayView')};
 document.querySelectorAll('.seg').forEach(b=>b.onclick=()=>{progMode=b.dataset.prog;renderProgress()});
 renderAll();
 </script></body></html>
