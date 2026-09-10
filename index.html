@@ -363,6 +363,33 @@ body.todayMode .tabs,body.todayMode .addFloat{z-index:50}
 .v39SummaryMetric{background:rgba(255,255,255,.055);border-radius:16px;padding:14px}
 .v39SummaryMetric span{display:block;color:var(--muted);font-size:13px;margin-bottom:5px}
 .v39SummaryMetric b{font-size:18px}
+
+/* v40 Progress — visual modern */
+#progressView{padding-bottom:120px}
+#progressView>.top{margin-bottom:18px}
+.v40Stats,.v40Calendar{background:linear-gradient(180deg,rgba(31,33,36,.96),rgba(22,24,27,.96))!important;border:1px solid rgba(255,255,255,.07)!important}
+.v40Stats{padding:18px!important;margin-bottom:14px!important}
+.v40SectionHead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.v40SectionHead h2{margin:0 0 3px;font-size:20px}
+.v40Logged{text-align:right;white-space:nowrap}.v40Logged b{display:block;font-size:20px}.v40Logged span{display:block;color:var(--muted);font-size:11px}
+.v40Rings{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:18px 0}
+.v40RingItem{text-align:center;min-width:0}
+.v40Ring{--pct:0;--ring:#0a84ff;width:64px;height:64px;border-radius:50%;margin:auto;background:conic-gradient(var(--ring) calc(var(--pct)*1%),rgba(255,255,255,.09) 0);display:grid;place-items:center;position:relative}
+.v40Ring:after{content:"";position:absolute;inset:6px;border-radius:50%;background:#1b1d20}
+.v40RingVal{position:relative;z-index:1;font-weight:800;font-size:13px;line-height:1.05}.v40RingVal small{display:block;font-size:9px;font-weight:600;color:var(--muted);margin-top:2px}
+.v40RingItem>span{display:block;color:var(--muted);font-size:11px;margin-top:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v40MiniRow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid rgba(255,255,255,.08);padding-top:14px;gap:4px}
+.v40Mini{text-align:center;min-width:0}.v40Mini .ico{font-size:17px}.v40Mini b{display:block;font-size:14px;margin-top:3px;white-space:nowrap}.v40Mini span{display:block;color:var(--muted);font-size:10px;margin-top:2px}
+.v40Calendar{padding:18px!important;margin-top:2px!important}
+.v40CalHead{display:grid;grid-template-columns:42px 1fr 42px;align-items:center;margin-bottom:18px}.v40CalHead h2{text-align:center;margin:0;font-size:20px}
+.v40CalNav{width:40px;height:40px;border:0;border-radius:13px;background:rgba(255,255,255,.06);color:#fff;font-size:27px;line-height:1}
+.v40WeekNames,.v40CalendarGrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.v40WeekNames{color:var(--muted);font-size:11px;font-weight:800;text-align:center;margin-bottom:7px}
+.v40CalDay{height:42px;min-width:0;border:0;background:transparent;color:#fff;border-radius:13px;position:relative;font-size:14px}.v40CalDay.other{opacity:.22}
+.v40CalDay.hasData:after{content:"";position:absolute;width:4px;height:4px;border-radius:50%;background:#0a84ff;bottom:3px;left:50%;transform:translateX(-50%)}
+.v40CalDay.selected{background:#0a84ff;font-weight:800}.v40CalDay.selected:after{background:#fff}
+.v40CalDay.today:not(.selected){box-shadow:inset 0 0 0 1.5px #4aa3ff}
+.v40Legend{display:flex;justify-content:center;gap:16px;margin-top:14px;color:var(--muted);font-size:10px}.v40Legend span{display:flex;align-items:center;gap:5px}.v40Legend i{width:8px;height:8px;border-radius:50%;display:inline-block}.v40Legend .logged{background:#0a84ff}.v40Legend .today{border:1px solid #4aa3ff}.v40Legend .selected{background:#0a84ff;box-shadow:0 0 0 2px rgba(10,132,255,.2)}
+@media(max-width:370px){.v40Ring{width:57px;height:57px}.v40Rings{gap:4px}.v40RingVal{font-size:12px}.v40CalDay{height:39px}}
 </style></head><body class="system"><div id="todayWallpaper" aria-hidden="true"></div><div class="wrap">
 <section id="todayView">
 <button class="todayTop dateOpen" id="dateOpenBtn" type="button"><h1 id="dayHeading">Today <span class="todayDrop">⌄</span></h1><div class="todayDate" id="todayDate"></div></button>
@@ -405,19 +432,25 @@ body.todayMode .tabs,body.todayMode .addFloat{z-index:50}
  </div>
 </div>
 <section id="progressView" class="hidden">
- <div class="top"><div><h1>Calendar</h1><div class="muted">Your CutTrack history</div></div></div>
- <div class="v39Calendar card">
-  <div class="v39CalHead">
-   <button id="v39PrevMonth" class="v39CalNav" type="button">‹</button>
-   <h2 id="v39MonthTitle">September 2026</h2>
-   <button id="v39NextMonth" class="v39CalNav" type="button">›</button>
-  </div>
-  <div class="v39WeekNames"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
-  <div id="v39CalendarGrid" class="v39CalendarGrid"></div>
+ <div class="top"><div><h1>Progress</h1><div class="muted">Small steps. Big results.</div></div></div>
+
+ <div class="v40Stats card">
+  <div class="v40SectionHead"><div><h2>This Week</h2><div id="v40WeekRange" class="muted"></div></div><div class="v40Logged"><b id="v40WeekLogged">0 / 7</b><span>Days logged</span></div></div>
+  <div id="v40WeekRings" class="v40Rings"></div>
+  <div id="v40WeekMini" class="v40MiniRow"></div>
  </div>
- <div class="v39DaySummary card">
-  <div class="v39SummaryHead"><div><div class="muted">Selected day</div><h2 id="v39SelectedTitle"></h2></div><button id="v39OpenToday" class="linkBtn" type="button">View day ›</button></div>
-  <div id="v39SummaryGrid" class="v39SummaryGrid"></div>
+
+ <div class="v40Stats card">
+  <div class="v40SectionHead"><div><h2>This Month</h2><div id="v40MonthLabel" class="muted"></div></div><div class="v40Logged"><b id="v40MonthLogged">0 / 0</b><span>Days logged</span></div></div>
+  <div id="v40MonthRings" class="v40Rings"></div>
+  <div id="v40MonthMini" class="v40MiniRow"></div>
+ </div>
+
+ <div class="v40Calendar card">
+  <div class="v40CalHead"><button id="v40PrevMonth" class="v40CalNav" type="button">‹</button><h2 id="v40CalTitle"></h2><button id="v40NextMonth" class="v40CalNav" type="button">›</button></div>
+  <div class="v40WeekNames"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+  <div id="v40CalendarGrid" class="v40CalendarGrid"></div>
+  <div class="v40Legend"><span><i class="logged"></i>Logged</span><span><i class="today"></i>Today</span><span><i class="selected"></i>Selected</span></div>
  </div>
 </section>
 <section id="healthView" class="hidden"><div class="top"><div><h1>Health</h1><div class="muted">Body & activity</div></div></div><div class="card"><h2>Today</h2><div class="miniGrid"><div class="mini"><div class="label">💧 Water</div><strong id="hWater">0 mL</strong></div><div class="mini"><div class="label">👟 Steps</div><strong id="hSteps">—</strong></div><div class="mini"><div class="label">🔥 Active</div><strong id="hBurn">—</strong></div><div class="mini"><div class="label">⚖️ Weight</div><strong id="hWeight">—</strong></div></div></div><div class="card"><h2>Manual health data</h2><div class="grid"><div class="field"><label>Steps</label><input id="stepsInput" type="number" min="0"></div><div class="field"><label>Active calories</label><input id="burnInput" type="number" min="0"></div></div><div class="grid"><div class="field"><label>Weight kg</label><input id="weightInput" type="number" min="0" step=".1"></div><div class="field"><label>Water mL</label><input id="waterInput" type="number" min="0"></div></div><button class="primary" id="saveHealth">Save Health Data</button></div><div class="card"><h2>Apple Health</h2><p class="muted">When CutTrack moves to its native iPhone version, this section can sync permitted steps, active energy, workouts, weight and other Health data automatically.</p><button class="secondary" disabled>Connect Apple Health · native app required</button></div></section>
@@ -1344,9 +1377,45 @@ $('v39OpenToday')?.addEventListener('click',()=>show('todayView'));
 const v39Show=show;
 show=function(id){
  v39Show(id);
- if(id==='progressView'){
-   v39MonthDate=new Date((window.cuttrackSelectedDateKey||key())+'T12:00:00');
-   setTimeout(v39RenderCalendar,0);
- }
+ if(false && id==='progressView'){}
 };
+
+// v40 Progress — weekly/monthly averages + full calendar
+let v40MonthDate=new Date((window.cuttrackSelectedDateKey||key())+'T12:00:00');
+function v40Key(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${dd}`}
+function v40Data(k){return db.days?.[k]||{foods:[],health:{steps:0,burn:0,weight:0,water:0}}}
+function v40Logged(k){const d=db.days?.[k];return !!(d&&((d.foods&&d.foods.length)||+d.health?.steps||+d.health?.burn||+d.health?.water||+d.health?.weight))}
+function v40Food(d){return (d.foods||[]).reduce((a,x)=>{a.cal+=+x.cal||0;a.p+=+x.p||0;a.c+=+x.c||0;a.f+=+x.f||0;return a},{cal:0,p:0,c:0,f:0})}
+function v40Targets(){return {cal:+db.targets?.cal||0,p:+db.targets?.p||0,c:+db.targets?.c||0,f:+db.targets?.f||0}}
+function v40Range(keys){
+ let n=0,s={cal:0,p:0,c:0,f:0,burn:0,steps:0,water:0,weight:0,weightN:0};
+ keys.forEach(k=>{if(!v40Logged(k))return;n++;const d=v40Data(k),f=v40Food(d),h=d.health||{};['cal','p','c','f'].forEach(x=>s[x]+=f[x]);s.burn+=+h.burn||0;s.steps+=+h.steps||0;s.water+=+h.water||0;if(+h.weight){s.weight+=+h.weight;s.weightN++}});
+ const div=n||1;return {logged:n,cal:s.cal/div,p:s.p/div,c:s.c/div,f:s.f/div,burn:s.burn/div,steps:s.steps/div,water:s.water/div,weight:s.weightN?s.weight/s.weightN:0}
+}
+function v40RingHTML(a){
+ const t=v40Targets(),defs=[['cal','Calories','kcal','#0a84ff'],['p','Protein','g','#30d158'],['c','Carbs','g','#ff9f0a'],['f','Fat','g','#ffd60a']];
+ return defs.map(([k,l,u,col])=>{const pct=t[k]?Math.min(100,Math.round(a[k]/t[k]*100)):0;const val=Math.round(a[k]);return `<div class="v40RingItem"><div class="v40Ring" style="--pct:${pct};--ring:${col}"><div class="v40RingVal">${val.toLocaleString()}<small>${u}</small></div></div><span>${l}</span></div>`}).join('')
+}
+function v40MiniHTML(a){return [['🔥','burn','Burned','kcal'],['👟','steps','Steps',''],['💧','water','Water','mL'],['⚖️','weight','Weight','kg']].map(([i,k,l,u])=>{let v=a[k];let text=k==='weight'?(v?v.toFixed(1):'—'):k==='steps'?Math.round(v).toLocaleString():Math.round(v).toLocaleString();return `<div class="v40Mini"><div class="ico">${i}</div><b>${text}${u?' '+u:''}</b><span>${l}</span></div>`}).join('')}
+function v40Render(){
+ const sel=new Date((window.cuttrackSelectedDateKey||key())+'T12:00:00');
+ const dow=(sel.getDay()+6)%7,mon=new Date(sel);mon.setDate(sel.getDate()-dow);const weekKeys=[];for(let i=0;i<7;i++){let d=new Date(mon);d.setDate(mon.getDate()+i);weekKeys.push(v40Key(d))}
+ const wa=v40Range(weekKeys);$('v40WeekLogged').textContent=`${wa.logged} / 7`;
+ const sun=new Date(mon);sun.setDate(mon.getDate()+6);$('v40WeekRange').textContent=`${mon.toLocaleDateString(undefined,{day:'numeric',month:'short'})} – ${sun.toLocaleDateString(undefined,{day:'numeric',month:'short'})}`;
+ $('v40WeekRings').innerHTML=v40RingHTML(wa);$('v40WeekMini').innerHTML=v40MiniHTML(wa);
+
+ const y=v40MonthDate.getFullYear(),m=v40MonthDate.getMonth(),days=new Date(y,m+1,0).getDate(),monthKeys=[];
+ for(let d=1;d<=days;d++)monthKeys.push(v40Key(new Date(y,m,d,12)));
+ const ma=v40Range(monthKeys);$('v40MonthLogged').textContent=`${ma.logged} / ${days}`;$('v40MonthLabel').textContent=new Date(y,m,1).toLocaleDateString(undefined,{month:'long',year:'numeric'});
+ $('v40MonthRings').innerHTML=v40RingHTML(ma);$('v40MonthMini').innerHTML=v40MiniHTML(ma);
+
+ $('v40CalTitle').textContent=new Date(y,m,1).toLocaleDateString(undefined,{month:'long',year:'numeric'});
+ const first=new Date(y,m,1,12),off=(first.getDay()+6)%7,prev=new Date(y,m,0).getDate(),selected=window.cuttrackSelectedDateKey||key(),today=v40Key(new Date());let cells=[];
+ for(let i=0;i<42;i++){let d,other=false;if(i<off){d=new Date(y,m-1,prev-off+i+1,12);other=true}else if(i>=off+days){d=new Date(y,m+1,i-off-days+1,12);other=true}else d=new Date(y,m,i-off+1,12);const k=v40Key(d);cells.push(`<button type="button" data-v40date="${k}" class="v40CalDay${other?' other':''}${v40Logged(k)?' hasData':''}${k===selected?' selected':''}${k===today?' today':''}">${d.getDate()}</button>`)}
+ $('v40CalendarGrid').innerHTML=cells.join('');
+ document.querySelectorAll('[data-v40date]').forEach(b=>b.addEventListener('click',()=>{const d=new Date(b.dataset.v40date+'T12:00:00');setSelectedDate(d);window.cuttrackSelectedDateKey=selectedDateKey;v40MonthDate=new Date(d);v40Render()}));
+}
+$('v40PrevMonth')?.addEventListener('click',()=>{v40MonthDate=new Date(v40MonthDate.getFullYear(),v40MonthDate.getMonth()-1,1,12);v40Render()});
+$('v40NextMonth')?.addEventListener('click',()=>{v40MonthDate=new Date(v40MonthDate.getFullYear(),v40MonthDate.getMonth()+1,1,12);v40Render()});
+const v40Show=show;show=function(id){v40Show(id);if(id==='progressView'){v40MonthDate=new Date((window.cuttrackSelectedDateKey||key())+'T12:00:00');setTimeout(v40Render,0)}};
 </script></body></html>
