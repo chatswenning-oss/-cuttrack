@@ -200,6 +200,26 @@ body.todayMode:after{position:fixed!important;inset:0!important;width:100vw!impo
 .editTargetSection label{margin:9px 0}.editSwitchRow{display:flex;align-items:center;justify-content:space-between;gap:15px}
 .editSwitchRow b{display:block;font-size:16px}.editSwitchRow small{display:block;color:var(--muted);font-size:12px;margin-top:3px}
 .etSave{width:100%;margin-top:12px}.dangerBtn{width:100%;margin-top:10px;border:1px solid rgba(255,69,58,.55);background:rgba(255,69,58,.10);color:#ff453a;border-radius:14px;padding:14px;font-weight:750;font-size:16px}
+
+/* v25 — simplified metric manager */
+#targetView .muted{display:none}
+#targetView #saveTargets{display:none!important}
+#targetView #targetInputs,#targetView #v19StandardTargets,#targetView #customTargetsInline{display:none!important}
+#targetView .card:has(#v25MetricList){padding:0!important;background:transparent!important}
+#v25MetricList{display:flex;flex-direction:column;gap:9px;margin:14px 0}
+.v25MetricRow{display:grid;grid-template-columns:42px minmax(0,1fr) 84px 62px;align-items:center;gap:9px;background:rgba(34,34,36,.96);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:12px 11px}
+.v25Emoji{font-size:27px;text-align:center}.v25Name{font-size:17px;font-weight:780;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v25Edit{border:1.5px solid #0a84ff;background:transparent;color:#0a84ff;border-radius:999px;padding:8px 10px;font-weight:750;font-size:14px}
+.v25MetricRow .switch{justify-self:end}
+.v25MetricRow.off{opacity:.58}
+.v25Create{width:100%;margin-top:16px;border:1.5px solid #0a84ff;background:transparent;color:#0a84ff;border-radius:18px;padding:16px;font-size:17px;font-weight:800}
+#editTargetModal .switch{position:relative!important;display:inline-block!important;width:51px!important;height:31px!important;flex:0 0 51px!important}
+#editTargetModal .switch input{opacity:0!important;width:0!important;height:0!important;position:absolute!important}
+#editTargetModal .switch .slider{position:absolute!important;inset:0!important;border-radius:999px!important;background:#3a3a3c!important;transition:.2s!important}
+#editTargetModal .switch .slider:before{content:""!important;position:absolute!important;width:27px!important;height:27px!important;left:2px!important;top:2px!important;border-radius:50%!important;background:#fff!important;transition:.2s!important;box-shadow:0 2px 5px rgba(0,0,0,.28)!important}
+#editTargetModal .switch input:checked + .slider{background:#0a84ff!important}
+#editTargetModal .switch input:checked + .slider:before{transform:translateX(20px)!important}
+#targetView .targetCreateFooter{display:none!important}
 </style></head><body class="system"><div class="wrap">
 <section id="todayView">
 <button class="todayTop dateOpen" id="dateOpenBtn" type="button"><h1 id="dayHeading">Today <span class="todayDrop">⌄</span></h1><div class="todayDate" id="todayDate"></div></button>
@@ -247,7 +267,7 @@ body.todayMode:after{position:fixed!important;inset:0!important;width:100vw!impo
 <section id="reminderView" class="hidden"><div class="top"><button class="back" data-back="settingsView">‹</button><div style="flex:1"><h1 class="sheetTitle" id="reminderHeading">Add Reminder</h1><div class="muted">Set a meal or supplement reminder.</div></div></div><div class="card"><div class="field"><label>Reminder type</label><select id="rType"><option value="meal">Meal</option><option value="supplement">Supplement</option></select></div><div class="field"><label>Name</label><input id="rName" placeholder="e.g. Breakfast or Creatine"></div><div class="field" id="rSuppWrap"><label>Choose supplement (optional)</label><select id="rSupplement"></select></div><div class="field"><label>Time</label><input id="rTime" type="time" value="08:00"></div><label class="muted">Days</label><div class="goalGrid" id="rDays" style="margin-top:8px"><button data-rday="1">Mon</button><button data-rday="2">Tue</button><button data-rday="3">Wed</button><button data-rday="4">Thu</button><button data-rday="5">Fri</button><button data-rday="6">Sat</button><button data-rday="0">Sun</button></div><div class="settingsRow" style="margin-top:14px"><span>Reminder enabled</span><input class="toggle" id="rEnabled" type="checkbox" checked></div><button class="primary" id="saveReminder">Save Reminder</button><button class="secondary hidden" id="deleteReminder" style="margin-top:10px">Delete Reminder</button></div></section>
 <section id="mealView" class="hidden"><div class="mealHero" id="mealHero"><img id="mealHeroBg" class="mealHeroBg" alt="Meal photo"><button class="heroBack" id="mealBack">‹</button><button class="heroPhoto" id="heroPhotoBtn">＋</button><span id="photoCount" class="photoCount hidden"></span><div class="heroStats"><div><span>Calories</span><b id="heroCal">0 kcal</b></div><div><span>Protein</span><b id="heroP">0 g</b></div><div><span>Carbs</span><b id="heroC">0 g</b></div><div><span>Fat</span><b id="heroF">0 g</b></div><div><span>Fibre</span><b id="heroFiber">0 g</b></div></div><div id="heroDots" class="heroDots"></div><div class="heroTitle"><h1 id="heroMealName">New Meal</h1><div id="heroSubtitle">Add a photo or enter nutrition manually</div></div></div><input id="cameraInput" type="file" accept="image/*" capture="environment" hidden><input id="libraryInput" type="file" accept="image/*" multiple hidden><div class="mealEditor"><div class="mealSeg"><button id="editMealTab" class="on">Edit Meal</button><button id="nutritionTab">Nutrition Info</button></div><div id="editMealPanel"><div class="field"><label>Meal name</label><input id="mName" placeholder="Meal / item name"></div><div class="grid"><div class="field"><label>Calories</label><input id="mCal" type="number" min="0"></div><div class="field"><label>Protein</label><input id="mP" type="number" min="0" step=".1"></div><div class="field"><label>Carbs</label><input id="mC" type="number" min="0" step=".1"></div><div class="field"><label>Fat</label><input id="mF" type="number" min="0" step=".1"></div><div class="field"><label>Fibre</label><input id="mFiber" type="number" min="0" step=".1"></div></div><details class="accordion"><summary>Add more nutrition details <span>›</span></summary><div class="grid"><div class="field"><label>Water mL</label><input id="mWater" type="number" min="0"></div><div class="field"><label>Sodium mg</label><input id="mSodium" type="number"></div><div class="field"><label>Potassium mg</label><input id="mPotassium" type="number"></div><div class="field"><label>Sugar g</label><input id="mSugar" type="number"></div><div class="field"><label>Saturated fat g</label><input id="mSatfat" type="number"></div><div class="field"><label>Calcium mg</label><input id="mCalcium" type="number"></div><div class="field"><label>Iron mg</label><input id="mIron" type="number"></div><div class="field"><label>Magnesium mg</label><input id="mMagnesium" type="number"></div></div></details></div><div id="nutritionPanel" class="nutritionRead hidden"></div></div><div class="mealActions"><button class="danger" id="deleteMeal">Delete Meal</button><button class="primary" id="saveMeal">Add to Today</button></div><div id="photoSheet" class="photoSheet hidden"><div class="photoSheetBox"><button id="takePhotoBtn">Take Photo</button><button id="choosePhotoBtn">Choose from Photo Library</button><button id="cancelPhotoBtn">Cancel</button></div></div>
 </section>
-<section id="targetView" class="hidden"><div class="top"><button class="back" data-back="todayView">‹</button><div style="flex:1"><h1 class="sheetTitle">Daily Targets</h1><div class="muted">Tracking stays on even without a target.</div></div></div><div class="card" id="targetInputs"></div><button class="primary" id="saveTargets">Save Daily Targets</button><div class="customTargetsInline" id="customTargetsInline"></div>
+<section id="targetView" class="hidden"><div class="top"><button class="back" data-back="todayView">‹</button><div style="flex:1"><h1 class="sheetTitle">Daily Targets</h1><div class="muted">Turn metrics on or off and tap Edit to customise.</div></div></div><div class="card" id="targetInputs"></div><button class="primary" id="saveTargets">Save Daily Targets</button><div class="customTargetsInline" id="customTargetsInline"></div>
 <div class="targetCreateFooter">
   <button class="primary" id="newCustomTargetBtn" type="button">+ Create Custom Target</button>
 </div>
@@ -645,4 +665,95 @@ $('ctSave')?.addEventListener('click',()=>setTimeout(()=>{
 // Replace v23 all-performance behavior with v24 individual preferences.
 localStorage.removeItem('cuttrackAllPerformance');
 v24RenderPerformance();
+
+// v25 — one master tracking switch per metric + Edit for target/performance settings.
+const V25_META=[
+ ['calories','🔥','Calories'],['protein','🥩','Protein'],['carbs','🍞','Carbs'],['fat','💧','Fat'],
+ ['fiber','🌿','Fibre'],['water','💧','Water'],['steps','👟','Steps'],['burned','🔥','Burned'],
+ ['sodium','🧂','Sodium'],['potassium','🍌','Potassium'],['sugar','🧊','Sugar'],['satfat','🧈','Saturated Fat'],
+ ['calcium','🦴','Calcium'],['iron','🩸','Iron'],['magnesium','💊','Magnesium']
+];
+let v25Tracking={};
+try{v25Tracking=JSON.parse(localStorage.getItem('cuttrackV25Tracking')||'{}')||{}}catch(e){}
+function v25SaveTracking(){localStorage.setItem('cuttrackV25Tracking',JSON.stringify(v25Tracking))}
+function v25IsTracked(k){return v25Tracking[k]!==false}
+function v25CustomTracked(t){return t.tracked!==false}
+function v25Switch(on,key,custom=false){
+ return `<label class="switch"><input type="checkbox" ${on?'checked':''} data-v25track="${key}" data-v25custom="${custom?'1':'0'}"><span class="slider"></span></label>`;
+}
+function v25RenderTargets(){
+ const view=$('targetView');if(!view)return;
+ let list=$('v25MetricList');
+ if(!list){
+   list=document.createElement('div');list.id='v25MetricList';
+   const top=view.querySelector('.top');top.insertAdjacentElement('afterend',list);
+ }
+ let rows=V25_META.map(([k,emoji,name])=>`<div class="v25MetricRow ${v25IsTracked(k)?'':'off'}">
+   <div class="v25Emoji">${emoji}</div><div class="v25Name">${name}</div>
+   <button class="v25Edit" type="button" data-v25edit="${k}" ${v25IsTracked(k)?'':'disabled'}>Edit</button>
+   ${v25Switch(v25IsTracked(k),k)}
+ </div>`).join('');
+ rows+=(db.customTargets||[]).map((t,i)=>`<div class="v25MetricRow ${v25CustomTracked(t)?'':'off'}">
+   <div class="v25Emoji">${t.emoji||'✨'}</div><div class="v25Name">${t.name}</div>
+   <button class="v25Edit" type="button" data-v25cedit="${i}" ${v25CustomTracked(t)?'':'disabled'}>Edit</button>
+   ${v25Switch(v25CustomTracked(t),String(i),true)}
+ </div>`).join('');
+ list.innerHTML=rows;
+ let create=$('v25Create');
+ if(!create){create=document.createElement('button');create.id='v25Create';create.className='v25Create';create.type='button';create.textContent='+ Create Custom Target';list.insertAdjacentElement('afterend',create)}
+ create.onclick=()=>{ if(typeof openCustomTarget==='function')openCustomTarget(); else $('customTargetModal')?.classList.remove('hidden') };
+ list.querySelectorAll('[data-v25edit]').forEach(b=>b.onclick=()=>v24OpenTarget(b.dataset.v25edit));
+ list.querySelectorAll('[data-v25cedit]').forEach(b=>b.onclick=()=>v24OpenTarget(null,+b.dataset.v25cedit));
+}
+document.addEventListener('change',e=>{
+ const el=e.target;if(!el.matches('[data-v25track]'))return;
+ if(el.dataset.v25custom==='1'){
+   const t=(db.customTargets||[])[+el.dataset.v25track];if(t){t.tracked=el.checked;saveCustomTargets()}
+ }else{v25Tracking[el.dataset.v25track]=el.checked;v25SaveTracking()}
+ v25RenderTargets();v25RenderPerformance();
+});
+
+// Tracking OFF removes metric from app-facing Performance regardless of its saved Performance preference.
+// Target ON/OFF remains independent and controls only goal/bar.
+const v25OldRenderPerformance=v24RenderPerformance;
+v24RenderPerformance=function(){
+ const grid=$('perfGrid');if(!grid)return;
+ grid.innerHTML='';
+ V24_BUILTINS.forEach(([k,name])=>{
+   const s=v24State(k);if(!v25IsTracked(k)||!s.performance)return;
+   const cur=Math.round(v24Current(k)),goal=+s.value||0,pct=goal?Math.max(0,Math.min(100,cur/goal*100)):0,rem=Math.max(0,goal-cur);
+   const el=document.createElement('div');el.className='perf';
+   el.innerHTML=`<b>${name}</b><span class="perfValue">${cur}${s.enabled?` / ${goal}`:''} ${s.unit}</span>${s.enabled?`<div class="perfTrack"><div class="perfFill" style="width:${pct}%"></div></div><small class="perfRemain">${rem} ${s.unit} remaining</small>`:''}`;
+   grid.appendChild(el);
+ });
+ (db.customTargets||[]).forEach(t=>{
+   if(!v25CustomTracked(t)||t.performance===false)return;
+   const on=t.enabled!==false,cur=0,goal=+t.value||0,pct=goal?Math.max(0,Math.min(100,cur/goal*100)):0;
+   const el=document.createElement('div');el.className='perf customPerf';
+   el.innerHTML=`<b>${t.name}</b><span class="perfValue">${cur}${on?` / ${goal}`:''} ${t.unit}</span>${on?`<div class="perfTrack"><div class="perfFill" style="width:${pct}%"></div></div><small class="perfRemain">${Math.max(0,goal-cur)} ${t.unit} remaining</small>`:''}`;
+   grid.appendChild(el);
+ });
+};
+
+// Edit modal uses Target as goal/bar only; master tracking is controlled from Daily Targets list.
+const v25Open=v24OpenTarget;
+v24OpenTarget=function(key,customIndex=null){
+ v25Open(key,customIndex);
+ // Ensure the two editor switches are the intended independent settings.
+ $('etEnabled').closest('.editSwitchRow').querySelector('b').textContent='Target';
+ $('etEnabled').closest('.editSwitchRow').querySelector('small').textContent='Show goal and progress bar';
+ $('etPerformance').closest('.editSwitchRow').querySelector('b').textContent='Show in Performance';
+};
+
+// Refresh simplified list whenever Daily Targets is opened.
+const v25Show=show;
+show=function(id){v25Show(id);if(id==='targetView')setTimeout(v25RenderTargets,0)}
+v25RenderTargets();
+
+// Custom target creation defaults: tracked ON, target ON, Performance ON.
+$('ctSave')?.addEventListener('click',()=>setTimeout(()=>{
+ const a=db.customTargets||[],t=a[a.length-1];
+ if(t){if(t.tracked===undefined)t.tracked=true;if(t.enabled===undefined)t.enabled=true;if(t.performance===undefined)t.performance=true;saveCustomTargets()}
+ v25RenderTargets();v25RenderPerformance();
+},10));
 </script></body></html>
