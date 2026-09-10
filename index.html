@@ -860,4 +860,105 @@ v25RenderTargets();
 $('targetsHubBack')?.addEventListener('click',()=>show('todayView'));
 $('hubAiTarget')?.addEventListener('click',()=>show('personaliseView'));
 $('hubMacros')?.addEventListener('click',()=>show('targetView'));
+
+// v28 — ONE target source of truth for AI Setup, Macros & Supplements and Today.
+const V28_KEYMAP={
+ calories:'cal', protein:'p', carbs:'c', fat:'f', fiber:'fiber', water:'water',
+ sodium:'sodium', potassium:'potassium', sugar:'sugar', calcium:'calcium',
+ iron:'iron', magnesium:'magnesium'
+};
+const V28_REVERSE=Object.fromEntries(Object.entries(V28_KEYMAP).map(([a,b])=>[b,a]));
+
+function v28CanonicalKey(k){ return V28_KEYMAP[k] || k; }
+function v28UiKey(k){ return V28_REVERSE[k] || k; }
+
+function v28GetTarget(k){
+ const ck=v28CanonicalKey(k);
+ const base=(db.targets&&db.targets[ck]) || {};
+ const ui=v24Prefs[v28UiKey(ck)] || {};
+ return {
+   value: ui.value ?? base.value ?? 0,
+   enabled: ui.enabled ?? base.enabled ?? true,
+   unit: ui.unit || (N[ck] ? N[ck][1] : '')
+ };
+}
+function v28SetTarget(k,value,extra={}){
+ const ck=v28CanonicalKey(k), uk=v28UiKey(ck), val=Math.max(0,+value||0);
+ if(db.targets){
+   if(!db.targets[ck]) db.targets[ck]={enabled:true,value:val};
+   db.targets[ck].value=val;
+   if(extra.enabled!==undefined) db.targets[ck].enabled=!!extra.enabled;
+ }
+ const prev=v24Prefs[uk]||{};
+ v24Prefs[uk]={...prev,value:val};
+ if(extra.enabled!==undefined)v24Prefs[uk].enabled=!!extra.enabled;
+ if(extra.unit)v24Prefs[uk].unit=extra.unit;
+ v24SavePrefs();
+ if(typeof save==='function')save();
+ return val;
+}
+
+// Make v24/v26 read the canonical values used by Today.
+const v28OldState=v24State;
+v24State=function(k){
+ const s=v28OldState(k), ck=v28CanonicalKey(k);
+ if(V28_REVERSE[ck] || N[ck]){
+   const c=v28GetTarget(k);
+   s.value=c.value;s.enabled=c.enabled;if(c.unit)s.unit=c.unit;
+ }
+ return s;
+};
+
+// Direct number edits now update canonical Today targets too.
+document.addEventListener('change',e=>{
+ if(e.target.matches('[data-v26value]')){
+   const k=e.target.dataset.v26value;
+   v28SetTarget(k,e.target.value);
+   if(typeof render==='function')render();
+   v25RenderTargets();v24RenderPerformance();
+ }
+},true);
+
+// Save Changes in Edit synchronises the edited target to Today.
+$('etSave')?.addEventListener('click',()=>{
+ if(v24Editing && !v24Editing.custom){
+   setTimeout(()=>{
+     const k=v24Editing.key;
+     const pref=v24Prefs[k];
+     if(pref)v28SetTarget(k,pref.value,{enabled:pref.enabled,unit:pref.unit});
+     if(typeof render==='function')render();
+     v25RenderTargets();v24RenderPerformance();
+   },0);
+ }
+});
+
+// AI setup: after its existing generator/save action runs, copy its canonical
+// db.targets values into Macros & Supplements so both screens display identically.
+function v28SyncFromCanonical(){
+ Object.entries(V28_KEYMAP).forEach(([uk,ck])=>{
+   const t=db.targets&&db.targets[ck];
+   if(t && t.value!==undefined){
+     const old=v24Prefs[uk]||{};
+     v24Prefs[uk]={...old,value:+t.value||0,enabled:t.enabled!==false,unit:old.unit||(N[ck]?N[ck][1]:'')};
+   }
+ });
+ v24SavePrefs();
+ if(typeof save==='function')save();
+ if(typeof render==='function')render();
+ v25RenderTargets();v24RenderPerformance();
+}
+
+// Hook all controls inside the existing AI/personalisation view that commit/generate targets.
+// Sync occurs after the app's original click handler has completed.
+$('personaliseView')?.addEventListener('click',e=>{
+ const b=e.target.closest('button');if(!b)return;
+ const txt=(b.textContent||'').toLowerCase();
+ if(/generate|calculate|apply|save|set targets|update targets/.test(txt)){
+   setTimeout(v28SyncFromCanonical,20);
+ }
+});
+
+// On startup migrate the existing Today values into Macros & Supplements.
+// This immediately fixes old installs where the two screens had diverged.
+v28SyncFromCanonical();
 </script></body></html>
