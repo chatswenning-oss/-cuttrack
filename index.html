@@ -299,6 +299,49 @@ body.todayMode{background:#05080b!important;background-image:none!important}
 body.todayMode:before,body.todayMode:after{content:none!important;display:none!important}
 body.todayMode .wrap{position:relative;z-index:1}
 body.todayMode .tabs,body.todayMode .addFloat{z-index:50}
+
+/* v38 — iOS overscroll coverage + Edit Target safe area */
+
+/* Extend the fixed wallpaper beyond every viewport edge.
+   The image itself stays fixed while Safari rubber-bands the document. */
+#todayWallpaper{
+ top:-18vh!important;
+ right:-12vw!important;
+ bottom:-18vh!important;
+ left:-12vw!important;
+ width:auto!important;
+ height:auto!important;
+ min-width:124vw!important;
+ min-height:136vh!important;
+ min-height:136dvh!important;
+ background-size:cover,cover!important;
+ background-position:center center,center center!important;
+}
+
+/* Keep Edit Target above Safari controls and CutTrack's floating nav. */
+#editTargetModal{
+ z-index:200!important;
+ align-items:flex-end!important;
+ padding:
+   18px
+   18px
+   calc(118px + env(safe-area-inset-bottom,0px))
+   18px!important;
+ overflow-y:auto!important;
+ overscroll-behavior:contain;
+}
+#editTargetModal .modalCard{
+ max-height:calc(100dvh - 150px - env(safe-area-inset-bottom,0px))!important;
+ overflow-y:auto!important;
+ -webkit-overflow-scrolling:touch;
+ margin:0 auto!important;
+ padding-bottom:24px!important;
+}
+#editTargetModal #etSave{
+ position:relative!important;
+ z-index:1!important;
+ margin-bottom:4px!important;
+}
 </style></head><body class="system"><div id="todayWallpaper" aria-hidden="true"></div><div class="wrap">
 <section id="todayView">
 <button class="todayTop dateOpen" id="dateOpenBtn" type="button"><h1 id="dayHeading">Today <span class="todayDrop">⌄</span></h1><div class="todayDate" id="todayDate"></div></button>
