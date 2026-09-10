@@ -272,7 +272,42 @@ body.todayMode:before{
  width:100vw!important;height:100vh!important;height:100dvh!important;
  min-height:100%!important;background-size:cover!important;background-position:center top!important
 }
-</style></head><body class="system"><div class="wrap">
+
+/* v36 — true fixed Today wallpaper layer.
+   The document/cards scroll; this layer never participates in page scrolling. */
+#todayWallpaper{
+ display:none;
+ position:fixed;
+ left:0;top:0;
+ width:100vw;
+ height:100vh;
+ height:100dvh;
+ z-index:-10;
+ pointer-events:none;
+ background:#05080b url("cuttrack-v16-bg.jpg") center center / cover no-repeat;
+ transform:translateZ(0);
+ -webkit-transform:translateZ(0);
+}
+body.todayMode #todayWallpaper{display:block}
+body.todayMode{
+ background:#05080b!important;
+ background-image:none!important;
+ min-height:100%!important;
+}
+body.todayMode:before{
+ content:none!important;
+ display:none!important;
+ background:none!important;
+}
+body.todayMode:after{
+ z-index:-9!important;
+ position:fixed!important;
+ inset:0!important;
+ width:100vw!important;
+ height:100vh!important;
+ height:100dvh!important;
+}
+</style></head><body class="system"><div id="todayWallpaper" aria-hidden="true"></div><div class="wrap">
 <section id="todayView">
 <button class="todayTop dateOpen" id="dateOpenBtn" type="button"><h1 id="dayHeading">Today <span class="todayDrop">⌄</span></h1><div class="todayDate" id="todayDate"></div></button>
 <input type="date" id="calendarPicker" class="calendarPicker" aria-label="Choose date">
