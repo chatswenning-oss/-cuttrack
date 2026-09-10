@@ -393,31 +393,35 @@ body.todayMode .tabs,body.todayMode .addFloat{z-index:50}
 
 /* v48 — selectable Today backgrounds. UI/functionality otherwise unchanged. */
 
-/* v51 actual app wallpaper framing: preserve the original landscape photo without stretching.
-   A soft full-screen copy fills the tall phone canvas; the sharp original sits over it at natural aspect ratio. */
+/* v53 — original mountain photo, sharp and uncropped on top of a blurred full-screen fill.
+   The sharp layer keeps the original photo proportions/path. The blurred copy only fills
+   the portrait space behind it, so there are no blank bands and no stretched mountain. */
 #todayWallpaper{
+  position:fixed!important;
+  inset:0!important;
+  top:0!important;right:0!important;bottom:0!important;left:0!important;
+  width:100vw!important;height:100vh!important;height:100dvh!important;
+  min-width:0!important;min-height:0!important;
   background:none!important;
   overflow:hidden!important;
+  transform:none!important;-webkit-transform:none!important;
 }
 #todayWallpaper::before{
-  content:"";
-  position:absolute;
-  inset:-24px;
-  background-image:linear-gradient(180deg,rgba(0,0,0,.08) 0%,rgba(0,0,0,.06) 30%,rgba(0,0,0,.20) 62%,rgba(0,0,0,.36) 100%),url("cuttrack-v16-bg.jpg");
-  background-size:cover;
-  background-position:center center;
-  background-repeat:no-repeat;
-  filter:blur(18px) saturate(.95);
-  transform:scale(1.06);
+  content:""!important;display:block!important;position:absolute;
+  inset:-34px;
+  background:url("cuttrack-v16-bg.jpg") center center / cover no-repeat;
+  filter:blur(28px) saturate(.92) brightness(.72);
+  -webkit-filter:blur(28px) saturate(.92) brightness(.72);
+  transform:scale(1.08);
 }
 #todayWallpaper::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background-image:linear-gradient(180deg,rgba(0,0,0,.05) 0%,rgba(0,0,0,.03) 32%,rgba(0,0,0,.16) 62%,rgba(0,0,0,.30) 100%),url("cuttrack-v16-bg.jpg");
-  background-size:100% auto;
-  background-position:center top;
-  background-repeat:no-repeat;
+  content:"";display:block!important;position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(180deg,rgba(0,0,0,.05) 0%,rgba(0,0,0,.03) 30%,rgba(0,0,0,.15) 62%,rgba(0,0,0,.30) 100%),
+    url("cuttrack-v16-bg.jpg");
+  background-size:100% 100%,100% auto;
+  background-position:center top,center top;
+  background-repeat:no-repeat,no-repeat;
 }
 </style></head><body class="system"><div id="todayWallpaper" aria-hidden="true"></div><div class="wrap">
 <section id="todayView">

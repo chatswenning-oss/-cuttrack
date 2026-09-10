@@ -1,10 +1,10 @@
-CutTrack v51 — Actual App Background Fix
+CutTrack v53 — Blurred Background Fill
 
-Built directly from the working v49 baseline.
+Built from v52. Uses the original mountain/snow-path photo only.
+- Sharp original photo at the top, kept in its original proportions.
+- A blurred copy of the same photo fills the portrait screen behind it.
+- No stretched mountain, no blank band, no generated scenery.
+- CutTrack UI and app functionality otherwise unchanged.
 
-- Uses the real original mountain photo.
-- Keeps the original photo aspect ratio (no vertical stretching).
-- Shows the full photo width so the mountain/path composition is visible.
-- Uses a soft copy of the same photo behind it to fill the tall Today screen edge-to-edge.
-- No generated replacement image.
-- No changes to Today cards, navigation, nutrition, Progress, Health, Goals, or cuttrack_v9 data.
+Upload all 6 files to the GitHub repo root and replace existing files.
+Do not delete any other repo files.
