@@ -1,13 +1,10 @@
-CutTrack v57 — AI Photo Meal Flow
-Built from stable v56.
+CutTrack v58 — Photo Upload AI Meals
+Built from the v57 AI Photo Meals baseline.
 
-Changes only to meal adding flow:
-- Blue + opens the iPhone camera/photo capture immediately.
-- After a photo, CutTrack shows “Analysing meal…” and sends it to the configured secure AI Worker.
-- AI nutrition is automatically saved as a Today meal.
-- Tap the saved meal to use the existing Edit Meal / Nutrition Info screen and correct anything.
-- If AI is not connected or fails, the existing meal editor opens with the photo preserved.
+Change in v58:
+- Tapping the blue + now opens the image upload/photo library picker instead of forcing the camera.
+- The selected meal photo continues into the same AI nutrition-analysis flow.
+- Existing meal editor, Today, Progress, Health, Profile, Goals, backgrounds, navigation and data storage remain unchanged.
+- Storage key remains cuttrack_v9.
 
-All v56 backgrounds, layouts, navigation and cuttrack_v9 data storage are retained.
-
-IMPORTANT: AI analysis requires the separate CutTrack v57 AI Worker to be deployed and its URL pasted into index.html. Do not put API keys in this public GitHub Pages app.
+Upload all 6 files to the root of the -cuttrack GitHub Pages repository and replace the existing versions.
