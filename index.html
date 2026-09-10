@@ -120,6 +120,58 @@ body.todayMode:after{position:fixed!important;inset:0!important;width:100vw!impo
 .targetCreateFooter .primary{width:100%}
 .v19StandardTargets{margin-top:0}
 @media(max-width:390px){.inlineTargetRow{grid-template-columns:minmax(0,1fr) 92px 54px;gap:8px}}
+
+/* v20 — navigation polish + strict target screen isolation */
+
+/* Smaller + button: fully contained within the floating nav */
+.addFloat{
+  width:58px!important;
+  height:58px!important;
+  right:max(10px,calc((100vw - 430px)/2 + 10px))!important;
+  bottom:calc(17px + env(safe-area-inset-bottom))!important;
+  font-size:38px!important;
+  line-height:1!important;
+  border-radius:50%!important;
+  box-shadow:0 8px 24px rgba(0,0,0,.28)!important;
+}
+.tabs{padding-right:78px!important;overflow:hidden!important}
+
+/* Cleaner consistent nav glyphs */
+.tabIcon{
+  width:25px!important;height:25px!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  font-size:0!important;position:relative
+}
+.tabIcon svg{width:24px;height:24px;display:block;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.tab.active .tabIcon{color:#0a84ff}
+
+/* v19 target additions must never render as loose global content */
+#v19StandardTargets,
+#customTargetsInline,
+.targetCreateFooter{
+  display:none!important;
+}
+
+/* They are visible only after JS marks the actual target setup container */
+.v20TargetsHost #v19StandardTargets,
+.v20TargetsHost #customTargetsInline,
+.v20TargetsHost .targetCreateFooter{
+  display:block!important;
+}
+
+/* Meal detail is isolated from any target configuration UI */
+#mealDetailView #v19StandardTargets,
+#mealDetailView #customTargetsInline,
+#mealDetailView .targetCreateFooter,
+#mealDetailView .customTargetBox,
+#mealDetailView #customTargetModal{
+  display:none!important;
+}
+
+@media(max-width:390px){
+ .addFloat{width:54px!important;height:54px!important;font-size:34px!important;right:8px!important}
+ .tabs{padding-right:72px!important}
+}
 </style></head><body class="system"><div class="wrap">
 <section id="todayView">
 <button class="todayTop dateOpen" id="dateOpenBtn" type="button"><h1 id="dayHeading">Today <span class="todayDrop">⌄</span></h1><div class="todayDate" id="todayDate"></div></button>
@@ -159,7 +211,7 @@ body.todayMode:after{position:fixed!important;inset:0!important;width:100vw!impo
 <section id="personaliseView" class="hidden"><div class="top"><button class="back" data-back="settingsView">‹</button><div style="flex:1"><h1 class="sheetTitle">Personalise CutTrack</h1><div class="muted">Quick setup first. Improve accuracy only if you want.</div></div></div><div class="card"><h2>Quick setup</h2><div class="field"><label>Your goals · choose one or more</label><div class="chips" id="goalChips"><button class="chip" data-goal="lose">Lose fat</button><button class="chip" data-goal="maintain">Maintain</button><button class="chip" data-goal="muscle">Build muscle</button><button class="chip" data-goal="performance">Performance</button></div></div><div class="grid"><div class="field"><label>Age</label><input id="pAge" type="number"></div><div class="field"><label>Sex</label><select id="pSex"><option value="male">Male</option><option value="female">Female</option></select></div><div class="field"><label>Height cm</label><input id="pHeight" type="number"></div><div class="field"><label>Weight kg</label><input id="pWeight" type="number" step=".1"></div></div><div class="field"><label>Activity</label><select id="pActivity"><option value="1.2">Mostly sedentary</option><option value="1.375">Lightly active</option><option value="1.55" selected>Moderately active</option><option value="1.725">Very active</option></select></div></div><details class="accordion"><summary>Improve My Targets <span>＋</span></summary><p class="muted small">Optional details give the target assistant more context.</p><div class="field"><label>Body fat %</label><input id="pBodyfat" type="number" min="3" max="60" placeholder="Skip if unknown"></div><div class="field"><label>Recent weight trend</label><select id="pTrend"><option value="unknown">Not sure</option><option value="losing">Losing weight</option><option value="stable">Weight stable</option><option value="gaining">Gaining weight</option></select></div><div class="field"><label>Exercise sessions / week</label><select id="pSessions"><option>0</option><option>1-3</option><option>4-6</option><option>7+</option></select></div><div class="field"><label>Non-exercise activity</label><select id="pDailyActivity"><option>Mostly sedentary</option><option>Moderately active</option><option>Very active</option></select></div><div class="field"><label>Lifting experience</label><select id="pLifting"><option>None</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></div><div class="field"><label>Cardio experience</label><select id="pCardio"><option>None</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></div><div class="field"><label>Athletic level</label><select id="pAthlete"><option>Exercise regularly</option><option>Athlete</option><option>Professional athlete</option></select></div></details><button class="primary" id="generateTargets">Generate My Targets</button><div id="targetResult"></div></section>
 <section id="suppView" class="hidden"><div class="top"><button class="back" data-back="settingsView">‹</button><div style="flex:1"><h1 class="sheetTitle">Supplements</h1><div class="muted">Track whatever you use.</div></div></div><div class="card"><div id="suppList"></div><h2 style="margin-top:18px">Add supplement</h2><div class="grid"><div class="field"><label>Name</label><input id="sName" placeholder="Creatine"></div><div class="field"><label>Daily target</label><input id="sTarget" type="number" step=".1" placeholder="5"></div><div class="field"><label>Unit</label><select id="sUnit"><option>g</option><option>mg</option><option>mL</option><option>serving</option></select></div><div class="field"><label>Reminder</label><input id="sTime" type="time"></div></div><button class="primary" id="addSupp">Add Supplement</button></div></section>
 <section id="profileView" class="hidden"><div class="top"><button class="back" data-back="settingsView">‹</button><div style="flex:1"><h1 class="sheetTitle">Edit Profile</h1></div></div><div class="card"><input id="profilePhotoInput" type="file" accept="image/*" hidden><div class="row" style="justify-content:flex-start"><div id="editProfilePic" class="profilePic">👤</div><button class="linkBtn" id="changePhoto">Add profile picture</button></div><div class="field"><label>Name</label><input id="nameInput" placeholder="Your name"></div><div class="field"><label>Email</label><input id="emailInput" type="email" placeholder="Optional"></div><button class="primary" id="saveProfile">Save Profile</button></div></section>
-</div><nav class="tabs"><div class="tabsIn"><button class="tab active" data-view="todayView"><span class="tabIcon">⌂</span><span>Today</span></button><button class="tab" data-view="progressView"><span class="tabIcon">▢</span><span>Progress</span></button><button class="tab" data-view="healthView"><span class="tabIcon">▥</span><span>Health</span></button><button class="tab" data-view="settingsView"><span class="tabIcon">⚙</span><span>Settings</span></button></div></nav><button class="addFloat" id="addIntakeBtn" aria-label="Add intake">＋</button>
+</div><nav class="tabs"><div class="tabsIn"><button class="tab active" data-view="todayView"><span class="tabIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.8 3h4.4l.7 2.2 2 .8 2-1 3.1 3.1-1 2 .8 2 2.2.7v4.4l-2.2.7-.8 2 1 2-3.1 3.1-2-1-2 .8-.7 2.2H9.8l-.7-2.2-2-.8-2 1L2 20.9l1-2-.8-2L0 16.2v-4.4l2.2-.7.8-2-1-2L5.1 4l2 1 2-.8z" transform="scale(.78) translate(3.4 1.4)"/><circle cx="12" cy="12" r="3"/></svg></span><span>Settings</span></button></div></nav><button class="addFloat" id="addIntakeBtn" aria-label="Add intake">＋</button>
 <script>
 const $=id=>document.getElementById(id), key=()=>new Date().toISOString().slice(0,10);const N={cal:['Calories','kcal','limit',2200],p:['Protein','g','goal',180],c:['Carbs','g','goal',200],f:['Fat','g','limit',70],fiber:['Fibre','g','goal',30],water:['Water','mL','goal',2700],sodium:['Sodium','mg','limit',2300],potassium:['Potassium','mg','goal',3500],sugar:['Sugar','g','limit',50],satfat:['Saturated fat','g','limit',20],calcium:['Calcium','mg','goal',1000],iron:['Iron','mg','goal',8],magnesium:['Magnesium','mg','goal',400]};let db=JSON.parse(localStorage.getItem('cuttrack_v9')||localStorage.getItem('cuttrack_v8')||localStorage.getItem('cuttrack_v7')||'null')||{days:{},targets:{},theme:'system',profile:{name:'',email:'',photo:''},personal:{goals:['lose']},supplements:[],reminders:[]};if(!Array.isArray(db.reminders)){let old=db.reminders||{};db.reminders=old.meal?[{type:'meal',name:'Meal',time:old.time||'18:00',days:[0,1,2,3,4,5,6],enabled:true}]:[]}for(const[k,n]of Object.entries(N))db.targets[k]??={enabled:['cal','p','c'].includes(k),value:n[3]};function day(){return db.days[key()]??={foods:[],health:{steps:0,burn:0,weight:0,water:0},supp:{}}}function save(){localStorage.setItem('cuttrack_v9',JSON.stringify(db))}function total(d=day()){let t={};Object.keys(N).forEach(k=>t[k]=0);(d.foods||[]).forEach(x=>Object.keys(N).forEach(k=>t[k]+=+x[k]||0));t.water+=(+d.health?.water||0);return t}function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function theme(){let today=document.body.classList.contains('todayMode'),meal=document.body.classList.contains('mealViewOnly');document.body.className=db.theme==='dark'?'dark':db.theme==='light'?'light':'system';if(today)document.body.classList.add('todayMode');if(meal)document.body.classList.add('mealViewOnly');document.querySelectorAll('[data-theme]').forEach(x=>x.classList.toggle('on',x.dataset.theme===db.theme))}
 function metric(k){let t=total()[k],n=N[k],g=db.targets[k],pct=g.enabled?Math.min(100,t/g.value*100):0,over=g.enabled&&n[2]==='limit'&&t>g.value,sub=!g.enabled?'Tracked · no daily target':over?`${Math.round(t-g.value)} ${n[1]} over limit`:n[2]==='limit'?`${Math.max(0,Math.round(g.value-t))} ${n[1]} remaining`:t>=g.value?'Goal reached':`${Math.max(0,Math.round(g.value-t))} ${n[1]} to goal`;return `<div class="metric ${over?'over':''} ${g.enabled?'':'noTarget'}"><div class="metricHead"><span>${n[0]}</span><span>${Math.round(t)}${g.enabled?` / ${g.value}`:''} ${n[1]}</span></div><div class="track"><div class="fill" style="width:${pct}%"></div></div><div class="metricSub">${sub}</div></div>`}
@@ -353,4 +405,43 @@ document.addEventListener('change',e=>{
 });
 ensureStandardTargetRows();
 renderCustomTargets();
+
+// v20 — keep target configuration strictly inside the Targets screen.
+function v20FindTargetsHost(){
+  const create=$('newCustomTargetBtn');
+  if(!create)return null;
+  let node=create.parentElement;
+  while(node && node!==document.body){
+    const txt=(node.textContent||'');
+    if(txt.includes('Daily Targets') || txt.includes('Targets & Personalisation')){
+      return node;
+    }
+    node=node.parentElement;
+  }
+  return null;
+}
+function v20MountTargets(){
+  const host=v20FindTargetsHost();
+  const std=$('v19StandardTargets'), custom=$('customTargetsInline');
+  const footer=document.querySelector('.targetCreateFooter');
+  if(!host)return;
+  host.classList.add('v20TargetsHost');
+
+  // Move any accidentally-global v19 target blocks into the target screen.
+  // Place them immediately before the create button/footer area.
+  if(std && !host.contains(std)){
+    const anchor=footer && host.contains(footer)?footer:null;
+    host.insertBefore(std,anchor);
+  }
+  if(custom && !host.contains(custom)){
+    const anchor=footer && host.contains(footer)?footer:null;
+    host.insertBefore(custom,anchor);
+  }
+  if(footer && !host.contains(footer)) host.appendChild(footer);
+}
+v20MountTargets();
+
+// Re-assert isolation whenever a main/detail view changes.
+const v20Obs=new MutationObserver(()=>v20MountTargets());
+v20Obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
 </script></body></html>
