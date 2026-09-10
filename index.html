@@ -342,6 +342,27 @@ body.todayMode .tabs,body.todayMode .addFloat{z-index:50}
  z-index:1!important;
  margin-bottom:4px!important;
 }
+
+/* v39 — Progress becomes Calendar/history */
+.v39Calendar{padding:20px!important}
+.v39CalHead{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;margin-bottom:20px}
+.v39CalHead h2{text-align:center;margin:0;font-size:22px}
+.v39CalNav{border:0;background:rgba(255,255,255,.06);color:#fff;border-radius:14px;width:42px;height:42px;font-size:30px;line-height:1}
+.v39WeekNames,.v39CalendarGrid{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
+.v39WeekNames{margin-bottom:8px;color:var(--muted);text-align:center;font-size:13px;font-weight:700}
+.v39CalDay{aspect-ratio:1/1;border:0;border-radius:14px;background:transparent;color:#fff;display:flex;align-items:center;justify-content:center;position:relative;font-size:16px}
+.v39CalDay.other{opacity:.24}
+.v39CalDay.hasData:after{content:"";position:absolute;width:5px;height:5px;border-radius:50%;background:var(--blue);bottom:5px}
+.v39CalDay.selected{background:var(--blue);font-weight:800}
+.v39CalDay.selected:after{background:#fff}
+.v39CalDay.today:not(.selected){box-shadow:inset 0 0 0 1px rgba(10,132,255,.9)}
+.v39DaySummary{margin-top:16px!important}
+.v39SummaryHead{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.v39SummaryHead h2{margin:3px 0 0}
+.v39SummaryGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}
+.v39SummaryMetric{background:rgba(255,255,255,.055);border-radius:16px;padding:14px}
+.v39SummaryMetric span{display:block;color:var(--muted);font-size:13px;margin-bottom:5px}
+.v39SummaryMetric b{font-size:18px}
 </style></head><body class="system"><div id="todayWallpaper" aria-hidden="true"></div><div class="wrap">
 <section id="todayView">
 <button class="todayTop dateOpen" id="dateOpenBtn" type="button"><h1 id="dayHeading">Today <span class="todayDrop">⌄</span></h1><div class="todayDate" id="todayDate"></div></button>
@@ -383,7 +404,22 @@ body.todayMode .tabs,body.todayMode .addFloat{z-index:50}
   <div class="modalActions"><button id="ctCancel" type="button">Cancel</button><button class="primary" id="ctSave" type="button">Save Target</button></div>
  </div>
 </div>
-<section id="progressView" class="hidden"><div class="top"><div><h1>Progress</h1><div class="muted">Nutrition, activity & consistency</div></div></div><div class="segment"><button class="seg on" data-range="week">Week</button><button class="seg" data-range="month">Month</button><button class="seg" data-range="supp">Supplements</button></div><div id="progressContent"></div></section>
+<section id="progressView" class="hidden">
+ <div class="top"><div><h1>Calendar</h1><div class="muted">Your CutTrack history</div></div></div>
+ <div class="v39Calendar card">
+  <div class="v39CalHead">
+   <button id="v39PrevMonth" class="v39CalNav" type="button">‹</button>
+   <h2 id="v39MonthTitle">September 2026</h2>
+   <button id="v39NextMonth" class="v39CalNav" type="button">›</button>
+  </div>
+  <div class="v39WeekNames"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+  <div id="v39CalendarGrid" class="v39CalendarGrid"></div>
+ </div>
+ <div class="v39DaySummary card">
+  <div class="v39SummaryHead"><div><div class="muted">Selected day</div><h2 id="v39SelectedTitle"></h2></div><button id="v39OpenToday" class="linkBtn" type="button">View day ›</button></div>
+  <div id="v39SummaryGrid" class="v39SummaryGrid"></div>
+ </div>
+</section>
 <section id="healthView" class="hidden"><div class="top"><div><h1>Health</h1><div class="muted">Body & activity</div></div></div><div class="card"><h2>Today</h2><div class="miniGrid"><div class="mini"><div class="label">💧 Water</div><strong id="hWater">0 mL</strong></div><div class="mini"><div class="label">👟 Steps</div><strong id="hSteps">—</strong></div><div class="mini"><div class="label">🔥 Active</div><strong id="hBurn">—</strong></div><div class="mini"><div class="label">⚖️ Weight</div><strong id="hWeight">—</strong></div></div></div><div class="card"><h2>Manual health data</h2><div class="grid"><div class="field"><label>Steps</label><input id="stepsInput" type="number" min="0"></div><div class="field"><label>Active calories</label><input id="burnInput" type="number" min="0"></div></div><div class="grid"><div class="field"><label>Weight kg</label><input id="weightInput" type="number" min="0" step=".1"></div><div class="field"><label>Water mL</label><input id="waterInput" type="number" min="0"></div></div><button class="primary" id="saveHealth">Save Health Data</button></div><div class="card"><h2>Apple Health</h2><p class="muted">When CutTrack moves to its native iPhone version, this section can sync permitted steps, active energy, workouts, weight and other Health data automatically.</p><button class="secondary" disabled>Connect Apple Health · native app required</button></div></section>
 <section id="settingsView" class="hidden"><div class="top"><div><h1>Profile</h1><div class="muted">Account, settings & preferences</div></div></div><div class="card"><div class="row"><div class="row" style="justify-content:flex-start"><div id="profilePic" class="profilePic">👤</div><div><h2 id="profileName">Your Profile</h2><div class="muted small">CutTrack account</div></div></div><button class="linkBtn" id="editProfileBtn">Edit ›</button></div></div><div class="card"><h2>Appearance</h2><div class="appearance"><button data-theme="system">System</button><button data-theme="light">Light</button><button data-theme="dark">Dark</button></div></div><div class="card" id="profileTargetsSettings"><h2>Targets & personalisation</h2><div class="settingsRow"><span>AI Target Setup</span><button class="linkBtn" id="personaliseBtn">Open ›</button></div><div class="settingsRow"><span>Macros &amp; Supplements</span><button class="linkBtn" id="dailyTargetBtn">Edit ›</button></div><div class="settingsRow"><span>Supplements</span><button class="linkBtn" id="suppSettingsBtn">Manage ›</button></div></div><div class="card"><div class="row"><div><h2>Reminders</h2><div class="muted small">Meals & supplements</div></div><button class="linkBtn" id="addReminderBtn">＋ Add</button></div><div id="reminderList" style="margin-top:12px"></div><div class="notice">Create several meal or supplement reminders. Settings are saved in this prototype; reliable scheduled iPhone notifications will be enabled in the native app/push-notification version.</div></div><div class="card"><h2>Account & data</h2><div class="settingsRow"><span>Sign in with Apple</span><span class="muted">Coming with backend</span></div><div class="settingsRow"><span>Google account</span><span class="muted">Coming with backend</span></div><div class="settingsRow"><span>Cloud sync</span><span class="muted">Local for now</span></div>
 <div class="settingsRow"><span>Apple Health &amp; Data</span><span class="muted">Native connection later</span></div>
@@ -1253,4 +1289,64 @@ document.querySelectorAll('[data-generic-info]').forEach(b=>b.addEventListener('
  const what=b.dataset.genericInfo==='privacy'?'Privacy Policy':'Terms & Conditions';
  alert(`${what} will be added here before CutTrack is released publicly.`);
 }));
+
+// v39 — one calendar/history system backed by the exact same db.days records as Today.
+let v39MonthDate=new Date((window.cuttrackSelectedDateKey||key())+'T12:00:00');
+function v39DateKey(d){
+ const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');
+ return `${y}-${m}-${dd}`;
+}
+function v39HasData(k){
+ const d=db.days?.[k];if(!d)return false;
+ return !!((d.foods&&d.foods.length)||(+d.health?.steps)||(+d.health?.burn)||(+d.health?.water)||(+d.health?.weight)||Object.values(d.supp||{}).some(Number));
+}
+function v39RenderSummary(){
+ const k=window.cuttrackSelectedDateKey||key(),d=db.days?.[k]||{foods:[],health:{steps:0,burn:0,weight:0,water:0},supp:{}};
+ const dt=new Date(k+'T12:00:00'), foods=d.foods||[];
+ const sum=foods.reduce((a,x)=>{a.cal+=+x.cal||0;a.p+=+x.p||0;a.c+=+x.c||0;a.f+=+x.f||0;return a},{cal:0,p:0,c:0,f:0});
+ $('v39SelectedTitle').textContent=dt.toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'});
+ const h=d.health||{};
+ const rows=[
+  ['Calories',`${Math.round(sum.cal)} kcal`],['Protein',`${Math.round(sum.p)} g`],
+  ['Carbs',`${Math.round(sum.c)} g`],['Fat',`${Math.round(sum.f)} g`],
+  ['Burned',`${Math.round(+h.burn||0)} kcal`],['Steps',Math.round(+h.steps||0).toLocaleString()],
+  ['Water',`${Math.round(+h.water||0)} mL`],['Weight',h.weight?`${(+h.weight).toFixed(1)} kg`:'—']
+ ];
+ $('v39SummaryGrid').innerHTML=rows.map(x=>`<div class="v39SummaryMetric"><span>${x[0]}</span><b>${x[1]}</b></div>`).join('');
+}
+function v39RenderCalendar(){
+ const y=v39MonthDate.getFullYear(),m=v39MonthDate.getMonth();
+ $('v39MonthTitle').textContent=new Date(y,m,1).toLocaleDateString(undefined,{month:'long',year:'numeric'});
+ const first=new Date(y,m,1,12),offset=(first.getDay()+6)%7,days=new Date(y,m+1,0).getDate();
+ const prevDays=new Date(y,m,0).getDate(),selected=window.cuttrackSelectedDateKey||key(),today=v39DateKey(new Date());
+ let cells=[];
+ for(let i=0;i<42;i++){
+   let d,other=false;
+   if(i<offset){d=new Date(y,m-1,prevDays-offset+i+1,12);other=true}
+   else if(i>=offset+days){d=new Date(y,m+1,i-offset-days+1,12);other=true}
+   else d=new Date(y,m,i-offset+1,12);
+   const k=v39DateKey(d);
+   cells.push(`<button class="v39CalDay${other?' other':''}${v39HasData(k)?' hasData':''}${k===selected?' selected':''}${k===today?' today':''}" data-v39date="${k}" type="button">${d.getDate()}</button>`);
+ }
+ $('v39CalendarGrid').innerHTML=cells.join('');
+ document.querySelectorAll('[data-v39date]').forEach(b=>b.onclick=()=>{
+   const d=new Date(b.dataset.v39date+'T12:00:00');
+   setSelectedDate(d);window.cuttrackSelectedDateKey=selectedDateKey;
+   v39MonthDate=new Date(d);v39RenderCalendar();v39RenderSummary();
+ });
+ v39RenderSummary();
+}
+$('v39PrevMonth')?.addEventListener('click',()=>{v39MonthDate=new Date(v39MonthDate.getFullYear(),v39MonthDate.getMonth()-1,1,12);v39RenderCalendar()});
+$('v39NextMonth')?.addEventListener('click',()=>{v39MonthDate=new Date(v39MonthDate.getFullYear(),v39MonthDate.getMonth()+1,1,12);v39RenderCalendar()});
+$('v39OpenToday')?.addEventListener('click',()=>show('todayView'));
+
+// Replace Progress's old week/month/supplement rendering when the tab opens.
+const v39Show=show;
+show=function(id){
+ v39Show(id);
+ if(id==='progressView'){
+   v39MonthDate=new Date((window.cuttrackSelectedDateKey||key())+'T12:00:00');
+   setTimeout(v39RenderCalendar,0);
+ }
+};
 </script></body></html>
