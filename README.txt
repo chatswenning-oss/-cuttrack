@@ -1,11 +1,9 @@
-CutTrack v54 — Sharp Original Background Fix
+CutTrack v55 — Locked Exact Background
 
-Background-only change from v52:
-- Original mountain photo only
-- No blur anywhere
-- No generated replacement image
-- No stretching/distortion
-- Sharp full-screen fill plus the full original landscape visible sharply at the top
-- App UI/functionality otherwise unchanged
+Built from the stable v49 app baseline.
+- Uses the EXACT portrait background supplied/approved by the user.
+- One continuous image only.
+- No blur, repeat, tiling, generated replacement, or stretching.
+- Existing CutTrack UI and functionality otherwise unchanged.
 
-Upload all 6 files to the GitHub repository root and replace existing files. Do not delete anything else.
+Upload all 6 files to the GitHub repository root and replace the existing files.

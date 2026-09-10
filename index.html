@@ -393,31 +393,16 @@ body.todayMode .tabs,body.todayMode .addFloat{z-index:50}
 
 /* v48 — selectable Today backgrounds. UI/functionality otherwise unchanged. */
 
-/* v54 — sharp original-photo wallpaper. No blur, no generated imagery, no distortion.
-   A sharp full-screen crop fills the portrait canvas; the complete original landscape is
-   then shown sharply across the top so the mountain and snow path stay visible. */
+/* v55 — LOCKED exact portrait background asset. One image only; no blur, tiling, or distortion. */
 #todayWallpaper{
-  background-image:
-    linear-gradient(180deg,rgba(0,0,0,.04) 0%,rgba(0,0,0,.02) 28%,rgba(0,0,0,.14) 62%,rgba(0,0,0,.28) 100%),
-    url("cuttrack-v16-bg.jpg")!important;
-  background-size:cover,cover!important;
-  background-position:center center,58% center!important;
-  background-repeat:no-repeat!important;
-  overflow:hidden!important;
-}
-#todayWallpaper::before{
-  content:""!important;
-  display:block!important;
-  position:absolute!important;
-  left:0!important;right:0!important;top:0!important;
-  height:min(58vw,290px)!important;
-  background:url("cuttrack-v16-bg.jpg") center top/100% auto no-repeat!important;
-  pointer-events:none!important;
-  z-index:0!important;
-}
-#todayWallpaper::after{
-  content:"";position:absolute;inset:0;pointer-events:none;z-index:1;
-  background:linear-gradient(180deg,rgba(0,0,0,.01) 0%,rgba(0,0,0,.02) 25%,rgba(0,0,0,.10) 58%,rgba(0,0,0,.22) 100%);
+ top:0!important;right:0!important;bottom:0!important;left:0!important;
+ width:100vw!important;height:100vh!important;height:100dvh!important;
+ min-width:0!important;min-height:0!important;
+ background-image:linear-gradient(180deg,rgba(0,0,0,.05) 0%,rgba(0,0,0,.03) 30%,rgba(0,0,0,.18) 58%,rgba(0,0,0,.30) 100%),url("cuttrack-v16-bg.jpg")!important;
+ background-size:cover,cover!important;
+ background-position:center center,center center!important;
+ background-repeat:no-repeat,no-repeat!important;
+ filter:none!important;
 }
 </style></head><body class="system"><div id="todayWallpaper" aria-hidden="true"></div><div class="wrap">
 <section id="todayView">
