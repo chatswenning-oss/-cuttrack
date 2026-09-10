@@ -392,6 +392,9 @@ body.todayMode .tabs,body.todayMode .addFloat{z-index:50}
 @media(max-width:370px){.v40Ring{width:57px;height:57px}.v40Rings{gap:4px}.v40RingVal{font-size:12px}.v40CalDay{height:39px}}
 
 /* v48 — selectable Today backgrounds. UI/functionality otherwise unchanged. */
+
+/* v50: show the complete selected mountain photo instead of cover-cropping it */
+#todayWallpaper{background-size:100% 100%!important;background-position:center top!important;background-repeat:no-repeat!important;}
 </style></head><body class="system"><div id="todayWallpaper" aria-hidden="true"></div><div class="wrap">
 <section id="todayView">
 <button class="todayTop dateOpen" id="dateOpenBtn" type="button"><h1 id="dayHeading">Today <span class="todayDrop">⌄</span></h1><div class="todayDate" id="todayDate"></div></button>
