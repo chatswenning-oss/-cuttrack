@@ -590,12 +590,8 @@ function weekDate(i){
 document.querySelectorAll('.weekDay').forEach((b,i)=>b.addEventListener('click',()=>setSelectedDate(weekDate(i))));
 const picker=$('calendarPicker');
 $('dateOpenBtn')?.addEventListener('click',()=>{
-  // Open the in-app Progress calendar instead of Safari's native date picker.
-  v40MonthDate=new Date((window.cuttrackSelectedDateKey||key())+'T12:00:00');
-  show('progressView');
-  v40Render();
-  const cal=$('v40CalendarCard')||$('v40CalendarGrid');
-  if(cal) window.scrollTo(0,Math.max(0,cal.getBoundingClientRect().top+window.scrollY-18));
+  picker.value=selectedDateKey;
+  if(picker.showPicker) picker.showPicker(); else picker.click();
 });
 picker?.addEventListener('change',()=>{if(picker.value){let d=new Date(picker.value+'T12:00:00');setSelectedDate(d)}});
 
@@ -1399,7 +1395,7 @@ function v40Key(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'
 function v40Data(k){return db.days?.[k]||{foods:[],health:{steps:0,burn:0,weight:0,water:0}}}
 function v40Logged(k){const d=db.days?.[k];return !!(d&&((d.foods&&d.foods.length)||+d.health?.steps||+d.health?.burn||+d.health?.water||+d.health?.weight))}
 function v40Food(d){return (d.foods||[]).reduce((a,x)=>{a.cal+=+x.cal||0;a.p+=+x.p||0;a.c+=+x.c||0;a.f+=+x.f||0;return a},{cal:0,p:0,c:0,f:0})}
-function v40Targets(){const val=k=>+(db.targets?.[k]?.value??db.targets?.[k]??0)||0;return {cal:val('cal'),p:val('p'),c:val('c'),f:val('f')}}
+function v40Targets(){return {cal:+db.targets?.cal||0,p:+db.targets?.p||0,c:+db.targets?.c||0,f:+db.targets?.f||0}}
 function v40Range(keys){
  let n=0,s={cal:0,p:0,c:0,f:0,burn:0,steps:0,water:0,weight:0,weightN:0};
  keys.forEach(k=>{if(!v40Logged(k))return;n++;const d=v40Data(k),f=v40Food(d),h=d.health||{};['cal','p','c','f'].forEach(x=>s[x]+=f[x]);s.burn+=+h.burn||0;s.steps+=+h.steps||0;s.water+=+h.water||0;if(+h.weight){s.weight+=+h.weight;s.weightN++}});
@@ -1426,14 +1422,9 @@ function v40Render(){
  const first=new Date(y,m,1,12),off=(first.getDay()+6)%7,prev=new Date(y,m,0).getDate(),selected=window.cuttrackSelectedDateKey||key(),today=v40Key(new Date());let cells=[];
  for(let i=0;i<42;i++){let d,other=false;if(i<off){d=new Date(y,m-1,prev-off+i+1,12);other=true}else if(i>=off+days){d=new Date(y,m+1,i-off-days+1,12);other=true}else d=new Date(y,m,i-off+1,12);const k=v40Key(d);cells.push(`<button type="button" data-v40date="${k}" class="v40CalDay${other?' other':''}${v40Logged(k)?' hasData':''}${k===selected?' selected':''}${k===today?' today':''}">${d.getDate()}</button>`)}
  $('v40CalendarGrid').innerHTML=cells.join('');
+ document.querySelectorAll('[data-v40date]').forEach(b=>b.addEventListener('click',()=>{const d=new Date(b.dataset.v40date+'T12:00:00');setSelectedDate(d);window.cuttrackSelectedDateKey=selectedDateKey;v40MonthDate=new Date(d);v40Render()}));
 }
-// One delegated calendar handler: it survives re-renders and avoids creating 42 listeners each time.
-$('v40CalendarGrid')?.addEventListener('click',e=>{
- const b=e.target.closest('[data-v40date]');if(!b)return;
- const d=new Date(b.dataset.v40date+'T12:00:00');
- setSelectedDate(d);window.cuttrackSelectedDateKey=selectedDateKey;v40MonthDate=new Date(d);v40Render();
-});
 $('v40PrevMonth')?.addEventListener('click',()=>{v40MonthDate=new Date(v40MonthDate.getFullYear(),v40MonthDate.getMonth()-1,1,12);v40Render()});
 $('v40NextMonth')?.addEventListener('click',()=>{v40MonthDate=new Date(v40MonthDate.getFullYear(),v40MonthDate.getMonth()+1,1,12);v40Render()});
-const v40Show=show;show=function(id){v40Show(id);if(id==='progressView'){v40MonthDate=new Date((window.cuttrackSelectedDateKey||key())+'T12:00:00');v40Render()}};
+const v40Show=show;show=function(id){v40Show(id);if(id==='progressView'){v40MonthDate=new Date((window.cuttrackSelectedDateKey||key())+'T12:00:00');setTimeout(v40Render,0)}};
 </script></body></html>
