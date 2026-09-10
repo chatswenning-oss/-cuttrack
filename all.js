@@ -1,485 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#000000"><title>CutTrack</title><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-192.png"><style>
-:root{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",sans-serif;--bg:#f5f5f7;--card:#fff;--card2:#ececf0;--text:#111;--muted:#73737b;--line:#dedee3;--blue:#0a84ff;--green:#30d158;--red:#ff453a;--track:#dddde2}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);-webkit-tap-highlight-color:transparent}body.dark{--bg:#000;--card:#1c1c1e;--card2:#2c2c2e;--text:#f5f5f7;--muted:#98989f;--line:#353539;--track:#3a3a3c}@media(prefers-color-scheme:dark){body.system{--bg:#000;--card:#1c1c1e;--card2:#2c2c2e;--text:#f5f5f7;--muted:#98989f;--line:#353539;--track:#3a3a3c}}
-.wrap{max-width:560px;margin:auto;padding:24px 16px 110px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:6px 2px 22px}.top h1{font-size:38px;letter-spacing:-1.4px;margin:0}.muted{color:var(--muted)}.small{font-size:13px}.card{background:var(--card);border-radius:26px;padding:20px;margin:13px 0}.card h2{margin:0;font-size:22px;letter-spacing:-.4px}.row{display:flex;align-items:center;justify-content:space-between;gap:12px}.linkBtn{border:0;background:transparent;color:var(--blue);font-size:15px;font-weight:750;padding:8px 0}.primary,.secondary{width:100%;border:0;border-radius:18px;min-height:56px;font-size:17px;font-weight:780}.primary{background:var(--blue);color:#fff}.secondary{background:var(--card2);color:var(--text)}.miniGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:16px}.mini{background:var(--card2);border-radius:20px;padding:15px}.mini .label{font-size:13px;color:var(--muted);margin-bottom:7px}.mini strong{font-size:22px}.metric{margin:20px 0}.metricHead{display:flex;justify-content:space-between;gap:10px;font-size:17px;font-weight:760}.track{height:10px;background:var(--track);border-radius:99px;overflow:hidden;margin:9px 0 6px}.fill{height:100%;background:var(--blue);border-radius:99px}.over .fill{background:var(--red)}.over .metricHead,.over .metricSub{color:var(--red)}.metricSub{font-size:13px;color:var(--muted)}.noTarget .track{display:none}.performance{border-top:1px solid var(--line);margin-top:22px;padding-top:16px}.performance summary{list-style:none;display:flex;justify-content:space-between;cursor:pointer;font-size:19px;font-weight:760}.performance summary::-webkit-details-marker{display:none}.performance summary .chev{transition:.2s}.performance[open] .chev{transform:rotate(90deg)}.perfGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}.perf{background:var(--card2);border-radius:18px;padding:14px}.perf b{display:block;margin-bottom:6px}.perf span{font-size:18px}.perf small{display:block;color:var(--muted);margin-top:4px}.meal{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line);cursor:pointer;touch-action:pan-y;transition:transform .16s ease}.meal:last-child{border:0}.thumb{width:56px;height:56px;border-radius:14px;object-fit:cover;background:var(--card2);display:grid;place-items:center}.mealText{flex:1;min-width:0}.mealText b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mealText small{color:var(--muted)}.mealKcal{white-space:nowrap}.mealChev{color:var(--muted);font-size:28px;font-weight:400;line-height:1;padding-left:2px}.meal.swiping{transition:none}
-.tabs{position:fixed;left:0;right:0;bottom:0;z-index:50;background:color-mix(in srgb,var(--bg) 91%,transparent);backdrop-filter:blur(22px);border-top:1px solid var(--line);padding:8px 8px calc(8px + env(safe-area-inset-bottom))}.tabsIn{max-width:560px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr)}.tab{border:0;background:transparent;color:var(--muted);min-height:50px;font-weight:700}.tab.active{color:var(--blue)}.hidden{display:none!important}.field{margin:14px 0}label{display:block;color:var(--muted);font-size:13px;margin:0 0 6px 4px}input,select{width:100%;min-height:52px;border:1px solid var(--line);border-radius:15px;background:var(--card2);color:var(--text);font-size:17px;padding:10px 13px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.chips{display:flex;flex-wrap:wrap;gap:9px}.chip{border:1px solid var(--line);background:var(--card2);color:var(--text);border-radius:999px;padding:11px 14px;font-weight:700}.chip.on{background:rgba(10,132,255,.16);border-color:var(--blue);color:var(--blue)}.accordion{background:var(--card);border-radius:22px;margin:13px 0;padding:18px}.accordion summary{list-style:none;cursor:pointer;font-weight:760;font-size:18px;display:flex;justify-content:space-between}.accordion summary::-webkit-details-marker{display:none}.notice{background:var(--card2);border-radius:15px;padding:13px;color:var(--muted);font-size:13px;line-height:1.4}.photos{display:flex;gap:10px;overflow:auto;margin:12px 0}.photoTile{width:96px;height:96px;border-radius:16px;object-fit:cover;flex:none}.photoAdd{width:96px;height:96px;border:1px dashed var(--muted);border-radius:16px;background:var(--card2);color:var(--text);font-size:28px;flex:none}.profilePic{width:76px;height:76px;border-radius:50%;object-fit:cover;background:var(--card2);display:grid;place-items:center;font-size:30px}.settingsRow{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--line)}.settingsRow:last-child{border:0}.appearance{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.appearance button{border:1px solid var(--line);background:var(--card2);color:var(--text);border-radius:14px;padding:12px}.appearance button.on{background:var(--blue);color:#fff}.segment{display:grid;grid-template-columns:repeat(3,1fr);background:var(--card2);padding:3px;border-radius:13px}.seg{border:0;background:transparent;color:var(--muted);padding:10px;border-radius:10px;font-weight:700}.seg.on{background:var(--card);color:var(--text)}.stat{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line)}.stat:last-child{border:0}.supp{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}.supp:last-child{border:0}.step{display:flex;gap:12px;margin:15px 0}.stepNum{width:30px;height:30px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;font-weight:800;flex:none}.result{font-size:30px;font-weight:850;margin:10px 0}.back{border:0;background:var(--card2);color:var(--text);width:44px;height:44px;border-radius:50%;font-size:22px}.sheetTitle{font-size:31px;margin:0 0 6px}.toggle{appearance:none;width:50px;height:30px;min-height:30px;border-radius:99px;padding:0;background:#777;position:relative;border:0}.toggle:after{content:"";position:absolute;width:26px;height:26px;left:2px;top:2px;border-radius:50%;background:#fff;transition:.2s}.toggle:checked{background:var(--blue)}.toggle:checked:after{left:22px}
 
-.quickHealth{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0 4px}.quickHealth>div{background:var(--card2);border-radius:16px;padding:12px 10px;min-width:0}.quickHealth span{display:block;color:var(--muted);font-size:12px;margin-bottom:5px;white-space:nowrap}.quickHealth b{font-size:16px}.performance{margin-top:16px;border-top:1px solid var(--line);padding-top:4px}
-
-/* v11 meal photo detail */
-.mealHero{position:relative;height:430px;margin:-24px -16px 14px;border-radius:0 0 28px 28px;overflow:hidden;background:linear-gradient(180deg,#222,#090909)}
-.mealHeroBg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}.mealHero.hasPhoto .mealHeroBg{display:block}.mealHero:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.28) 0%,rgba(0,0,0,.04) 35%,rgba(0,0,0,.76) 100%);pointer-events:none}
-.heroBack,.heroPhoto{position:absolute;z-index:3;top:22px;width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(20,20,20,.58);backdrop-filter:blur(14px);color:#fff;font-size:28px;display:grid;place-items:center}.heroBack{left:18px}.heroPhoto{right:18px;font-size:20px}.heroStats{position:absolute;z-index:3;right:18px;top:84px;background:rgba(18,18,18,.66);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.2);border-radius:15px;padding:10px 13px;min-width:142px;color:#fff}.heroStats div{display:flex;justify-content:space-between;gap:16px;font-size:13px;line-height:1.55}.heroStats span{color:#c8c8cc}.heroTitle{position:absolute;z-index:3;left:20px;right:78px;bottom:24px;color:#fff}.heroTitle h1{font-size:30px;line-height:1.05;margin:0 0 6px;letter-spacing:-.8px}.heroTitle div{color:#ddd;font-size:14px}.mealEditor{background:var(--card);border-radius:26px;padding:16px;margin:0 0 13px}.mealSeg{display:grid;grid-template-columns:1fr 1fr;background:var(--card2);padding:3px;border-radius:14px;margin-bottom:14px}.mealSeg button{border:0;border-radius:11px;padding:10px;background:transparent;color:var(--muted);font-weight:750}.mealSeg button.on{background:var(--card);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.12)}.mealActions{display:grid;grid-template-columns:1fr 1.7fr;gap:10px;margin:13px 0}.danger{border:0;border-radius:18px;min-height:56px;background:var(--card);color:var(--red);font-weight:780;font-size:16px}.photoSheet{position:fixed;z-index:100;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;justify-content:center;padding:16px}.photoSheetBox{width:min(100%,530px);background:var(--card);border-radius:24px;padding:10px;margin-bottom:calc(8px + env(safe-area-inset-bottom))}.photoSheetBox button{width:100%;border:0;background:transparent;color:var(--blue);font-size:18px;min-height:54px;border-bottom:1px solid var(--line)}.photoSheetBox button:last-child{border:0;color:var(--text)}.nutritionRead .stat b{font-weight:750}.photoCount{position:absolute;z-index:3;right:22px;top:70px;background:var(--blue);color:#fff;border-radius:99px;padding:2px 7px;font-size:11px;font-weight:800}.mealViewOnly .tabs{display:none}.heroDots{position:absolute;z-index:4;left:50%;bottom:10px;transform:translateX(-50%);display:flex;gap:6px}.heroDot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.45)}.heroDot.on{background:#fff;width:7px;height:7px}.mealHero{touch-action:pan-y}.mealHeroBg{transition:opacity .14s ease}
-
-/* v13 — simplified Today dashboard + floating Add Intake */
-.calorieCard{background:var(--card2);border-radius:20px;padding:16px;margin-top:18px}
-.calorieCard .metric{margin:0}
-.macroCard{background:var(--card2);border-radius:20px;padding:16px;margin-top:10px}
-.macroGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.macroItem{min-width:0}
-.macroItem .macroLabel{font-size:14px;color:var(--muted);margin-bottom:5px}
-.macroItem .macroValue{font-size:18px;font-weight:800;white-space:nowrap}
-.macroItem .track{height:7px;margin:9px 0 0}
-.macroItem.noTarget .track{display:none}
-.macroItem.over .fill{background:var(--red)}
-.activityCard{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
-.activityCard>div{background:var(--card2);border-radius:18px;padding:14px 11px;min-width:0}
-.activityCard span{display:block;color:var(--muted);font-size:12px;margin-bottom:6px;white-space:nowrap}
-.activityCard b{font-size:17px}
-.todayCard .performance{margin-top:16px}
-.tabs{padding-right:82px}
-.tabsIn{grid-template-columns:repeat(4,1fr)}
-.addFloat{position:fixed;z-index:60;right:max(16px,calc((100vw - 560px)/2 + 16px));bottom:calc(10px + env(safe-area-inset-bottom));width:64px;height:64px;border-radius:50%;border:0;background:var(--blue);color:#fff;font-size:36px;font-weight:300;line-height:1;box-shadow:0 8px 24px rgba(0,0,0,.28);display:grid;place-items:center}
-.mealViewOnly .addFloat{display:none}
-@media(max-width:390px){.macroGrid{gap:10px}.macroItem .macroValue{font-size:16px}.tabs{padding-right:76px}.addFloat{width:60px;height:60px}}
-
-
-/* v16 — approved Today screen specification */
-body:before,body:after{display:none!important}
-body.todayMode{background:#05080b!important;color:#fff;--text:#fff;--muted:#b3b3bb;--line:rgba(255,255,255,.10);--track:rgba(181,190,207,.27)}
-body.todayMode:before{content:"";display:block!important;position:fixed;inset:0;z-index:-2;background-image:url("cuttrack-v16-bg.jpg");background-size:cover;background-position:center top;background-repeat:no-repeat}
-body.todayMode:after{content:"";display:block!important;position:fixed;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,.06) 0%,rgba(0,0,0,.04) 28%,rgba(0,0,0,.20) 55%,rgba(0,0,0,.36) 100%)}
-body.todayMode .wrap{max-width:430px;padding:48px 22px 142px}
-#todayView{color:#fff}
-.todayTop{margin:0 5px}.todayTop h1{font-size:40px;line-height:1;font-weight:760;letter-spacing:-1.6px;margin:0 0 9px}.todayDrop{font-size:19px;vertical-align:7px;margin-left:4px}.todayDate{font-size:17px;color:#c1c1c8}
-.weekStrip{display:grid;grid-template-columns:repeat(7,1fr);margin:17px -2px 54px;gap:4px}.weekDay{position:relative;border:0;background:none;color:#c2c2c8;font-size:14px;font-weight:600;padding:4px 0 18px}.weekDay:after{content:"";position:absolute;width:24px;height:6px;border-radius:9px;left:50%;bottom:2px;transform:translateX(-50%);background:rgba(235,235,240,.42)}.weekDay.active{color:#fff}.weekDay.active:after{width:28px;background:#0a84ff}
-.glanceHead{display:flex;justify-content:space-between;align-items:end;margin:0 6px 12px}.glanceHead h2,.intakeHead h2{font-size:24px;line-height:1.05;font-weight:740;letter-spacing:-.55px;margin:0}.glanceHead>div>div{font-size:15px;color:#c0c0c7;margin-top:5px}.glanceHead .linkBtn{font-size:17px;color:#0a84ff;font-weight:650;padding:0}
-.glass{background:rgba(28,28,30,.66)!important;border:1px solid rgba(255,255,255,.08)!important;box-shadow:0 8px 26px rgba(0,0,0,.18)!important;backdrop-filter:blur(20px) saturate(125%);-webkit-backdrop-filter:blur(20px) saturate(125%)}
-.calorieCard{border-radius:22px;padding:2px 17px 4px;margin-bottom:8px}.calorieCard .metric{margin:14px 0}.calorieCard .metricHead{font-size:17px}.calorieCard .metricHead b{font-size:18px}.calorieCard .track{height:8px;margin-top:10px}.calorieCard .metricSub{font-size:14px;color:#b3b3bb;margin-top:8px}
-.macroCard{border-radius:21px;padding:16px 17px 14px;margin-bottom:8px}.macroGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0}.macroItem{padding:0 14px;border-right:1px solid rgba(255,255,255,.22)}.macroItem:first-child{padding-left:0}.macroItem:last-child{padding-right:0;border:0}.macroLabel{font-size:14px;color:#bfc0c8}.macroValue{font-size:17px;font-weight:740;margin:4px 0 9px;white-space:nowrap}.macroItem .track{height:8px;margin:0}
-.activityCard{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));padding:16px 0;border-radius:21px;margin-bottom:8px}
-.activityCard>div{background:transparent!important;border:0!important;border-right:1px solid rgba(255,255,255,.22)!important;border-radius:0!important;padding:0 16px!important;box-shadow:none!important}
-.activityCard>div:last-child{border-right:0!important}.activityCard span{display:block;color:#bfc0c8;font-size:14px;white-space:nowrap}.activityCard b{display:block;font-size:20px;margin-top:7px}.activityCard small{display:block;color:#b3b3bb;font-size:12px;margin-top:8px;white-space:nowrap}
-.performance{border-radius:21px;padding:15px 17px;margin:0 0 22px}.performance summary{display:grid;grid-template-columns:42px 1fr 16px;align-items:center;gap:9px}.perfIcon{font-size:29px}.perfCopy b{font-size:18px}.perfCopy small{font-size:13px;color:#b3b3bb;margin-top:3px}.chev{font-size:28px}
-.intakeHead{display:flex;justify-content:space-between;align-items:center;margin:0 6px 10px}.intakeHead span{font-size:14px;color:#c0c0c7}
-.intakeGlass{border-radius:21px;padding:2px 16px}.intakeGlass .meal{border:0!important;padding:12px 0!important}.intakeGlass .thumb{width:62px;height:62px;border-radius:12px}.intakeGlass .mealText b{font-size:16px}.intakeGlass .mealText small{font-size:13px;color:#b3b3bb}.intakeGlass .mealKcal{font-size:16px}.intakeGlass .mealChev{font-size:27px;color:#bfc0c8}
-.tabs{position:fixed;left:50%;right:auto;transform:translateX(-50%);width:min(calc(100% - 32px),398px);bottom:calc(12px + env(safe-area-inset-bottom));padding:7px 70px 7px 7px;border-radius:28px;border:1px solid rgba(255,255,255,.09);background:rgba(18,18,20,.75);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);box-shadow:0 10px 28px rgba(0,0,0,.28)}
-.tabsIn{display:grid;grid-template-columns:repeat(4,1fr);gap:0}.tab{min-height:55px;border:0;background:none;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:3px;color:#b8bac5;font-size:11px;font-weight:600}.tabIcon{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif;font-size:23px;line-height:23px}.tab.active{color:#0a84ff}
-.addFloat{position:fixed;width:68px;height:68px;right:max(20px,calc((100vw - 398px)/2 + 20px));bottom:calc(18px + env(safe-area-inset-bottom));border-radius:50%;background:#0a84ff;border:0;color:#fff;font-size:42px;font-weight:300;box-shadow:0 9px 28px rgba(0,0,0,.36),0 0 0 1px rgba(255,255,255,.10)}
-body:not(.todayMode) .tabs{background:var(--card);border-color:var(--line)}
-body:not(.todayMode):before,body:not(.todayMode):after{display:none!important}
-@media(max-width:390px){body.todayMode .wrap{padding-left:16px;padding-right:16px}.macroItem{padding:0 9px}.macroValue{font-size:16px}.activityCard>div{padding:0 10px!important}.tabs{width:calc(100% - 20px);padding-right:66px}.addFloat{right:13px;width:64px;height:64px}}
-
-/* v17 refinements */
-html,body{min-height:100%;overscroll-behavior-y:none}
-body.todayMode{background:#05080b!important}
-body.todayMode:before{
-  inset:-2px!important;
-  background-image:url("cuttrack-v16-bg.jpg")!important;
-  background-size:cover!important;
-  background-position:center top!important;
-  background-attachment:fixed!important;
-}
-body.todayMode .wrap{min-height:100svh}
-.performance summary{grid-template-columns:48px minmax(0,1fr) 18px!important}
-.perfCopy{min-width:0}.perfCopy b{display:block;line-height:1.15}.perfCopy small{display:block;line-height:1.3;margin-top:5px!important}
-.perfIcon{width:40px;height:34px;display:flex;align-items:flex-end;gap:3px;border-bottom:2px solid currentColor;padding:0 3px 3px;box-sizing:border-box;font-size:0!important}
-.perfIcon i{display:block;width:6px;border:2px solid currentColor;border-bottom:0;border-radius:2px 2px 0 0}
-.perfIcon i:nth-child(1){height:10px}.perfIcon i:nth-child(2){height:17px}.perfIcon i:nth-child(3){height:24px}.perfIcon i:nth-child(4){height:31px}
-.tabs{padding-right:76px!important}
-.addFloat{
-  right:max(8px,calc((100vw - 430px)/2 + 8px))!important;
-  z-index:70!important;
-}
-#todayView,#progressView,#healthView,#settingsView{touch-action:pan-y}
-@media(max-width:430px){
-  .tabs{width:calc(100% - 18px)!important;padding-right:72px!important}
-  .addFloat{right:5px!important}
-}
-
-/* v18 */
-body.todayMode:before{
- position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;
- background-attachment:fixed!important;background-size:cover!important;background-position:center center!important;
- transform:none!important;
-}
-body.todayMode:after{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important}
-.dateOpen{display:block;width:auto;text-align:left;background:none;border:0;color:inherit;padding:0;margin:0 5px;cursor:pointer}
-.dateOpen h1{pointer-events:none}.calendarPicker{position:fixed;left:-9999px;top:-9999px;opacity:0}
-.glanceHead .linkBtn{color:#fff!important;text-shadow:0 1px 10px rgba(0,0,0,.35)}
-.weekDay{cursor:pointer}
-.customTargetBox{margin:18px 0;padding-top:12px;border-top:1px solid var(--line)}
-.customTargetBox .primary{width:100%;margin-top:12px}
-.customTargetRow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
-.customTargetRow small{display:block;color:var(--muted);margin-top:3px}.customTargetRow button{border:0;background:none;color:#ff453a;font-size:14px}
-.modal{position:fixed;inset:0;z-index:120;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;padding:18px}
-.modal.hidden{display:none}.modalCard{width:min(100%,500px);background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
-.modalCard h3{margin:0 0 14px;font-size:22px}.modalCard label{display:block;font-size:13px;color:var(--muted);margin:10px 0}.modalCard input,.modalCard select{display:block;width:100%;margin-top:6px}.modalActions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
-
-/* v19 — unified Daily Targets */
-.customTargetsInline{margin-top:0}
-.inlineTargetRow{
- display:grid;grid-template-columns:minmax(0,1fr) 110px 58px;gap:12px;align-items:center;
- padding:18px 0;border-top:1px solid var(--line)
-}
-.inlineTargetRow .targetName{font-weight:750;font-size:17px}
-.inlineTargetRow .targetMeta{font-size:13px;color:var(--muted);margin-top:4px}
-.inlineTargetRow input[type=number]{width:100%;min-width:0}
-.inlineTargetRow .switch{justify-self:end}
-.inlineTargetRow .removeCT{grid-column:1/-1;border:0;background:none;color:#ff453a;text-align:left;padding:0;font-size:13px}
-.targetCreateFooter{padding:14px 0 4px;border-top:1px solid var(--line)}
-.targetCreateFooter .primary{width:100%}
-.v19StandardTargets{margin-top:0}
-@media(max-width:390px){.inlineTargetRow{grid-template-columns:minmax(0,1fr) 92px 54px;gap:8px}}
-
-/* v20 fixed hotfix */
-.tabIcon{width:25px;height:25px;display:flex;align-items:center;justify-content:center;font-size:0}
-.tabIcon svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.addFloat{
- width:58px!important;height:58px!important;
- right:max(10px,calc((100vw - 430px)/2 + 10px))!important;
- bottom:calc(18px + env(safe-area-inset-bottom))!important;
- font-size:37px!important;line-height:1!important;border-radius:50%!important;
-}
-.tabs{padding-right:76px!important}
-@media(max-width:390px){
- .addFloat{width:54px!important;height:54px!important;right:8px!important;font-size:34px!important}
- .tabs{padding-right:70px!important}
-}
-
-/* v21 — Performance target bars */
-.perf{display:flex;flex-direction:column;min-height:104px}
-.perf b{margin-bottom:7px}
-.perf .perfValue{font-size:18px;font-weight:700}
-.perf .perfTrack{height:7px;background:rgba(142,142,147,.42);border-radius:99px;overflow:hidden;margin-top:auto}
-.perf .perfFill{height:100%;background:var(--blue);border-radius:99px;min-width:0}
-.perf .perfRemain{display:block;color:var(--muted);font-size:12px;margin-top:6px}
-
-/* v22 — one unified Daily Targets list */
-#targetView .card:has(.targetRow),
-#targetView .v19StandardTargets,
-#targetView #v19StandardTargets,
-#targetView #customTargetsInline{
-  margin-top:0!important;
-}
-#targetView #v19StandardTargets,
-#targetView #customTargetsInline{
-  background:transparent!important;
-  border-radius:0!important;
-  padding:0!important;
-}
-#targetView .inlineTargetRow{
-  padding:18px 0!important;
-  margin:0!important;
-  border-top:1px solid var(--line)!important;
-}
-#targetView .targetCreateFooter{
-  margin-top:14px!important;
-  padding-top:0!important;
-  border-top:0!important;
-}
-#targetView .targetCreateFooter .primary{
-  background:transparent!important;
-  color:var(--blue)!important;
-  border:1.5px solid var(--blue)!important;
-}
-
-/* v23 — unified iOS switches + Performance controls */
-#targetView .switch{
- position:relative!important;display:inline-block!important;width:51px!important;height:31px!important;
- flex:0 0 51px!important
-}
-#targetView .switch input{opacity:0!important;width:0!important;height:0!important;position:absolute!important}
-#targetView .switch .slider{
- position:absolute!important;inset:0!important;border-radius:999px!important;
- background:#3a3a3c!important;transition:.2s!important;box-shadow:none!important
-}
-#targetView .switch .slider:before{
- content:""!important;position:absolute!important;width:27px!important;height:27px!important;
- left:2px!important;top:2px!important;border-radius:50%!important;background:#fff!important;
- transition:.2s!important;box-shadow:0 2px 5px rgba(0,0,0,.28)!important
-}
-#targetView .switch input:checked + .slider{background:#0a84ff!important}
-#targetView .switch input:checked + .slider:before{transform:translateX(20px)!important}
-
-/* v24 — per-target editor */
-#targetView .targetRow,#targetView .inlineTargetRow{cursor:pointer}
-.editTargetCard{max-height:88dvh;overflow:auto}
-.editTargetTop{display:grid;grid-template-columns:70px 1fr 70px;align-items:center;margin-bottom:14px}
-.editTargetTop h3{text-align:center;margin:0}.editTargetTop button{border:0;background:none;color:var(--blue);font-size:16px;text-align:left}
-.editTargetSection{background:rgba(118,118,128,.12);border-radius:16px;padding:14px;margin:10px 0}
-.editTargetSection label{margin:9px 0}.editSwitchRow{display:flex;align-items:center;justify-content:space-between;gap:15px}
-.editSwitchRow b{display:block;font-size:16px}.editSwitchRow small{display:block;color:var(--muted);font-size:12px;margin-top:3px}
-.etSave{width:100%;margin-top:12px}.dangerBtn{width:100%;margin-top:10px;border:1px solid rgba(255,69,58,.55);background:rgba(255,69,58,.10);color:#ff453a;border-radius:14px;padding:14px;font-weight:750;font-size:16px}
-
-/* v25 — simplified metric manager */
-#targetView .muted{display:none}
-#targetView #saveTargets{display:none!important}
-#targetView #targetInputs,#targetView #v19StandardTargets,#targetView #customTargetsInline{display:none!important}
-#targetView .card:has(#v25MetricList){padding:0!important;background:transparent!important}
-#v25MetricList{display:flex;flex-direction:column;gap:9px;margin:14px 0}
-.v25MetricRow{display:grid;grid-template-columns:42px minmax(0,1fr) 84px 62px;align-items:center;gap:9px;background:rgba(34,34,36,.96);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:12px 11px}
-.v25Emoji{font-size:27px;text-align:center}.v25Name{font-size:17px;font-weight:780;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.v25Edit{border:1.5px solid #0a84ff;background:transparent;color:#0a84ff;border-radius:999px;padding:8px 10px;font-weight:750;font-size:14px}
-.v25MetricRow .switch{justify-self:end}
-.v25MetricRow.off{opacity:.58}
-.v25Create{width:100%;margin-top:16px;border:1.5px solid #0a84ff;background:transparent;color:#0a84ff;border-radius:18px;padding:16px;font-size:17px;font-weight:800}
-#editTargetModal .switch{position:relative!important;display:inline-block!important;width:51px!important;height:31px!important;flex:0 0 51px!important}
-#editTargetModal .switch input{opacity:0!important;width:0!important;height:0!important;position:absolute!important}
-#editTargetModal .switch .slider{position:absolute!important;inset:0!important;border-radius:999px!important;background:#3a3a3c!important;transition:.2s!important}
-#editTargetModal .switch .slider:before{content:""!important;position:absolute!important;width:27px!important;height:27px!important;left:2px!important;top:2px!important;border-radius:50%!important;background:#fff!important;transition:.2s!important;box-shadow:0 2px 5px rgba(0,0,0,.28)!important}
-#editTargetModal .switch input:checked + .slider{background:#0a84ff!important}
-#editTargetModal .switch input:checked + .slider:before{transform:translateX(20px)!important}
-#targetView .targetCreateFooter{display:none!important}
-
-/* v26 — compact Daily Targets */
-.v25MetricRow{grid-template-columns:42px minmax(0,1fr) 112px 84px!important}
-.v25MetricRow>.switch{display:none!important}
-.v26Value{
- width:100%!important;min-width:0!important;box-sizing:border-box!important;
- border:1px solid rgba(255,255,255,.08)!important;background:rgba(58,58,60,.45)!important;
- color:#fff!important;border-radius:14px!important;padding:10px 8px!important;
- text-align:center!important;font-size:17px!important
-}
-.v25MetricRow.off{opacity:1!important}
-.v25Edit:disabled{opacity:1!important;pointer-events:auto!important}
-
-/* v27 — Targets hub */
-.targetsHubCards{display:flex;flex-direction:column;gap:14px;margin-top:18px}
-.targetsHubCard{
- width:100%;display:grid;grid-template-columns:64px minmax(0,1fr) 24px;gap:14px;align-items:center;
- text-align:left;color:var(--text);background:var(--card);border:1px solid rgba(255,255,255,.08);
- border-radius:22px;padding:20px 16px;appearance:none
-}
-.hubIcon{width:58px;height:58px;border-radius:18px;background:rgba(10,132,255,.12);display:grid;place-items:center;font-size:30px}
-.hubCopy b{display:block;font-size:19px;margin-bottom:5px}.hubCopy span{display:block;color:var(--muted);font-size:14px;line-height:1.35}
-.hubChevron{font-size:30px;color:var(--muted);text-align:right}
-
-/* v27: target-related navigation now lives behind Today's Targets button */
-#settingsView .settingsCard:has(#personaliseBtn),
-#settingsView .card:has(#personaliseBtn){display:none!important}
-
-/* v31 — focused functional fixes only */
-#perfGrid .perf{cursor:pointer}
-#perfGrid .perf:active{transform:scale(.985)}
-.v31Track{height:7px;background:rgba(142,142,147,.42);border-radius:99px;overflow:hidden;margin-top:8px}
-.v31Fill{height:100%;background:var(--blue);border-radius:99px}
-.v31Remain{display:block;color:var(--muted);font-size:12px;margin-top:6px}
-
-/* v33 — Profile is the full settings home; Today Targets remains a shortcut. */
-#settingsView .card:has(h2){display:block}
-#settingsView .card:has(h2:first-child){display:block}
-#profileTargetsSettings{display:block!important}
-/* v35 — approved Today background must cover the complete app viewport */
-html{min-height:100%;background:#05080b}
-body.todayMode{
- min-height:100vh!important;min-height:100dvh!important;
- background-color:#05080b!important;
- background-image:url("cuttrack-v16-bg.jpg")!important;
- background-size:cover!important;background-position:center top!important;
- background-repeat:no-repeat!important;background-attachment:fixed!important
-}
-body.todayMode:before{
- width:100vw!important;height:100vh!important;height:100dvh!important;
- min-height:100%!important;background-size:cover!important;background-position:center top!important
-}
-
-/* v37 — fixed Today wallpaper with explicit non-negative stacking.
-   Wallpaper sits above body paint, app content sits above wallpaper. */
-html,body{min-height:100%;background:#05080b}
-#todayWallpaper{
- display:none;
- position:fixed;
- inset:0;
- width:100vw;
- height:100vh;
- height:100dvh;
- z-index:0;
- pointer-events:none;
- background-image:
-   linear-gradient(180deg,rgba(0,0,0,.06) 0%,rgba(0,0,0,.04) 28%,rgba(0,0,0,.20) 55%,rgba(0,0,0,.36) 100%),
-   url("cuttrack-v16-bg.jpg");
- background-size:cover,cover;
- background-position:center center,center center;
- background-repeat:no-repeat,no-repeat;
- transform:translate3d(0,0,0);
- -webkit-transform:translate3d(0,0,0);
-}
-body.todayMode #todayWallpaper{display:block}
-body.todayMode{background:#05080b!important;background-image:none!important}
-body.todayMode:before,body.todayMode:after{content:none!important;display:none!important}
-body.todayMode .wrap{position:relative;z-index:1}
-body.todayMode .tabs,body.todayMode .addFloat{z-index:50}
-
-/* v38 — iOS overscroll coverage + Edit Target safe area */
-
-/* Extend the fixed wallpaper beyond every viewport edge.
-   The image itself stays fixed while Safari rubber-bands the document. */
-#todayWallpaper{
- top:-18vh!important;
- right:-12vw!important;
- bottom:-18vh!important;
- left:-12vw!important;
- width:auto!important;
- height:auto!important;
- min-width:124vw!important;
- min-height:136vh!important;
- min-height:136dvh!important;
- background-size:cover,cover!important;
- background-position:center center,center center!important;
-}
-
-/* Keep Edit Target above Safari controls and CutTrack's floating nav. */
-#editTargetModal{
- z-index:200!important;
- align-items:flex-end!important;
- padding:
-   18px
-   18px
-   calc(118px + env(safe-area-inset-bottom,0px))
-   18px!important;
- overflow-y:auto!important;
- overscroll-behavior:contain;
-}
-#editTargetModal .modalCard{
- max-height:calc(100dvh - 150px - env(safe-area-inset-bottom,0px))!important;
- overflow-y:auto!important;
- -webkit-overflow-scrolling:touch;
- margin:0 auto!important;
- padding-bottom:24px!important;
-}
-#editTargetModal #etSave{
- position:relative!important;
- z-index:1!important;
- margin-bottom:4px!important;
-}
-
-/* v40 Progress — visual modern */
-#progressView{padding-bottom:120px}
-#progressView>.top{margin-bottom:18px}
-.v40Stats,.v40Calendar{background:linear-gradient(180deg,rgba(31,33,36,.96),rgba(22,24,27,.96))!important;border:1px solid rgba(255,255,255,.07)!important}
-.v40Stats{padding:18px!important;margin-bottom:14px!important}
-.v40SectionHead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.v40SectionHead h2{margin:0 0 3px;font-size:20px}
-.v40Logged{text-align:right;white-space:nowrap}.v40Logged b{display:block;font-size:20px}.v40Logged span{display:block;color:var(--muted);font-size:11px}
-.v40Rings{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:18px 0}
-.v40RingItem{text-align:center;min-width:0}
-.v40Ring{--pct:0;--ring:#0a84ff;width:64px;height:64px;border-radius:50%;margin:auto;background:conic-gradient(var(--ring) calc(var(--pct)*1%),rgba(255,255,255,.09) 0);display:grid;place-items:center;position:relative}
-.v40Ring:after{content:"";position:absolute;inset:6px;border-radius:50%;background:#1b1d20}
-.v40RingVal{position:relative;z-index:1;font-weight:800;font-size:13px;line-height:1.05}.v40RingVal small{display:block;font-size:9px;font-weight:600;color:var(--muted);margin-top:2px}
-.v40RingItem>span{display:block;color:var(--muted);font-size:11px;margin-top:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.v40MiniRow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid rgba(255,255,255,.08);padding-top:14px;gap:4px}
-.v40Mini{text-align:center;min-width:0}.v40Mini .ico{font-size:17px}.v40Mini b{display:block;font-size:14px;margin-top:3px;white-space:nowrap}.v40Mini span{display:block;color:var(--muted);font-size:10px;margin-top:2px}
-.v40Calendar{padding:18px!important;margin-top:2px!important}
-.v40CalHead{display:grid;grid-template-columns:42px 1fr 42px;align-items:center;margin-bottom:18px}.v40CalHead h2{text-align:center;margin:0;font-size:20px}
-.v40CalNav{width:40px;height:40px;border:0;border-radius:13px;background:rgba(255,255,255,.06);color:#fff;font-size:27px;line-height:1}
-.v40WeekNames,.v40CalendarGrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.v40WeekNames{color:var(--muted);font-size:11px;font-weight:800;text-align:center;margin-bottom:7px}
-.v40CalDay{height:42px;min-width:0;border:0;background:transparent;color:#fff;border-radius:13px;position:relative;font-size:14px}.v40CalDay.other{opacity:.22}
-.v40CalDay.hasData:after{content:"";position:absolute;width:4px;height:4px;border-radius:50%;background:#0a84ff;bottom:3px;left:50%;transform:translateX(-50%)}
-.v40CalDay.selected{background:#0a84ff;font-weight:800}.v40CalDay.selected:after{background:#fff}
-.v40CalDay.today:not(.selected){box-shadow:inset 0 0 0 1.5px #4aa3ff}
-.v40Legend{display:flex;justify-content:center;gap:16px;margin-top:14px;color:var(--muted);font-size:10px}.v40Legend span{display:flex;align-items:center;gap:5px}.v40Legend i{width:8px;height:8px;border-radius:50%;display:inline-block}.v40Legend .logged{background:#0a84ff}.v40Legend .today{border:1px solid #4aa3ff}.v40Legend .selected{background:#0a84ff;box-shadow:0 0 0 2px rgba(10,132,255,.2)}
-@media(max-width:370px){.v40Ring{width:57px;height:57px}.v40Rings{gap:4px}.v40RingVal{font-size:12px}.v40CalDay{height:39px}}
-</style></head><body class="system"><div id="todayWallpaper" aria-hidden="true"></div><div class="wrap">
-<section id="todayView">
-<button class="todayTop dateOpen" id="dateOpenBtn" type="button"><h1 id="dayHeading">Today <span class="todayDrop">⌄</span></h1><div class="todayDate" id="todayDate"></div></button>
-<input type="date" id="calendarPicker" class="calendarPicker" aria-label="Choose date">
-<div class="weekStrip" id="weekStrip"><button class="weekDay">M</button><button class="weekDay">T</button><button class="weekDay">W</button><button class="weekDay">T</button><button class="weekDay">F</button><button class="weekDay">S</button><button class="weekDay">S</button></div>
-<div class="glanceHead"><div><h2>Today at a glance</h2><div>Nutrition &amp; daily targets</div></div><button class="linkBtn" id="targetSetupBtn">Goals ›</button></div>
-<div class="glass calorieCard" id="calorieMetric"></div>
-<div class="glass macroCard"><div class="macroGrid" id="macroMetrics"></div></div>
-<div class="glass activityCard"><div><span>🔥 Burned</span><b id="glBurn">—</b><small>No data</small></div><div><span>👟 Steps</span><b id="glSteps">—</b><small>No data</small></div><div><span>💧 Water</span><b id="glWater">0 mL</b><small>Set a target ›</small></div></div>
-<details class="glass performance" id="performanceDrop"><summary><span class="perfIcon" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="perfCopy"><b>Performance</b><small>Vitamins, minerals, fibre and more</small></span><span class="chev">›</span></summary><div class="perfGrid" id="perfGrid"></div><div id="suppToday"></div></details>
-<div class="intakeHead"><h2>Today’s intake</h2><span id="loggedCount"></span></div>
-<div class="glass intakeGlass"><div id="mealList"></div></div>
-</section>
-
-
-<div class="modal hidden" id="editTargetModal">
- <div class="modalCard editTargetCard">
-  <div class="editTargetTop"><button type="button" id="editTargetBack">‹ Back</button><h3>Edit Target</h3></div>
-  <div class="editTargetSection">
-   <label>Name<input id="etName" disabled></label>
-   <label>Unit<select id="etUnit"><option>kcal</option><option>g</option><option>mg</option><option>mL</option><option>steps</option><option>servings</option><option>times</option><option>custom</option></select></label>
-   <label id="etCustomUnitWrap" class="hidden">Custom unit<input id="etCustomUnit" placeholder="unit"></label>
-   <label>Daily target<input id="etValue" type="number" min="0" step="any"></label>
-  </div>
-  <div class="editTargetSection editSwitchRow"><div><b>Target</b><small>Show goal and progress bar</small></div><label class="switch"><input id="etEnabled" type="checkbox"><span class="slider"></span></label></div>
-  <div class="editTargetSection editSwitchRow"><div><b>Show in Performance</b><small>Add or remove this item from Performance</small></div><label class="switch"><input id="etPerformance" type="checkbox"><span class="slider"></span></label></div>
-  <button class="primary etSave" id="etSave" type="button">Save Changes</button>
-  <button class="dangerBtn hidden" id="etDelete" type="button">Delete Target</button>
- </div>
-</div>
-<div class="modal hidden" id="customTargetModal">
- <div class="modalCard">
-  <h3>Create Custom Target</h3>
-  <label>Name<input id="ctName" placeholder="e.g. Caffeine"></label>
-  <label>Daily target<input id="ctValue" type="number" min="0" step="any" placeholder="300"></label>
-  <label>Unit<select id="ctUnit"><option>g</option><option>mg</option><option>mL</option><option>kcal</option><option>servings</option><option>times</option><option>custom</option></select></label>
-  <label id="ctCustomUnitWrap" class="hidden">Custom unit<input id="ctCustomUnit" placeholder="unit"></label>
-  <label>Target type<select id="ctType"><option value="goal">Minimum goal</option><option value="limit">Maximum limit</option></select></label>
-  <div class="modalActions"><button id="ctCancel" type="button">Cancel</button><button class="primary" id="ctSave" type="button">Save Target</button></div>
- </div>
-</div>
-<section id="progressView" class="hidden">
- <div class="top"><div><h1>Progress</h1><div class="muted">Small steps. Big results.</div></div></div>
-
- <div class="v40Stats card">
-  <div class="v40SectionHead"><div><h2>This Week</h2><div id="v40WeekRange" class="muted"></div></div><div class="v40Logged"><b id="v40WeekLogged">0 / 7</b><span>Days logged</span></div></div>
-  <div id="v40WeekRings" class="v40Rings"></div>
-  <div id="v40WeekMini" class="v40MiniRow"></div>
- </div>
-
- <div class="v40Stats card">
-  <div class="v40SectionHead"><div><h2>This Month</h2><div id="v40MonthLabel" class="muted"></div></div><div class="v40Logged"><b id="v40MonthLogged">0 / 0</b><span>Days logged</span></div></div>
-  <div id="v40MonthRings" class="v40Rings"></div>
-  <div id="v40MonthMini" class="v40MiniRow"></div>
- </div>
-
- <div class="v40Calendar card">
-  <div class="v40CalHead"><button id="v40PrevMonth" class="v40CalNav" type="button">‹</button><h2 id="v40CalTitle"></h2><button id="v40NextMonth" class="v40CalNav" type="button">›</button></div>
-  <div class="v40WeekNames"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
-  <div id="v40CalendarGrid" class="v40CalendarGrid"></div>
-  <div class="v40Legend"><span><i class="logged"></i>Logged</span><span><i class="today"></i>Today</span><span><i class="selected"></i>Selected</span></div>
- </div>
-</section>
-<section id="healthView" class="hidden"><div class="top"><div><h1>Health</h1><div class="muted">Body & activity</div></div></div><div class="card"><h2>Today</h2><div class="miniGrid"><div class="mini"><div class="label">💧 Water</div><strong id="hWater">0 mL</strong></div><div class="mini"><div class="label">👟 Steps</div><strong id="hSteps">—</strong></div><div class="mini"><div class="label">🔥 Active</div><strong id="hBurn">—</strong></div><div class="mini"><div class="label">⚖️ Weight</div><strong id="hWeight">—</strong></div></div></div><div class="card"><h2>Manual health data</h2><div class="grid"><div class="field"><label>Steps</label><input id="stepsInput" type="number" min="0"></div><div class="field"><label>Active calories</label><input id="burnInput" type="number" min="0"></div></div><div class="grid"><div class="field"><label>Weight kg</label><input id="weightInput" type="number" min="0" step=".1"></div><div class="field"><label>Water mL</label><input id="waterInput" type="number" min="0"></div></div><button class="primary" id="saveHealth">Save Health Data</button></div><div class="card"><h2>Apple Health</h2><p class="muted">When CutTrack moves to its native iPhone version, this section can sync permitted steps, active energy, workouts, weight and other Health data automatically.</p><button class="secondary" disabled>Connect Apple Health · native app required</button></div></section>
-<section id="settingsView" class="hidden"><div class="top"><div><h1>Profile</h1><div class="muted">Account, settings & preferences</div></div></div><div class="card"><div class="row"><div class="row" style="justify-content:flex-start"><div id="profilePic" class="profilePic">👤</div><div><h2 id="profileName">Your Profile</h2><div class="muted small">CutTrack account</div></div></div><button class="linkBtn" id="editProfileBtn">Edit ›</button></div></div><div class="card"><h2>Appearance</h2><div class="appearance"><button data-theme="system">System</button><button data-theme="light">Light</button><button data-theme="dark">Dark</button></div></div><div class="card"><h2>Account & data</h2><div class="settingsRow"><span>Sign in with Apple</span><span class="muted">Coming with backend</span></div><div class="settingsRow"><span>Google account</span><span class="muted">Coming with backend</span></div><div class="settingsRow"><span>Cloud sync</span><span class="muted">Local for now</span></div>
-<div class="settingsRow"><span>Apple Health &amp; Data</span><span class="muted">Native connection later</span></div>
-<div class="settingsRow"><span>Privacy Policy</span><button class="linkBtn" type="button" data-generic-info="privacy">View ›</button></div>
-<div class="settingsRow"><span>Terms &amp; Conditions</span><button class="linkBtn" type="button" data-generic-info="terms">View ›</button></div>
-<div class="settingsRow"><span>Export My Data</span><span class="muted">Coming later</span></div>
-<div class="settingsRow"><span>Delete Account &amp; Data</span><span class="muted">Available with accounts</span></div>
-<div class="settingsRow"><span>Log in / Log out</span><span class="muted">Available with accounts</span></div></div></section>
-<section id="reminderView" class="hidden"><div class="top"><button class="back" data-back="targetsHubView">‹</button><div style="flex:1"><h1 class="sheetTitle" id="reminderHeading">Add Reminder</h1><div class="muted">Set a meal or supplement reminder.</div></div></div><div class="card"><div class="field"><label>Reminder type</label><select id="rType"><option value="meal">Meal</option><option value="supplement">Supplement</option></select></div><div class="field"><label>Name</label><input id="rName" placeholder="e.g. Breakfast or Creatine"></div><div class="field" id="rSuppWrap"><label>Choose supplement (optional)</label><select id="rSupplement"></select></div><div class="field"><label>Time</label><input id="rTime" type="time" value="08:00"></div><label class="muted">Days</label><div class="goalGrid" id="rDays" style="margin-top:8px"><button data-rday="1">Mon</button><button data-rday="2">Tue</button><button data-rday="3">Wed</button><button data-rday="4">Thu</button><button data-rday="5">Fri</button><button data-rday="6">Sat</button><button data-rday="0">Sun</button></div><div class="settingsRow" style="margin-top:14px"><span>Reminder enabled</span><input class="toggle" id="rEnabled" type="checkbox" checked></div><button class="primary" id="saveReminder">Save Reminder</button><button class="secondary hidden" id="deleteReminder" style="margin-top:10px">Delete Reminder</button></div></section>
-<section id="mealView" class="hidden"><div class="mealHero" id="mealHero"><img id="mealHeroBg" class="mealHeroBg" alt="Meal photo"><button class="heroBack" id="mealBack">‹</button><button class="heroPhoto" id="heroPhotoBtn">＋</button><span id="photoCount" class="photoCount hidden"></span><div class="heroStats"><div><span>Calories</span><b id="heroCal">0 kcal</b></div><div><span>Protein</span><b id="heroP">0 g</b></div><div><span>Carbs</span><b id="heroC">0 g</b></div><div><span>Fat</span><b id="heroF">0 g</b></div><div><span>Fibre</span><b id="heroFiber">0 g</b></div></div><div id="heroDots" class="heroDots"></div><div class="heroTitle"><h1 id="heroMealName">New Meal</h1><div id="heroSubtitle">Add a photo or enter nutrition manually</div></div></div><input id="cameraInput" type="file" accept="image/*" capture="environment" hidden><input id="libraryInput" type="file" accept="image/*" multiple hidden><div class="mealEditor"><div class="mealSeg"><button id="editMealTab" class="on">Edit Meal</button><button id="nutritionTab">Nutrition Info</button></div><div id="editMealPanel"><div class="field"><label>Meal name</label><input id="mName" placeholder="Meal / item name"></div><div class="grid"><div class="field"><label>Calories</label><input id="mCal" type="number" min="0"></div><div class="field"><label>Protein</label><input id="mP" type="number" min="0" step=".1"></div><div class="field"><label>Carbs</label><input id="mC" type="number" min="0" step=".1"></div><div class="field"><label>Fat</label><input id="mF" type="number" min="0" step=".1"></div><div class="field"><label>Fibre</label><input id="mFiber" type="number" min="0" step=".1"></div></div><details class="accordion"><summary>Add more nutrition details <span>›</span></summary><div class="grid"><div class="field"><label>Water mL</label><input id="mWater" type="number" min="0"></div><div class="field"><label>Sodium mg</label><input id="mSodium" type="number"></div><div class="field"><label>Potassium mg</label><input id="mPotassium" type="number"></div><div class="field"><label>Sugar g</label><input id="mSugar" type="number"></div><div class="field"><label>Saturated fat g</label><input id="mSatfat" type="number"></div><div class="field"><label>Calcium mg</label><input id="mCalcium" type="number"></div><div class="field"><label>Iron mg</label><input id="mIron" type="number"></div><div class="field"><label>Magnesium mg</label><input id="mMagnesium" type="number"></div></div></details></div><div id="nutritionPanel" class="nutritionRead hidden"></div></div><div class="mealActions"><button class="danger" id="deleteMeal">Delete Meal</button><button class="primary" id="saveMeal">Add to Today</button></div><div id="photoSheet" class="photoSheet hidden"><div class="photoSheetBox"><button id="takePhotoBtn">Take Photo</button><button id="choosePhotoBtn">Choose from Photo Library</button><button id="cancelPhotoBtn">Cancel</button></div></div>
-</section>
-
-<section id="targetsHubView" class="view hidden">
- <div class="top">
-  <button class="back" id="targetsHubBack" type="button">‹</button>
-  <div><h1>Goals</h1></div>
- </div>
- <div class="targetsHubCards">
-  <button class="targetsHubCard" id="hubAiTarget" type="button">
-   <div class="hubIcon">🧠</div>
-   <div class="hubCopy"><b>AI Goal Setup</b><span>Get personalised goals based on your stats, activity and what you want to achieve.</span></div>
-   <div class="hubChevron">›</div>
-  </button>
-  <button class="targetsHubCard" id="hubMacros" type="button">
-   <div class="hubIcon">🎯</div>
-   <div class="hubCopy"><b>Nutrition &amp; Activity Goals</b><span>Manage calories, macros, nutrients, water, steps, activity and custom goals.</span></div>
-   <div class="hubChevron">›</div>
-  </button>
-  <div class="card" style="margin-top:16px">
-   <div class="row"><div><h2>Reminders</h2><div class="muted small">Quick reminders to stay on track</div></div><button class="linkBtn" id="addReminderBtn">＋ Custom</button></div>
-   <div class="settingsRow"><span>🍳 Breakfast <span class="muted small">· 8:00 AM</span></span><button class="linkBtn reminderPreset" data-rpreset="Breakfast" data-rtime="08:00" data-rtype="meal">Add ›</button></div>
-   <div class="settingsRow"><span>🥗 Lunch <span class="muted small">· 12:30 PM</span></span><button class="linkBtn reminderPreset" data-rpreset="Lunch" data-rtime="12:30" data-rtype="meal">Add ›</button></div>
-   <div class="settingsRow"><span>🍽️ Dinner <span class="muted small">· 6:30 PM</span></span><button class="linkBtn reminderPreset" data-rpreset="Dinner" data-rtime="18:30" data-rtype="meal">Add ›</button></div>
-   <div class="settingsRow"><span>💊 Supplements <span class="muted small">· 8:00 AM</span></span><button class="linkBtn reminderPreset" data-rpreset="Supplements" data-rtime="08:00" data-rtype="supplement">Add ›</button></div>
-   <div id="reminderList" style="margin-top:10px"></div>
-  </div>
- </div>
-</section>
-<section id="targetView" class="hidden"><div class="top"><button class="back" data-back="todayView">‹</button><div style="flex:1"><h1 class="sheetTitle">Nutrition &amp; Activity Goals</h1><div class="muted">Turn metrics on or off and tap Edit to customise.</div></div></div><div class="card" id="targetInputs"></div><button class="primary" id="saveTargets">Save Daily Targets</button><div class="customTargetsInline" id="customTargetsInline"></div>
-<div class="targetCreateFooter">
-  <button class="primary" id="newCustomTargetBtn" type="button">+ Create Custom Target</button>
-</div>
-</section>
-<section id="personaliseView" class="hidden"><div class="top"><button class="back" data-back="settingsView">‹</button><div style="flex:1"><h1 class="sheetTitle">Personalise CutTrack</h1><div class="muted">Quick setup first. Improve accuracy only if you want.</div></div></div><div class="card"><h2>Quick setup</h2><div class="field"><label>Your goals · choose one or more</label><div class="chips" id="goalChips"><button class="chip" data-goal="lose">Lose fat</button><button class="chip" data-goal="maintain">Maintain</button><button class="chip" data-goal="muscle">Build muscle</button><button class="chip" data-goal="performance">Performance</button></div></div><div class="grid"><div class="field"><label>Age</label><input id="pAge" type="number"></div><div class="field"><label>Sex</label><select id="pSex"><option value="male">Male</option><option value="female">Female</option></select></div><div class="field"><label>Height cm</label><input id="pHeight" type="number"></div><div class="field"><label>Weight kg</label><input id="pWeight" type="number" step=".1"></div></div><div class="field"><label>Activity</label><select id="pActivity"><option value="1.2">Mostly sedentary</option><option value="1.375">Lightly active</option><option value="1.55" selected>Moderately active</option><option value="1.725">Very active</option></select></div></div><details class="accordion"><summary>Improve My Targets <span>＋</span></summary><p class="muted small">Optional details give the target assistant more context.</p><div class="field"><label>Body fat %</label><input id="pBodyfat" type="number" min="3" max="60" placeholder="Skip if unknown"></div><div class="field"><label>Recent weight trend</label><select id="pTrend"><option value="unknown">Not sure</option><option value="losing">Losing weight</option><option value="stable">Weight stable</option><option value="gaining">Gaining weight</option></select></div><div class="field"><label>Exercise sessions / week</label><select id="pSessions"><option>0</option><option>1-3</option><option>4-6</option><option>7+</option></select></div><div class="field"><label>Non-exercise activity</label><select id="pDailyActivity"><option>Mostly sedentary</option><option>Moderately active</option><option>Very active</option></select></div><div class="field"><label>Lifting experience</label><select id="pLifting"><option>None</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></div><div class="field"><label>Cardio experience</label><select id="pCardio"><option>None</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></div><div class="field"><label>Athletic level</label><select id="pAthlete"><option>Exercise regularly</option><option>Athlete</option><option>Professional athlete</option></select></div></details><button class="primary" id="generateTargets">Generate My Targets</button><div id="targetResult"></div></section>
-<section id="suppView" class="hidden"><div class="top"><button class="back" data-back="settingsView">‹</button><div style="flex:1"><h1 class="sheetTitle">Supplements</h1><div class="muted">Track whatever you use.</div></div></div><div class="card"><div id="suppList"></div><h2 style="margin-top:18px">Add supplement</h2><div class="grid"><div class="field"><label>Name</label><input id="sName" placeholder="Creatine"></div><div class="field"><label>Daily target</label><input id="sTarget" type="number" step=".1" placeholder="5"></div><div class="field"><label>Unit</label><select id="sUnit"><option>g</option><option>mg</option><option>mL</option><option>serving</option></select></div><div class="field"><label>Reminder</label><input id="sTime" type="time"></div></div><button class="primary" id="addSupp">Add Supplement</button></div></section>
-<section id="profileView" class="hidden"><div class="top"><button class="back" data-back="settingsView">‹</button><div style="flex:1"><h1 class="sheetTitle">Edit Profile</h1></div></div><div class="card"><input id="profilePhotoInput" type="file" accept="image/*" hidden><div class="row" style="justify-content:flex-start"><div id="editProfilePic" class="profilePic">👤</div><button class="linkBtn" id="changePhoto">Add profile picture</button></div><div class="field"><label>Name</label><input id="nameInput" placeholder="Your name"></div><div class="field"><label>Email</label><input id="emailInput" type="email" placeholder="Optional"></div><button class="primary" id="saveProfile">Save Profile</button></div></section>
-</div><nav class="tabs"><div class="tabsIn"><button class="tab active" data-view="todayView"><span class="tabIcon"><svg viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V20h-5v-6H9v6H4z"/></svg></span><span>Today</span></button><button class="tab" data-view="progressView"><span class="tabIcon"><svg viewBox="0 0 24 24"><path d="M4 20v-6h4v6M10 20V9h4v11M16 20V4h4v16M3 20h18"/></svg></span><span>Progress</span></button><button class="tab" data-view="healthView"><span class="tabIcon"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.4A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z"/><path d="M8 12h2l1-2 2 4 1-2h2"/></svg></span><span>Health</span></button><button class="tab" data-view="settingsView"><span class="tabIcon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 21c.8-4.3 3.2-6.5 7.5-6.5s6.7 2.2 7.5 6.5"/></svg></span><span>Profile</span></button></div></nav><button class="addFloat" id="addIntakeBtn" aria-label="Add intake">＋</button>
-<script>
 const $=id=>document.getElementById(id), key=()=>{
   if(window.cuttrackSelectedDateKey) return window.cuttrackSelectedDateKey;
   const d=new Date(),y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');
@@ -487,7 +6,7 @@ const $=id=>document.getElementById(id), key=()=>{
 };const N={cal:['Calories','kcal','limit',2200],p:['Protein','g','goal',180],c:['Carbs','g','goal',200],f:['Fat','g','limit',70],fiber:['Fibre','g','goal',30],water:['Water','mL','goal',2700],sodium:['Sodium','mg','limit',2300],potassium:['Potassium','mg','goal',3500],sugar:['Sugar','g','limit',50],satfat:['Saturated fat','g','limit',20],calcium:['Calcium','mg','goal',1000],iron:['Iron','mg','goal',8],magnesium:['Magnesium','mg','goal',400]};let db=JSON.parse(localStorage.getItem('cuttrack_v9')||localStorage.getItem('cuttrack_v8')||localStorage.getItem('cuttrack_v7')||'null')||{days:{},targets:{},theme:'system',profile:{name:'',email:'',photo:''},personal:{goals:['lose']},supplements:[],reminders:[]};if(!Array.isArray(db.reminders)){let old=db.reminders||{};db.reminders=old.meal?[{type:'meal',name:'Meal',time:old.time||'18:00',days:[0,1,2,3,4,5,6],enabled:true}]:[]}for(const[k,n]of Object.entries(N))db.targets[k]??={enabled:['cal','p','c'].includes(k),value:n[3]};function day(){return db.days[key()]??={foods:[],health:{steps:0,burn:0,weight:0,water:0},supp:{}}}function save(){localStorage.setItem('cuttrack_v9',JSON.stringify(db))}function total(d=day()){let t={};Object.keys(N).forEach(k=>t[k]=0);(d.foods||[]).forEach(x=>Object.keys(N).forEach(k=>t[k]+=+x[k]||0));t.water+=(+d.health?.water||0);return t}function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function theme(){let today=document.body.classList.contains('todayMode'),meal=document.body.classList.contains('mealViewOnly');document.body.className=db.theme==='dark'?'dark':db.theme==='light'?'light':'system';if(today)document.body.classList.add('todayMode');if(meal)document.body.classList.add('mealViewOnly');document.querySelectorAll('[data-theme]').forEach(x=>x.classList.toggle('on',x.dataset.theme===db.theme))}
 function metric(k){let t=total()[k],n=N[k],g=db.targets[k],pct=g.enabled?Math.min(100,t/g.value*100):0,over=g.enabled&&n[2]==='limit'&&t>g.value,sub=!g.enabled?'Tracked · no daily target':over?`${Math.round(t-g.value)} ${n[1]} over limit`:n[2]==='limit'?`${Math.max(0,Math.round(g.value-t))} ${n[1]} remaining`:t>=g.value?'Goal reached':`${Math.max(0,Math.round(g.value-t))} ${n[1]} to goal`;return `<div class="metric ${over?'over':''} ${g.enabled?'':'noTarget'}"><div class="metricHead"><span>${n[0]}</span><span>${Math.round(t)}${g.enabled?` / ${g.value}`:''} ${n[1]}</span></div><div class="track"><div class="fill" style="width:${pct}%"></div></div><div class="metricSub">${sub}</div></div>`}
 function macroMini(k){let t=total()[k],n=N[k],g=db.targets[k],pct=g.enabled?Math.min(100,t/g.value*100):0,over=g.enabled&&n[2]==='limit'&&t>g.value;return `<div class="macroItem ${over?'over':''} ${g.enabled?'':'noTarget'}"><div class="macroLabel">${n[0]}</div><div class="macroValue">${Math.round(t)}${g.enabled?` / ${g.value}`:''} ${n[1]}</div><div class="track"><div class="fill" style="width:${pct}%"></div></div></div>`}
-function renderToday(){let t=total(),h=day().health||{};let rd=window.cuttrackSelectedDateKey?new Date(window.cuttrackSelectedDateKey+'T12:00:00'):new Date(),wi=(rd.getDay()+6)%7;document.querySelectorAll('#weekStrip .weekDay').forEach((el,i)=>el.classList.toggle('active',i===wi));$('todayDate').textContent=rd.toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'});$('glBurn').textContent=h.burn?Math.round(h.burn)+' kcal':'—';$('glSteps').textContent=h.steps?Math.round(h.steps).toLocaleString():'—';$('glWater').textContent=Math.round(t.water)+' mL';let aw=document.querySelector('.activityCard>div:nth-child(3) small');if(aw)aw.textContent=db.targets.water.enabled?`Target ${db.targets.water.value} mL`:'Set a target ›';$('calorieMetric').innerHTML=metric('cal');$('macroMetrics').innerHTML=['c','f','p'].map(macroMini).join('');$('perfGrid').innerHTML=['fiber','water','sodium','potassium','sugar','satfat','calcium','iron','magnesium'].map(k=>{let n=N[k],g=db.targets[k],cur=Math.round(t[k]),goal=+g.value||0,pct=goal?Math.max(0,Math.min(100,cur/goal*100)):0,remaining=Math.max(0,goal-cur);return `<div class="perf"><b>${n[0]}</b><span class="perfValue">${cur}${g.enabled?` / ${goal}`:''} ${n[1]}</span>${g.enabled?`<div class="perfTrack"><div class="perfFill" style="width:${pct}%"></div></div><small class="perfRemain">${remaining} ${n[1]} remaining</small>`:''}</div>`}).join('');$('suppToday').innerHTML='';let foods=day().foods||[];$('loggedCount').textContent=foods.length+' logged';$('mealList').innerHTML=foods.length?foods.map((x,i)=>`<div class="meal" data-meal="${i}"><div class="thumb">${x.photos?.[0]?`<img class="thumb" src="${x.photos[0]}">`:'🍽️'}</div><div class="mealText"><b>${esc(x.name||'Intake')}</b><small>${Math.round(+x.p||0)}P · ${Math.round(+x.c||0)}C · ${Math.round(+x.f||0)}F</small></div><b class="mealKcal">${Math.round(+x.cal||0)} kcal</b><span class="mealChev">‹</span></div>`).join(''):'<div class="muted" style="padding:20px 0;text-align:center">Nothing logged yet.</div>';wireMealRows()}
+function renderToday(){let t=total(),h=day().health||{};let rd=window.cuttrackSelectedDateKey?new Date(window.cuttrackSelectedDateKey+'T12:00:00'):new Date(),wi=(rd.getDay()+6)%7;document.querySelectorAll('#weekStrip .weekDay').forEach((el,i)=>el.classList.toggle('active',i===wi));$('todayDate').textContent=rd.toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'});$('glBurn').textContent=h.burn?Math.round(h.burn)+' kcal':'—';$('glSteps').textContent=h.steps?Math.round(h.steps).toLocaleString():'—';$('glWater').textContent=Math.round(t.water)+' mL';let aw=document.querySelector('.activityCard>div:nth-child(3) small');if(aw)aw.textContent=db.targets.water.enabled?`Target ${db.targets.water.value} mL`:'Set a target ›';$('calorieMetric').innerHTML=metric('cal');$('macroMetrics').innerHTML=['c','f','p'].map(macroMini).join('');$('perfGrid').innerHTML=['fiber','water','sodium','potassium','sugar','satfat','calcium','iron','magnesium'].map(k=>{let n=N[k],g=db.targets[k],cur=Math.round(t[k]),goal=+g.value||0,pct=goal?Math.max(0,Math.min(100,cur/goal*100)):0,remaining=Math.max(0,goal-cur);return `<div class="perf"><b>${n[0]}</b><span class="perfValue">${cur}${g.enabled?` / ${goal}`:''} ${n[1]}</span>${g.enabled?`<div class="perfTrack"><div class="perfFill" style="width:${pct}%"></div></div><small class="perfRemain">${remaining} ${n[1]} remaining</small>`:''}</div>`}).join('');$('suppToday').innerHTML=db.supplements.length?`<h3 style="margin:18px 0 6px">Supplements</h3>${db.supplements.map((s,i)=>{let v=+(day().supp?.[i]||0);return `<div class="supp"><div><b>${esc(s.name)}</b><div class="small muted">${v} / ${s.target} ${s.unit}</div></div><button class="chip ${v>=s.target?'on':''}" data-takesupp="${i}">${v>=s.target?'Taken':'＋ Log'}</button></div>`}).join('')}`:'';document.querySelectorAll('[data-takesupp]').forEach(b=>b.onclick=()=>{let i=+b.dataset.takesupp,s=db.supplements[i];day().supp[i]=+(day().supp[i]||0)+(+s.target||1);save();renderToday()});let foods=day().foods||[];$('loggedCount').textContent=foods.length+' logged';$('mealList').innerHTML=foods.length?foods.map((x,i)=>`<div class="meal" data-meal="${i}"><div class="thumb">${x.photos?.[0]?`<img class="thumb" src="${x.photos[0]}">`:'🍽️'}</div><div class="mealText"><b>${esc(x.name||'Intake')}</b><small>${Math.round(+x.p||0)}P · ${Math.round(+x.c||0)}C · ${Math.round(+x.f||0)}F</small></div><b class="mealKcal">${Math.round(+x.cal||0)} kcal</b><span class="mealChev">‹</span></div>`).join(''):'<div class="muted" style="padding:20px 0;text-align:center">Nothing logged yet.</div>';wireMealRows()}
 
 function wireMealRows(){document.querySelectorAll('[data-meal]').forEach(row=>{let startX=0,startY=0,dx=0,moved=false;const open=()=>openMeal(+row.dataset.meal);row.onclick=e=>{if(!moved)open()};row.addEventListener('touchstart',e=>{let t=e.touches[0];startX=t.clientX;startY=t.clientY;dx=0;moved=false;row.classList.add('swiping')},{passive:true});row.addEventListener('touchmove',e=>{let t=e.touches[0],x=t.clientX-startX,y=t.clientY-startY;if(Math.abs(x)>8&&Math.abs(x)>Math.abs(y)){dx=Math.min(0,Math.max(-72,x));moved=Math.abs(dx)>10;row.style.transform=`translateX(${dx}px)`}},{passive:true});row.addEventListener('touchend',()=>{row.classList.remove('swiping');row.style.transform='';if(dx<-42){moved=true;setTimeout(open,80)}setTimeout(()=>moved=false,220)},{passive:true})})}
 let editMeal=null,photos=[],activePhoto=0;
@@ -507,7 +26,7 @@ function loadPersonal(){let p=db.personal||{};document.querySelectorAll('[data-g
 function generate(){let p={goals:[...document.querySelectorAll('[data-goal].on')].map(x=>x.dataset.goal),age:+$('pAge').value,sex:$('pSex').value,height:+$('pHeight').value,weight:+$('pWeight').value,activity:$('pActivity').value,bodyfat:+$('pBodyfat').value||0,trend:$('pTrend').value,sessions:$('pSessions').value,dailyActivity:$('pDailyActivity').value,lifting:$('pLifting').value,cardio:$('pCardio').value,athlete:$('pAthlete').value};if(!p.goals.length||!p.age||!p.height||!p.weight)return alert('Add at least one goal, age, height and weight.');db.personal=p;let bmr=p.bodyfat?370+21.6*(p.weight*(1-p.bodyfat/100)):(10*p.weight+6.25*p.height-5*p.age+(p.sex==='male'?5:-161));let tdee=Math.round(bmr*(+p.activity));let cal=tdee;if(p.goals.includes('lose'))cal-=Math.round(Math.min(500,tdee*.18));if(p.goals.includes('muscle'))cal+=p.goals.includes('lose')?0:Math.round(Math.min(300,tdee*.1));if(p.goals.includes('performance'))cal+=p.goals.includes('lose')?100:100;let protein=Math.round(p.weight*(p.goals.includes('muscle')||p.goals.includes('lose')?2:1.7));let fat=Math.round(p.weight*.8),carbs=Math.max(80,Math.round((cal-protein*4-fat*9)/4));$('targetResult').innerHTML=`<div class="card"><div class="muted">Estimated maintenance</div><div class="result">${tdee} kcal/day</div><div class="muted">Suggested starting targets</div><div class="miniGrid"><div class="mini"><b>${cal}</b><div class="small muted">Calories</div></div><div class="mini"><b>${protein} g</b><div class="small muted">Protein</div></div><div class="mini"><b>${carbs} g</b><div class="small muted">Carbs</div></div><div class="mini"><b>${fat} g</b><div class="small muted">Fat</div></div></div><div class="notice" style="margin:12px 0">Prototype target assistant: these numbers are calculated locally from your answers. The secure AI service will add deeper reasoning and ongoing adjustments later.</div><button class="primary" id="useTargets">Use These Targets</button></div>`;$('useTargets').onclick=()=>{for(const[k,v]of Object.entries({cal, p:protein,c:carbs,f:fat})){db.targets[k].enabled=true;db.targets[k].value=v}save();renderToday();show('todayView')}}
 function renderSupp(){let d=day();$('suppList').innerHTML=db.supplements.length?db.supplements.map((s,i)=>`<div class="supp"><div><b>${esc(s.name)}</b><div class="small muted">${s.target} ${s.unit}/day${s.time?' · reminder '+s.time:''}</div></div><button class="linkBtn" data-rms="${i}">Remove</button></div>`).join(''):'<div class="muted">No supplements added yet.</div>';document.querySelectorAll('[data-rms]').forEach(b=>b.onclick=()=>{db.supplements.splice(+b.dataset.rms,1);d.supp={};save();renderSupp();renderToday()})}
 function progress(mode){document.querySelectorAll('[data-range]').forEach(x=>x.classList.toggle('on',x.dataset.range===mode));let days=mode==='month'?30:7;if(mode==='supp'){let rows=db.supplements.map((s,i)=>{let sum=0,hit=0;for(let d=0;d<7;d++){let dt=new Date();dt.setDate(dt.getDate()-d);let k=dt.toISOString().slice(0,10),v=+(db.days[k]?.supp?.[i]||0);sum+=v;if(v>=s.target)hit++}return `<div class="stat"><span><b>${esc(s.name)}</b><div class="small muted">${hit}/7 days hit target</div></span><b>${sum} ${s.unit}</b></div>`}).join('');$('progressContent').innerHTML=`<div class="card"><h2>Last 7 days</h2>${rows||'<div class="muted" style="margin-top:15px">Add supplements in Settings to track them here.</div>'}</div>`;return}let sums={cal:0,p:0,c:0};for(let d=0;d<days;d++){let dt=new Date();dt.setDate(dt.getDate()-d);let t=total(db.days[dt.toISOString().slice(0,10)]);for(const k of Object.keys(sums))sums[k]+=t[k]}$('progressContent').innerHTML=`<div class="card"><h2>Last ${days} days</h2>${Object.entries(sums).map(([k,v])=>`<div class="stat"><span>${N[k][0]} average</span><b>${Math.round(v/days)} ${N[k][1]}</b></div>`).join('')}</div>`}
-function show(id){document.body.classList.toggle('todayMode',id==='todayView');document.body.classList.toggle('mealViewOnly',id==='mealView');['todayView','progressView','healthView','settingsView','mealView','targetsHubView','targetView','personaliseView','suppView','profileView','reminderView'].forEach(x=>$(x).classList.toggle('hidden',x!==id));document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.view===id));if(id==='todayView')renderToday();else if(id==='progressView'){v40MonthDate=new Date((window.cuttrackSelectedDateKey||key())+'T12:00:00');v40Render()}else if(id==='healthView')renderHealth();else if(id==='settingsView')renderSettings();else if(id==='targetView'){renderTargets();if(typeof v25RenderTargets==='function')v25RenderTargets()}else if(id==='personaliseView')loadPersonal();else if(id==='targetsHubView')renderReminders();else if(id==='suppView')renderSupp();window.scrollTo(0,0)}
+function show(id){document.body.classList.toggle('todayMode',id==='todayView');document.body.classList.toggle('mealViewOnly',id==='mealView');['todayView','progressView','healthView','settingsView','mealView','targetsHubView','targetView','personaliseView','suppView','profileView','reminderView'].forEach(x=>$(x).classList.toggle('hidden',x!==id));document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.view===id));if(id==='todayView')renderToday();if(id==='healthView')renderHealth();if(id==='settingsView')renderSettings();if(id==='targetView')renderTargets();if(id==='personaliseView')loadPersonal();if(id==='targetsHubView')renderReminders();if(id==='suppView')renderSupp();scrollTo(0,0)}
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>show(b.dataset.view));document.querySelectorAll('[data-back]').forEach(b=>b.onclick=()=>show(b.dataset.back));$('addIntakeBtn').onclick=()=>openMeal();$('targetSetupBtn').onclick=()=>show('targetsHubView');$('dailyTargetBtn').onclick=()=>show('targetView');$('personaliseBtn').onclick=()=>show('personaliseView');$('suppSettingsBtn').onclick=()=>show('suppView');$('editProfileBtn').onclick=()=>{$('nameInput').value=db.profile.name||'';$('emailInput').value=db.profile.email||'';renderSettings();show('profileView')};$('saveMeal').onclick=()=>{let x={name:$('mName').value.trim()||'Intake',photos:[...photos]};for(const[k,id]of [['cal','Cal'],['p','P'],['c','C'],['f','F'],['fiber','Fiber'],['water','Water'],['sodium','Sodium'],['potassium','Potassium'],['sugar','Sugar'],['satfat','Satfat'],['calcium','Calcium'],['iron','Iron'],['magnesium','Magnesium']])x[k]=+$('m'+id).value||0;if(editMeal===null)day().foods.push(x);else day().foods[editMeal]=x;save();show('todayView')};$('saveHealth').onclick=()=>{day().health={steps:+$('stepsInput').value||0,burn:+$('burnInput').value||0,weight:+$('weightInput').value||0,water:+$('waterInput').value||0};save();renderHealth();renderToday()};$('saveTargets').onclick=()=>{Object.keys(N).forEach(k=>{db.targets[k]={enabled:$('te_'+k).checked,value:+$('tv_'+k).value||N[k][3]}});save();show('todayView')};document.querySelectorAll('[data-goal]').forEach(b=>b.onclick=()=>b.classList.toggle('on'));$('generateTargets').onclick=generate;$('addSupp').onclick=()=>{let name=$('sName').value.trim(),target=+$('sTarget').value;if(!name||!target)return alert('Add a supplement name and daily target.');db.supplements.push({name,target,unit:$('sUnit').value,time:$('sTime').value});save();$('sName').value='';$('sTarget').value='';renderSupp();renderToday()};document.querySelectorAll('[data-theme]').forEach(b=>b.onclick=()=>{db.theme=b.dataset.theme;save();theme();renderSettings()});$('addReminderBtn').onclick=()=>openReminder();$('rType').onchange=updateReminderType;document.querySelectorAll('[data-rday]').forEach(b=>b.onclick=()=>b.classList.toggle('on'));$('rSupplement').onchange=()=>{let i=$('rSupplement').value;if(i!==''&&!$('rName').value.trim())$('rName').value=db.supplements[+i]?.name||''};$('saveReminder').onclick=()=>{let days=[...document.querySelectorAll('[data-rday].on')].map(b=>+b.dataset.rday);if(!$('rName').value.trim())return alert('Give the reminder a name.');if(!$('rTime').value)return alert('Choose a reminder time.');if(!days.length)return alert('Choose at least one day.');let r={type:$('rType').value,name:$('rName').value.trim(),time:$('rTime').value,days,enabled:$('rEnabled').checked};if(r.type==='supplement'&&$('rSupplement').value!=='')r.supplementIndex=+$('rSupplement').value;if(editReminder===null)db.reminders.push(r);else db.reminders[editReminder]=r;save();show('targetsHubView');renderReminders()};$('deleteReminder').onclick=()=>{if(editReminder===null)return;db.reminders.splice(editReminder,1);save();show('targetsHubView');renderReminders()};$('changePhoto').onclick=()=>$('profilePhotoInput').click();$('profilePhotoInput').onchange=()=>{let f=$('profilePhotoInput').files[0];if(!f)return;let r=new FileReader;r.onload=e=>{db.profile.photo=e.target.result;save();renderSettings()};r.readAsDataURL(f)};$('saveProfile').onclick=()=>{db.profile.name=$('nameInput').value.trim();db.profile.email=$('emailInput').value.trim();save();show('settingsView')};document.querySelectorAll('[data-range]').forEach(b=>b.onclick=()=>progress(b.dataset.range));$('mealBack').onclick=()=>show('todayView');$('heroPhotoBtn').onclick=()=>photoMenu(true);$('takePhotoBtn').onclick=()=>{photoMenu(false);$('cameraInput').click()};$('choosePhotoBtn').onclick=()=>{photoMenu(false);$('libraryInput').click()};$('cancelPhotoBtn').onclick=()=>photoMenu(false);$('photoSheet').onclick=e=>{if(e.target===$('photoSheet'))photoMenu(false)};$('cameraInput').onchange=()=>{addFiles($('cameraInput').files);$('cameraInput').value=''};$('libraryInput').onchange=()=>{addFiles($('libraryInput').files);$('libraryInput').value=''};$('editMealTab').onclick=()=>setMealTab('edit');$('nutritionTab').onclick=()=>setMealTab('nutrition');['mName','mCal','mP','mC','mF','mFiber','mWater','mSodium','mPotassium','mSugar','mSatfat','mCalcium','mIron','mMagnesium'].forEach(id=>$(id).addEventListener('input',updateMealHero));$('deleteMeal').onclick=()=>{if(editMeal===null)return;if(confirm('Delete this meal?')){day().foods.splice(editMeal,1);save();show('todayView')}};
 let heroStartX=0,heroStartY=0,heroSwipe=false;$('mealHero').addEventListener('touchstart',e=>{if(e.target.closest('button'))return;let t=e.touches[0];heroStartX=t.clientX;heroStartY=t.clientY;heroSwipe=true},{passive:true});$('mealHero').addEventListener('touchend',e=>{if(!heroSwipe||photos.length<2)return;heroSwipe=false;let t=e.changedTouches[0],dx=t.clientX-heroStartX,dy=t.clientY-heroStartY;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.2)showHeroPhoto(activePhoto+(dx<0?1:-1))},{passive:true});theme();renderToday();
 
@@ -568,7 +87,18 @@ function weekDate(i){
 }
 document.querySelectorAll('.weekDay').forEach((b,i)=>b.addEventListener('click',()=>setSelectedDate(weekDate(i))));
 const picker=$('calendarPicker');
-$('dateOpenBtn')?.addEventListener('click',()=>{show('progressView');const cal=document.querySelector('.v40Calendar');if(cal)window.scrollTo(0,Math.max(0,cal.offsetTop-18))});
+$('dateOpenBtn')?.addEventListener('click',()=>{
+  show('progressView');
+  // Jump directly to the calendar without animated scrolling. On iOS Safari,
+  // smooth scrolling a freshly-rendered section can cause long frame stalls.
+  requestAnimationFrame(()=>{
+    const cal=document.querySelector('.v40Calendar');
+    if(cal){
+      const y=cal.getBoundingClientRect().top + window.scrollY - 18;
+      window.scrollTo(0,Math.max(0,y));
+    }
+  });
+});
 picker?.addEventListener('change',()=>{if(picker.value){let d=new Date(picker.value+'T12:00:00');setSelectedDate(d)}});
 
 function saveCustomTargets(){localStorage.setItem('cuttrackCustomTargets',JSON.stringify(db.customTargets)); if(typeof save==='function') save()}
@@ -954,6 +484,8 @@ v24OpenTarget=function(key,customIndex=null){
 };
 
 // Refresh simplified list whenever Daily Targets is opened.
+const v25Show=show;
+show=function(id){v25Show(id);if(id==='targetView')setTimeout(v25RenderTargets,0)}
 v25RenderTargets();
 
 // Custom target creation defaults: tracked ON, target ON, Performance ON.
@@ -1306,7 +838,63 @@ document.querySelectorAll('[data-generic-info]').forEach(b=>b.addEventListener('
  alert(`${what} will be added here before CutTrack is released publicly.`);
 }));
 
-// v45 CLEAN CORE — single Progress renderer; legacy storage remains backward-compatible
+// v39 — one calendar/history system backed by the exact same db.days records as Today.
+let v39MonthDate=new Date((window.cuttrackSelectedDateKey||key())+'T12:00:00');
+function v39DateKey(d){
+ const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');
+ return `${y}-${m}-${dd}`;
+}
+function v39HasData(k){
+ const d=db.days?.[k];if(!d)return false;
+ return !!((d.foods&&d.foods.length)||(+d.health?.steps)||(+d.health?.burn)||(+d.health?.water)||(+d.health?.weight)||Object.values(d.supp||{}).some(Number));
+}
+function v39RenderSummary(){
+ const k=window.cuttrackSelectedDateKey||key(),d=db.days?.[k]||{foods:[],health:{steps:0,burn:0,weight:0,water:0},supp:{}};
+ const dt=new Date(k+'T12:00:00'), foods=d.foods||[];
+ const sum=foods.reduce((a,x)=>{a.cal+=+x.cal||0;a.p+=+x.p||0;a.c+=+x.c||0;a.f+=+x.f||0;return a},{cal:0,p:0,c:0,f:0});
+ $('v39SelectedTitle').textContent=dt.toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'});
+ const h=d.health||{};
+ const rows=[
+  ['Calories',`${Math.round(sum.cal)} kcal`],['Protein',`${Math.round(sum.p)} g`],
+  ['Carbs',`${Math.round(sum.c)} g`],['Fat',`${Math.round(sum.f)} g`],
+  ['Burned',`${Math.round(+h.burn||0)} kcal`],['Steps',Math.round(+h.steps||0).toLocaleString()],
+  ['Water',`${Math.round(+h.water||0)} mL`],['Weight',h.weight?`${(+h.weight).toFixed(1)} kg`:'—']
+ ];
+ $('v39SummaryGrid').innerHTML=rows.map(x=>`<div class="v39SummaryMetric"><span>${x[0]}</span><b>${x[1]}</b></div>`).join('');
+}
+function v39RenderCalendar(){
+ const y=v39MonthDate.getFullYear(),m=v39MonthDate.getMonth();
+ $('v39MonthTitle').textContent=new Date(y,m,1).toLocaleDateString(undefined,{month:'long',year:'numeric'});
+ const first=new Date(y,m,1,12),offset=(first.getDay()+6)%7,days=new Date(y,m+1,0).getDate();
+ const prevDays=new Date(y,m,0).getDate(),selected=window.cuttrackSelectedDateKey||key(),today=v39DateKey(new Date());
+ let cells=[];
+ for(let i=0;i<42;i++){
+   let d,other=false;
+   if(i<offset){d=new Date(y,m-1,prevDays-offset+i+1,12);other=true}
+   else if(i>=offset+days){d=new Date(y,m+1,i-offset-days+1,12);other=true}
+   else d=new Date(y,m,i-offset+1,12);
+   const k=v39DateKey(d);
+   cells.push(`<button class="v39CalDay${other?' other':''}${v39HasData(k)?' hasData':''}${k===selected?' selected':''}${k===today?' today':''}" data-v39date="${k}" type="button">${d.getDate()}</button>`);
+ }
+ $('v39CalendarGrid').innerHTML=cells.join('');
+ document.querySelectorAll('[data-v39date]').forEach(b=>b.onclick=()=>{
+   const d=new Date(b.dataset.v39date+'T12:00:00');
+   setSelectedDate(d);window.cuttrackSelectedDateKey=selectedDateKey;
+   v39MonthDate=new Date(d);v39RenderCalendar();v39RenderSummary();
+ });
+ v39RenderSummary();
+}
+$('v39PrevMonth')?.addEventListener('click',()=>{v39MonthDate=new Date(v39MonthDate.getFullYear(),v39MonthDate.getMonth()-1,1,12);v39RenderCalendar()});
+$('v39NextMonth')?.addEventListener('click',()=>{v39MonthDate=new Date(v39MonthDate.getFullYear(),v39MonthDate.getMonth()+1,1,12);v39RenderCalendar()});
+$('v39OpenToday')?.addEventListener('click',()=>show('todayView'));
+
+// Replace Progress's old week/month/supplement rendering when the tab opens.
+const v39Show=show;
+show=function(id){
+ v39Show(id);
+ if(false && id==='progressView'){}
+};
+
 // v40 Progress — weekly/monthly averages + full calendar
 let v40MonthDate=new Date((window.cuttrackSelectedDateKey||key())+'T12:00:00');
 function v40Key(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${dd}`}
@@ -1340,10 +928,8 @@ function v40Render(){
  const first=new Date(y,m,1,12),off=(first.getDay()+6)%7,prev=new Date(y,m,0).getDate(),selected=window.cuttrackSelectedDateKey||key(),today=v40Key(new Date());let cells=[];
  for(let i=0;i<42;i++){let d,other=false;if(i<off){d=new Date(y,m-1,prev-off+i+1,12);other=true}else if(i>=off+days){d=new Date(y,m+1,i-off-days+1,12);other=true}else d=new Date(y,m,i-off+1,12);const k=v40Key(d);cells.push(`<button type="button" data-v40date="${k}" class="v40CalDay${other?' other':''}${v40Logged(k)?' hasData':''}${k===selected?' selected':''}${k===today?' today':''}">${d.getDate()}</button>`)}
  $('v40CalendarGrid').innerHTML=cells.join('');
- 
+ document.querySelectorAll('[data-v40date]').forEach(b=>b.addEventListener('click',()=>{const d=new Date(b.dataset.v40date+'T12:00:00');setSelectedDate(d);window.cuttrackSelectedDateKey=selectedDateKey;v40MonthDate=new Date(d);v40Render()}));
 }
 $('v40PrevMonth')?.addEventListener('click',()=>{v40MonthDate=new Date(v40MonthDate.getFullYear(),v40MonthDate.getMonth()-1,1,12);v40Render()});
 $('v40NextMonth')?.addEventListener('click',()=>{v40MonthDate=new Date(v40MonthDate.getFullYear(),v40MonthDate.getMonth()+1,1,12);v40Render()});
-$('v40CalendarGrid')?.addEventListener('click',e=>{const b=e.target.closest('[data-v40date]');if(!b)return;const d=new Date(b.dataset.v40date+'T12:00:00');setSelectedDate(d);v40MonthDate=new Date(d);v40Render()});
-
-</script></body></html>
+const v40Show=show;show=function(id){v40Show(id);if(id==='progressView'){v40MonthDate=new Date((window.cuttrackSelectedDateKey||key())+'T12:00:00');setTimeout(v40Render,0)}};
