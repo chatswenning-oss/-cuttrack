@@ -220,6 +220,18 @@ body.todayMode:after{position:fixed!important;inset:0!important;width:100vw!impo
 #editTargetModal .switch input:checked + .slider{background:#0a84ff!important}
 #editTargetModal .switch input:checked + .slider:before{transform:translateX(20px)!important}
 #targetView .targetCreateFooter{display:none!important}
+
+/* v26 — compact Daily Targets */
+.v25MetricRow{grid-template-columns:42px minmax(0,1fr) 112px 84px!important}
+.v25MetricRow>.switch{display:none!important}
+.v26Value{
+ width:100%!important;min-width:0!important;box-sizing:border-box!important;
+ border:1px solid rgba(255,255,255,.08)!important;background:rgba(58,58,60,.45)!important;
+ color:#fff!important;border-radius:14px!important;padding:10px 8px!important;
+ text-align:center!important;font-size:17px!important
+}
+.v25MetricRow.off{opacity:1!important}
+.v25Edit:disabled{opacity:1!important;pointer-events:auto!important}
 </style></head><body class="system"><div class="wrap">
 <section id="todayView">
 <button class="todayTop dateOpen" id="dateOpenBtn" type="button"><h1 id="dayHeading">Today <span class="todayDrop">⌄</span></h1><div class="todayDate" id="todayDate"></div></button>
@@ -756,4 +768,57 @@ $('ctSave')?.addEventListener('click',()=>setTimeout(()=>{
  if(t){if(t.tracked===undefined)t.tracked=true;if(t.enabled===undefined)t.enabled=true;if(t.performance===undefined)t.performance=true;saveCustomTargets()}
  v25RenderTargets();v25RenderPerformance();
 },10));
+
+// v26 — approved colourful icon list, editable values, no master on/off switch.
+// Saturated fat remains in nutrition data but is intentionally omitted from Daily Targets.
+const V26_META=[
+ ['calories','🔥','Calories'],['protein','🥩','Protein'],['carbs','🍞','Carbs'],['fat','🥑','Fat'],
+ ['fiber','🌿','Fibre'],['water','💧','Water'],['sodium','🧂','Sodium'],['potassium','🍌','Potassium'],
+ ['sugar','🧊','Sugar'],['calcium','🦴','Calcium'],['iron','🩸','Iron'],['magnesium','💊','Magnesium'],
+ ['steps','👟','Steps'],['burned','🔥','Burned']
+];
+function v26Value(k){
+ const s=v24State(k);
+ if(s && s.value!==undefined && s.value!==null && s.value!=='') return s.value;
+ const defaults={calories:2200,protein:180,carbs:200,fat:70,fiber:30,water:2700,sodium:2300,potassium:3500,sugar:50,calcium:1000,iron:8,magnesium:400,steps:10000,burned:500};
+ return defaults[k]??0;
+}
+v25RenderTargets=function(){
+ const view=$('targetView');if(!view)return;
+ let list=$('v25MetricList');
+ if(!list){list=document.createElement('div');list.id='v25MetricList';view.querySelector('.top').insertAdjacentElement('afterend',list)}
+ let rows=V26_META.map(([k,icon,name])=>`<div class="v25MetricRow">
+   <div class="v25Emoji">${icon}</div><div class="v25Name">${name}</div>
+   <input class="v26Value" type="number" min="0" step="any" value="${v26Value(k)}" data-v26value="${k}" aria-label="${name} target">
+   <button class="v25Edit" type="button" data-v25edit="${k}">Edit</button>
+ </div>`).join('');
+ rows+=(db.customTargets||[]).map((t,i)=>`<div class="v25MetricRow">
+   <div class="v25Emoji">${t.emoji||'🎯'}</div><div class="v25Name">${t.name}</div>
+   <input class="v26Value" type="number" min="0" step="any" value="${+t.value||0}" data-v26custom="${i}" aria-label="${t.name} target">
+   <button class="v25Edit" type="button" data-v25cedit="${i}">Edit</button>
+ </div>`).join('');
+ list.innerHTML=rows;
+
+ let create=$('v25Create');
+ if(!create){create=document.createElement('button');create.id='v25Create';create.className='v25Create';create.type='button';create.textContent='+ Create Custom Target';list.insertAdjacentElement('afterend',create)}
+ create.onclick=()=>{if(typeof openCustomTarget==='function')openCustomTarget();else $('customTargetModal')?.classList.remove('hidden')};
+ list.querySelectorAll('[data-v25edit]').forEach(b=>b.onclick=()=>v24OpenTarget(b.dataset.v25edit));
+ list.querySelectorAll('[data-v25cedit]').forEach(b=>b.onclick=()=>v24OpenTarget(null,+b.dataset.v25cedit));
+};
+document.addEventListener('change',e=>{
+ if(e.target.matches('[data-v26value]')){
+   const k=e.target.dataset.v26value,val=Math.max(0,parseFloat(e.target.value)||0);
+   const s=v24State(k);v24Prefs[k]={...(v24Prefs[k]||{}),unit:s.unit,value:val,enabled:s.enabled,performance:s.performance};v24SavePrefs();
+   if(db.targets&&db.targets[k])db.targets[k].value=val;
+   if(typeof save==='function')save();
+   v24RenderPerformance();
+ }
+ if(e.target.matches('[data-v26custom]')){
+   const t=(db.customTargets||[])[+e.target.dataset.v26custom];
+   if(t){t.value=Math.max(0,parseFloat(e.target.value)||0);saveCustomTargets();v24RenderPerformance()}
+ }
+});
+// Ensure legacy master tracking never hides a metric in v26.
+V26_META.forEach(([k])=>v25Tracking[k]=true);v25SaveTracking();
+v25RenderTargets();
 </script></body></html>
