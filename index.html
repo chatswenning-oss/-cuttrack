@@ -341,7 +341,7 @@ body.todayMode:after{position:fixed!important;inset:0!important;width:100vw!impo
 </div><nav class="tabs"><div class="tabsIn"><button class="tab active" data-view="todayView"><span class="tabIcon"><svg viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V20h-5v-6H9v6H4z"/></svg></span><span>Today</span></button><button class="tab" data-view="progressView"><span class="tabIcon"><svg viewBox="0 0 24 24"><path d="M4 20v-6h4v6M10 20V9h4v11M16 20V4h4v16M3 20h18"/></svg></span><span>Progress</span></button><button class="tab" data-view="healthView"><span class="tabIcon"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.4A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z"/><path d="M8 12h2l1-2 2 4 1-2h2"/></svg></span><span>Health</span></button><button class="tab" data-view="settingsView"><span class="tabIcon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 21c.8-4.3 3.2-6.5 7.5-6.5s6.7 2.2 7.5 6.5"/></svg></span><span>Profile</span></button></div></nav><button class="addFloat" id="addIntakeBtn" aria-label="Add intake">＋</button>
 <script>
 const $=id=>document.getElementById(id), key=()=>{
-  if(typeof selectedDateKey!=='undefined' && selectedDateKey) return selectedDateKey;
+  if(window.cuttrackSelectedDateKey) return window.cuttrackSelectedDateKey;
   const d=new Date(),y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');
   return `${y}-${m}-${dd}`;
 };const N={cal:['Calories','kcal','limit',2200],p:['Protein','g','goal',180],c:['Carbs','g','goal',200],f:['Fat','g','limit',70],fiber:['Fibre','g','goal',30],water:['Water','mL','goal',2700],sodium:['Sodium','mg','limit',2300],potassium:['Potassium','mg','goal',3500],sugar:['Sugar','g','limit',50],satfat:['Saturated fat','g','limit',20],calcium:['Calcium','mg','goal',1000],iron:['Iron','mg','goal',8],magnesium:['Magnesium','mg','goal',400]};let db=JSON.parse(localStorage.getItem('cuttrack_v9')||localStorage.getItem('cuttrack_v8')||localStorage.getItem('cuttrack_v7')||'null')||{days:{},targets:{},theme:'system',profile:{name:'',email:'',photo:''},personal:{goals:['lose']},supplements:[],reminders:[]};if(!Array.isArray(db.reminders)){let old=db.reminders||{};db.reminders=old.meal?[{type:'meal',name:'Meal',time:old.time||'18:00',days:[0,1,2,3,4,5,6],enabled:true}]:[]}for(const[k,n]of Object.entries(N))db.targets[k]??={enabled:['cal','p','c'].includes(k),value:n[3]};function day(){return db.days[key()]??={foods:[],health:{steps:0,burn:0,weight:0,water:0},supp:{}}}function save(){localStorage.setItem('cuttrack_v9',JSON.stringify(db))}function total(d=day()){let t={};Object.keys(N).forEach(k=>t[k]=0);(d.foods||[]).forEach(x=>Object.keys(N).forEach(k=>t[k]+=+x[k]||0));t.water+=(+d.health?.water||0);return t}function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function theme(){let today=document.body.classList.contains('todayMode'),meal=document.body.classList.contains('mealViewOnly');document.body.className=db.theme==='dark'?'dark':db.theme==='light'?'light':'system';if(today)document.body.classList.add('todayMode');if(meal)document.body.classList.add('mealViewOnly');document.querySelectorAll('[data-theme]').forEach(x=>x.classList.toggle('on',x.dataset.theme===db.theme))}
@@ -404,10 +404,11 @@ let selectedDateKey = localStorage.getItem('cuttrackSelectedDate') || (()=>{
  const d=new Date(),y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');
  return `${y}-${m}-${dd}`;
 })();
+window.cuttrackSelectedDateKey=selectedDateKey;
 
 function localISO(d){let y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}
 function setSelectedDate(d){
-  selectedDateKey=localISO(d); localStorage.setItem('cuttrackSelectedDate',selectedDateKey);
+  selectedDateKey=localISO(d); window.cuttrackSelectedDateKey=selectedDateKey; localStorage.setItem('cuttrackSelectedDate',selectedDateKey);
   const today=localISO(new Date());
   const heading=$('dayHeading');
   if(heading) heading.innerHTML=(selectedDateKey===today?'Today':d.toLocaleDateString(undefined,{weekday:'long'}))+' <span class="todayDrop">⌄</span>';
