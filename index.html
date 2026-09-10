@@ -343,6 +343,27 @@ body.todayMode .tabs,body.todayMode .addFloat{z-index:50}
  margin-bottom:4px!important;
 }
 
+/* v39 — Progress becomes Calendar/history */
+.v39Calendar{padding:20px!important}
+.v39CalHead{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;margin-bottom:20px}
+.v39CalHead h2{text-align:center;margin:0;font-size:22px}
+.v39CalNav{border:0;background:rgba(255,255,255,.06);color:#fff;border-radius:14px;width:42px;height:42px;font-size:30px;line-height:1}
+.v39WeekNames,.v39CalendarGrid{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
+.v39WeekNames{margin-bottom:8px;color:var(--muted);text-align:center;font-size:13px;font-weight:700}
+.v39CalDay{aspect-ratio:1/1;border:0;border-radius:14px;background:transparent;color:#fff;display:flex;align-items:center;justify-content:center;position:relative;font-size:16px}
+.v39CalDay.other{opacity:.24}
+.v39CalDay.hasData:after{content:"";position:absolute;width:5px;height:5px;border-radius:50%;background:var(--blue);bottom:5px}
+.v39CalDay.selected{background:var(--blue);font-weight:800}
+.v39CalDay.selected:after{background:#fff}
+.v39CalDay.today:not(.selected){box-shadow:inset 0 0 0 1px rgba(10,132,255,.9)}
+.v39DaySummary{margin-top:16px!important}
+.v39SummaryHead{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.v39SummaryHead h2{margin:3px 0 0}
+.v39SummaryGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}
+.v39SummaryMetric{background:rgba(255,255,255,.055);border-radius:16px;padding:14px}
+.v39SummaryMetric span{display:block;color:var(--muted);font-size:13px;margin-bottom:5px}
+.v39SummaryMetric b{font-size:18px}
+
 /* v40 Progress — visual modern */
 #progressView{padding-bottom:120px}
 #progressView>.top{margin-bottom:18px}
@@ -487,7 +508,7 @@ const $=id=>document.getElementById(id), key=()=>{
 };const N={cal:['Calories','kcal','limit',2200],p:['Protein','g','goal',180],c:['Carbs','g','goal',200],f:['Fat','g','limit',70],fiber:['Fibre','g','goal',30],water:['Water','mL','goal',2700],sodium:['Sodium','mg','limit',2300],potassium:['Potassium','mg','goal',3500],sugar:['Sugar','g','limit',50],satfat:['Saturated fat','g','limit',20],calcium:['Calcium','mg','goal',1000],iron:['Iron','mg','goal',8],magnesium:['Magnesium','mg','goal',400]};let db=JSON.parse(localStorage.getItem('cuttrack_v9')||localStorage.getItem('cuttrack_v8')||localStorage.getItem('cuttrack_v7')||'null')||{days:{},targets:{},theme:'system',profile:{name:'',email:'',photo:''},personal:{goals:['lose']},supplements:[],reminders:[]};if(!Array.isArray(db.reminders)){let old=db.reminders||{};db.reminders=old.meal?[{type:'meal',name:'Meal',time:old.time||'18:00',days:[0,1,2,3,4,5,6],enabled:true}]:[]}for(const[k,n]of Object.entries(N))db.targets[k]??={enabled:['cal','p','c'].includes(k),value:n[3]};function day(){return db.days[key()]??={foods:[],health:{steps:0,burn:0,weight:0,water:0},supp:{}}}function save(){localStorage.setItem('cuttrack_v9',JSON.stringify(db))}function total(d=day()){let t={};Object.keys(N).forEach(k=>t[k]=0);(d.foods||[]).forEach(x=>Object.keys(N).forEach(k=>t[k]+=+x[k]||0));t.water+=(+d.health?.water||0);return t}function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function theme(){let today=document.body.classList.contains('todayMode'),meal=document.body.classList.contains('mealViewOnly');document.body.className=db.theme==='dark'?'dark':db.theme==='light'?'light':'system';if(today)document.body.classList.add('todayMode');if(meal)document.body.classList.add('mealViewOnly');document.querySelectorAll('[data-theme]').forEach(x=>x.classList.toggle('on',x.dataset.theme===db.theme))}
 function metric(k){let t=total()[k],n=N[k],g=db.targets[k],pct=g.enabled?Math.min(100,t/g.value*100):0,over=g.enabled&&n[2]==='limit'&&t>g.value,sub=!g.enabled?'Tracked · no daily target':over?`${Math.round(t-g.value)} ${n[1]} over limit`:n[2]==='limit'?`${Math.max(0,Math.round(g.value-t))} ${n[1]} remaining`:t>=g.value?'Goal reached':`${Math.max(0,Math.round(g.value-t))} ${n[1]} to goal`;return `<div class="metric ${over?'over':''} ${g.enabled?'':'noTarget'}"><div class="metricHead"><span>${n[0]}</span><span>${Math.round(t)}${g.enabled?` / ${g.value}`:''} ${n[1]}</span></div><div class="track"><div class="fill" style="width:${pct}%"></div></div><div class="metricSub">${sub}</div></div>`}
 function macroMini(k){let t=total()[k],n=N[k],g=db.targets[k],pct=g.enabled?Math.min(100,t/g.value*100):0,over=g.enabled&&n[2]==='limit'&&t>g.value;return `<div class="macroItem ${over?'over':''} ${g.enabled?'':'noTarget'}"><div class="macroLabel">${n[0]}</div><div class="macroValue">${Math.round(t)}${g.enabled?` / ${g.value}`:''} ${n[1]}</div><div class="track"><div class="fill" style="width:${pct}%"></div></div></div>`}
-function renderToday(){let t=total(),h=day().health||{};let rd=window.cuttrackSelectedDateKey?new Date(window.cuttrackSelectedDateKey+'T12:00:00'):new Date(),wi=(rd.getDay()+6)%7;document.querySelectorAll('#weekStrip .weekDay').forEach((el,i)=>el.classList.toggle('active',i===wi));$('todayDate').textContent=rd.toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'});$('glBurn').textContent=h.burn?Math.round(h.burn)+' kcal':'—';$('glSteps').textContent=h.steps?Math.round(h.steps).toLocaleString():'—';$('glWater').textContent=Math.round(t.water)+' mL';let aw=document.querySelector('.activityCard>div:nth-child(3) small');if(aw)aw.textContent=db.targets.water.enabled?`Target ${db.targets.water.value} mL`:'Set a target ›';$('calorieMetric').innerHTML=metric('cal');$('macroMetrics').innerHTML=['c','f','p'].map(macroMini).join('');$('perfGrid').innerHTML=['fiber','water','sodium','potassium','sugar','satfat','calcium','iron','magnesium'].map(k=>{let n=N[k],g=db.targets[k],cur=Math.round(t[k]),goal=+g.value||0,pct=goal?Math.max(0,Math.min(100,cur/goal*100)):0,remaining=Math.max(0,goal-cur);return `<div class="perf"><b>${n[0]}</b><span class="perfValue">${cur}${g.enabled?` / ${goal}`:''} ${n[1]}</span>${g.enabled?`<div class="perfTrack"><div class="perfFill" style="width:${pct}%"></div></div><small class="perfRemain">${remaining} ${n[1]} remaining</small>`:''}</div>`}).join('');$('suppToday').innerHTML='';let foods=day().foods||[];$('loggedCount').textContent=foods.length+' logged';$('mealList').innerHTML=foods.length?foods.map((x,i)=>`<div class="meal" data-meal="${i}"><div class="thumb">${x.photos?.[0]?`<img class="thumb" src="${x.photos[0]}">`:'🍽️'}</div><div class="mealText"><b>${esc(x.name||'Intake')}</b><small>${Math.round(+x.p||0)}P · ${Math.round(+x.c||0)}C · ${Math.round(+x.f||0)}F</small></div><b class="mealKcal">${Math.round(+x.cal||0)} kcal</b><span class="mealChev">‹</span></div>`).join(''):'<div class="muted" style="padding:20px 0;text-align:center">Nothing logged yet.</div>';wireMealRows()}
+function renderToday(){let t=total(),h=day().health||{};let rd=window.cuttrackSelectedDateKey?new Date(window.cuttrackSelectedDateKey+'T12:00:00'):new Date(),wi=(rd.getDay()+6)%7;document.querySelectorAll('#weekStrip .weekDay').forEach((el,i)=>el.classList.toggle('active',i===wi));$('todayDate').textContent=rd.toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'});$('glBurn').textContent=h.burn?Math.round(h.burn)+' kcal':'—';$('glSteps').textContent=h.steps?Math.round(h.steps).toLocaleString():'—';$('glWater').textContent=Math.round(t.water)+' mL';let aw=document.querySelector('.activityCard>div:nth-child(3) small');if(aw)aw.textContent=db.targets.water.enabled?`Target ${db.targets.water.value} mL`:'Set a target ›';$('calorieMetric').innerHTML=metric('cal');$('macroMetrics').innerHTML=['c','f','p'].map(macroMini).join('');$('perfGrid').innerHTML=['fiber','water','sodium','potassium','sugar','satfat','calcium','iron','magnesium'].map(k=>{let n=N[k],g=db.targets[k],cur=Math.round(t[k]),goal=+g.value||0,pct=goal?Math.max(0,Math.min(100,cur/goal*100)):0,remaining=Math.max(0,goal-cur);return `<div class="perf"><b>${n[0]}</b><span class="perfValue">${cur}${g.enabled?` / ${goal}`:''} ${n[1]}</span>${g.enabled?`<div class="perfTrack"><div class="perfFill" style="width:${pct}%"></div></div><small class="perfRemain">${remaining} ${n[1]} remaining</small>`:''}</div>`}).join('');$('suppToday').innerHTML=db.supplements.length?`<h3 style="margin:18px 0 6px">Supplements</h3>${db.supplements.map((s,i)=>{let v=+(day().supp?.[i]||0);return `<div class="supp"><div><b>${esc(s.name)}</b><div class="small muted">${v} / ${s.target} ${s.unit}</div></div><button class="chip ${v>=s.target?'on':''}" data-takesupp="${i}">${v>=s.target?'Taken':'＋ Log'}</button></div>`}).join('')}`:'';document.querySelectorAll('[data-takesupp]').forEach(b=>b.onclick=()=>{let i=+b.dataset.takesupp,s=db.supplements[i];day().supp[i]=+(day().supp[i]||0)+(+s.target||1);save();renderToday()});let foods=day().foods||[];$('loggedCount').textContent=foods.length+' logged';$('mealList').innerHTML=foods.length?foods.map((x,i)=>`<div class="meal" data-meal="${i}"><div class="thumb">${x.photos?.[0]?`<img class="thumb" src="${x.photos[0]}">`:'🍽️'}</div><div class="mealText"><b>${esc(x.name||'Intake')}</b><small>${Math.round(+x.p||0)}P · ${Math.round(+x.c||0)}C · ${Math.round(+x.f||0)}F</small></div><b class="mealKcal">${Math.round(+x.cal||0)} kcal</b><span class="mealChev">‹</span></div>`).join(''):'<div class="muted" style="padding:20px 0;text-align:center">Nothing logged yet.</div>';wireMealRows()}
 
 function wireMealRows(){document.querySelectorAll('[data-meal]').forEach(row=>{let startX=0,startY=0,dx=0,moved=false;const open=()=>openMeal(+row.dataset.meal);row.onclick=e=>{if(!moved)open()};row.addEventListener('touchstart',e=>{let t=e.touches[0];startX=t.clientX;startY=t.clientY;dx=0;moved=false;row.classList.add('swiping')},{passive:true});row.addEventListener('touchmove',e=>{let t=e.touches[0],x=t.clientX-startX,y=t.clientY-startY;if(Math.abs(x)>8&&Math.abs(x)>Math.abs(y)){dx=Math.min(0,Math.max(-72,x));moved=Math.abs(dx)>10;row.style.transform=`translateX(${dx}px)`}},{passive:true});row.addEventListener('touchend',()=>{row.classList.remove('swiping');row.style.transform='';if(dx<-42){moved=true;setTimeout(open,80)}setTimeout(()=>moved=false,220)},{passive:true})})}
 let editMeal=null,photos=[],activePhoto=0;
@@ -507,7 +528,7 @@ function loadPersonal(){let p=db.personal||{};document.querySelectorAll('[data-g
 function generate(){let p={goals:[...document.querySelectorAll('[data-goal].on')].map(x=>x.dataset.goal),age:+$('pAge').value,sex:$('pSex').value,height:+$('pHeight').value,weight:+$('pWeight').value,activity:$('pActivity').value,bodyfat:+$('pBodyfat').value||0,trend:$('pTrend').value,sessions:$('pSessions').value,dailyActivity:$('pDailyActivity').value,lifting:$('pLifting').value,cardio:$('pCardio').value,athlete:$('pAthlete').value};if(!p.goals.length||!p.age||!p.height||!p.weight)return alert('Add at least one goal, age, height and weight.');db.personal=p;let bmr=p.bodyfat?370+21.6*(p.weight*(1-p.bodyfat/100)):(10*p.weight+6.25*p.height-5*p.age+(p.sex==='male'?5:-161));let tdee=Math.round(bmr*(+p.activity));let cal=tdee;if(p.goals.includes('lose'))cal-=Math.round(Math.min(500,tdee*.18));if(p.goals.includes('muscle'))cal+=p.goals.includes('lose')?0:Math.round(Math.min(300,tdee*.1));if(p.goals.includes('performance'))cal+=p.goals.includes('lose')?100:100;let protein=Math.round(p.weight*(p.goals.includes('muscle')||p.goals.includes('lose')?2:1.7));let fat=Math.round(p.weight*.8),carbs=Math.max(80,Math.round((cal-protein*4-fat*9)/4));$('targetResult').innerHTML=`<div class="card"><div class="muted">Estimated maintenance</div><div class="result">${tdee} kcal/day</div><div class="muted">Suggested starting targets</div><div class="miniGrid"><div class="mini"><b>${cal}</b><div class="small muted">Calories</div></div><div class="mini"><b>${protein} g</b><div class="small muted">Protein</div></div><div class="mini"><b>${carbs} g</b><div class="small muted">Carbs</div></div><div class="mini"><b>${fat} g</b><div class="small muted">Fat</div></div></div><div class="notice" style="margin:12px 0">Prototype target assistant: these numbers are calculated locally from your answers. The secure AI service will add deeper reasoning and ongoing adjustments later.</div><button class="primary" id="useTargets">Use These Targets</button></div>`;$('useTargets').onclick=()=>{for(const[k,v]of Object.entries({cal, p:protein,c:carbs,f:fat})){db.targets[k].enabled=true;db.targets[k].value=v}save();renderToday();show('todayView')}}
 function renderSupp(){let d=day();$('suppList').innerHTML=db.supplements.length?db.supplements.map((s,i)=>`<div class="supp"><div><b>${esc(s.name)}</b><div class="small muted">${s.target} ${s.unit}/day${s.time?' · reminder '+s.time:''}</div></div><button class="linkBtn" data-rms="${i}">Remove</button></div>`).join(''):'<div class="muted">No supplements added yet.</div>';document.querySelectorAll('[data-rms]').forEach(b=>b.onclick=()=>{db.supplements.splice(+b.dataset.rms,1);d.supp={};save();renderSupp();renderToday()})}
 function progress(mode){document.querySelectorAll('[data-range]').forEach(x=>x.classList.toggle('on',x.dataset.range===mode));let days=mode==='month'?30:7;if(mode==='supp'){let rows=db.supplements.map((s,i)=>{let sum=0,hit=0;for(let d=0;d<7;d++){let dt=new Date();dt.setDate(dt.getDate()-d);let k=dt.toISOString().slice(0,10),v=+(db.days[k]?.supp?.[i]||0);sum+=v;if(v>=s.target)hit++}return `<div class="stat"><span><b>${esc(s.name)}</b><div class="small muted">${hit}/7 days hit target</div></span><b>${sum} ${s.unit}</b></div>`}).join('');$('progressContent').innerHTML=`<div class="card"><h2>Last 7 days</h2>${rows||'<div class="muted" style="margin-top:15px">Add supplements in Settings to track them here.</div>'}</div>`;return}let sums={cal:0,p:0,c:0};for(let d=0;d<days;d++){let dt=new Date();dt.setDate(dt.getDate()-d);let t=total(db.days[dt.toISOString().slice(0,10)]);for(const k of Object.keys(sums))sums[k]+=t[k]}$('progressContent').innerHTML=`<div class="card"><h2>Last ${days} days</h2>${Object.entries(sums).map(([k,v])=>`<div class="stat"><span>${N[k][0]} average</span><b>${Math.round(v/days)} ${N[k][1]}</b></div>`).join('')}</div>`}
-function show(id){document.body.classList.toggle('todayMode',id==='todayView');document.body.classList.toggle('mealViewOnly',id==='mealView');['todayView','progressView','healthView','settingsView','mealView','targetsHubView','targetView','personaliseView','suppView','profileView','reminderView'].forEach(x=>$(x).classList.toggle('hidden',x!==id));document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.view===id));if(id==='todayView')renderToday();else if(id==='progressView'){v40MonthDate=new Date((window.cuttrackSelectedDateKey||key())+'T12:00:00');v40Render()}else if(id==='healthView')renderHealth();else if(id==='settingsView')renderSettings();else if(id==='targetView'){renderTargets();if(typeof v25RenderTargets==='function')v25RenderTargets()}else if(id==='personaliseView')loadPersonal();else if(id==='targetsHubView')renderReminders();else if(id==='suppView')renderSupp();window.scrollTo(0,0)}
+function show(id){document.body.classList.toggle('todayMode',id==='todayView');document.body.classList.toggle('mealViewOnly',id==='mealView');['todayView','progressView','healthView','settingsView','mealView','targetsHubView','targetView','personaliseView','suppView','profileView','reminderView'].forEach(x=>$(x).classList.toggle('hidden',x!==id));document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.view===id));if(id==='todayView')renderToday();if(id==='healthView')renderHealth();if(id==='settingsView')renderSettings();if(id==='targetView')renderTargets();if(id==='personaliseView')loadPersonal();if(id==='targetsHubView')renderReminders();if(id==='suppView')renderSupp();if(id==='progressView')progress('week');scrollTo(0,0)}
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>show(b.dataset.view));document.querySelectorAll('[data-back]').forEach(b=>b.onclick=()=>show(b.dataset.back));$('addIntakeBtn').onclick=()=>openMeal();$('targetSetupBtn').onclick=()=>show('targetsHubView');$('dailyTargetBtn').onclick=()=>show('targetView');$('personaliseBtn').onclick=()=>show('personaliseView');$('suppSettingsBtn').onclick=()=>show('suppView');$('editProfileBtn').onclick=()=>{$('nameInput').value=db.profile.name||'';$('emailInput').value=db.profile.email||'';renderSettings();show('profileView')};$('saveMeal').onclick=()=>{let x={name:$('mName').value.trim()||'Intake',photos:[...photos]};for(const[k,id]of [['cal','Cal'],['p','P'],['c','C'],['f','F'],['fiber','Fiber'],['water','Water'],['sodium','Sodium'],['potassium','Potassium'],['sugar','Sugar'],['satfat','Satfat'],['calcium','Calcium'],['iron','Iron'],['magnesium','Magnesium']])x[k]=+$('m'+id).value||0;if(editMeal===null)day().foods.push(x);else day().foods[editMeal]=x;save();show('todayView')};$('saveHealth').onclick=()=>{day().health={steps:+$('stepsInput').value||0,burn:+$('burnInput').value||0,weight:+$('weightInput').value||0,water:+$('waterInput').value||0};save();renderHealth();renderToday()};$('saveTargets').onclick=()=>{Object.keys(N).forEach(k=>{db.targets[k]={enabled:$('te_'+k).checked,value:+$('tv_'+k).value||N[k][3]}});save();show('todayView')};document.querySelectorAll('[data-goal]').forEach(b=>b.onclick=()=>b.classList.toggle('on'));$('generateTargets').onclick=generate;$('addSupp').onclick=()=>{let name=$('sName').value.trim(),target=+$('sTarget').value;if(!name||!target)return alert('Add a supplement name and daily target.');db.supplements.push({name,target,unit:$('sUnit').value,time:$('sTime').value});save();$('sName').value='';$('sTarget').value='';renderSupp();renderToday()};document.querySelectorAll('[data-theme]').forEach(b=>b.onclick=()=>{db.theme=b.dataset.theme;save();theme();renderSettings()});$('addReminderBtn').onclick=()=>openReminder();$('rType').onchange=updateReminderType;document.querySelectorAll('[data-rday]').forEach(b=>b.onclick=()=>b.classList.toggle('on'));$('rSupplement').onchange=()=>{let i=$('rSupplement').value;if(i!==''&&!$('rName').value.trim())$('rName').value=db.supplements[+i]?.name||''};$('saveReminder').onclick=()=>{let days=[...document.querySelectorAll('[data-rday].on')].map(b=>+b.dataset.rday);if(!$('rName').value.trim())return alert('Give the reminder a name.');if(!$('rTime').value)return alert('Choose a reminder time.');if(!days.length)return alert('Choose at least one day.');let r={type:$('rType').value,name:$('rName').value.trim(),time:$('rTime').value,days,enabled:$('rEnabled').checked};if(r.type==='supplement'&&$('rSupplement').value!=='')r.supplementIndex=+$('rSupplement').value;if(editReminder===null)db.reminders.push(r);else db.reminders[editReminder]=r;save();show('targetsHubView');renderReminders()};$('deleteReminder').onclick=()=>{if(editReminder===null)return;db.reminders.splice(editReminder,1);save();show('targetsHubView');renderReminders()};$('changePhoto').onclick=()=>$('profilePhotoInput').click();$('profilePhotoInput').onchange=()=>{let f=$('profilePhotoInput').files[0];if(!f)return;let r=new FileReader;r.onload=e=>{db.profile.photo=e.target.result;save();renderSettings()};r.readAsDataURL(f)};$('saveProfile').onclick=()=>{db.profile.name=$('nameInput').value.trim();db.profile.email=$('emailInput').value.trim();save();show('settingsView')};document.querySelectorAll('[data-range]').forEach(b=>b.onclick=()=>progress(b.dataset.range));$('mealBack').onclick=()=>show('todayView');$('heroPhotoBtn').onclick=()=>photoMenu(true);$('takePhotoBtn').onclick=()=>{photoMenu(false);$('cameraInput').click()};$('choosePhotoBtn').onclick=()=>{photoMenu(false);$('libraryInput').click()};$('cancelPhotoBtn').onclick=()=>photoMenu(false);$('photoSheet').onclick=e=>{if(e.target===$('photoSheet'))photoMenu(false)};$('cameraInput').onchange=()=>{addFiles($('cameraInput').files);$('cameraInput').value=''};$('libraryInput').onchange=()=>{addFiles($('libraryInput').files);$('libraryInput').value=''};$('editMealTab').onclick=()=>setMealTab('edit');$('nutritionTab').onclick=()=>setMealTab('nutrition');['mName','mCal','mP','mC','mF','mFiber','mWater','mSodium','mPotassium','mSugar','mSatfat','mCalcium','mIron','mMagnesium'].forEach(id=>$(id).addEventListener('input',updateMealHero));$('deleteMeal').onclick=()=>{if(editMeal===null)return;if(confirm('Delete this meal?')){day().foods.splice(editMeal,1);save();show('todayView')}};
 let heroStartX=0,heroStartY=0,heroSwipe=false;$('mealHero').addEventListener('touchstart',e=>{if(e.target.closest('button'))return;let t=e.touches[0];heroStartX=t.clientX;heroStartY=t.clientY;heroSwipe=true},{passive:true});$('mealHero').addEventListener('touchend',e=>{if(!heroSwipe||photos.length<2)return;heroSwipe=false;let t=e.changedTouches[0],dx=t.clientX-heroStartX,dy=t.clientY-heroStartY;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.2)showHeroPhoto(activePhoto+(dx<0?1:-1))},{passive:true});theme();renderToday();
 
@@ -568,7 +589,14 @@ function weekDate(i){
 }
 document.querySelectorAll('.weekDay').forEach((b,i)=>b.addEventListener('click',()=>setSelectedDate(weekDate(i))));
 const picker=$('calendarPicker');
-$('dateOpenBtn')?.addEventListener('click',()=>{show('progressView');const cal=document.querySelector('.v40Calendar');if(cal)window.scrollTo(0,Math.max(0,cal.offsetTop-18))});
+$('dateOpenBtn')?.addEventListener('click',()=>{
+  // Open the in-app Progress calendar instead of Safari's native date picker.
+  v40MonthDate=new Date((window.cuttrackSelectedDateKey||key())+'T12:00:00');
+  show('progressView');
+  v40Render();
+  const cal=$('v40CalendarCard')||$('v40CalendarGrid');
+  if(cal) window.scrollTo(0,Math.max(0,cal.getBoundingClientRect().top+window.scrollY-18));
+});
 picker?.addEventListener('change',()=>{if(picker.value){let d=new Date(picker.value+'T12:00:00');setSelectedDate(d)}});
 
 function saveCustomTargets(){localStorage.setItem('cuttrackCustomTargets',JSON.stringify(db.customTargets)); if(typeof save==='function') save()}
@@ -954,6 +982,8 @@ v24OpenTarget=function(key,customIndex=null){
 };
 
 // Refresh simplified list whenever Daily Targets is opened.
+const v25Show=show;
+show=function(id){v25Show(id);if(id==='targetView')setTimeout(v25RenderTargets,0)}
 v25RenderTargets();
 
 // Custom target creation defaults: tracked ON, target ON, Performance ON.
@@ -1306,14 +1336,70 @@ document.querySelectorAll('[data-generic-info]').forEach(b=>b.addEventListener('
  alert(`${what} will be added here before CutTrack is released publicly.`);
 }));
 
-// v45 CLEAN CORE — single Progress renderer; legacy storage remains backward-compatible
+// v39 — one calendar/history system backed by the exact same db.days records as Today.
+let v39MonthDate=new Date((window.cuttrackSelectedDateKey||key())+'T12:00:00');
+function v39DateKey(d){
+ const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');
+ return `${y}-${m}-${dd}`;
+}
+function v39HasData(k){
+ const d=db.days?.[k];if(!d)return false;
+ return !!((d.foods&&d.foods.length)||(+d.health?.steps)||(+d.health?.burn)||(+d.health?.water)||(+d.health?.weight)||Object.values(d.supp||{}).some(Number));
+}
+function v39RenderSummary(){
+ const k=window.cuttrackSelectedDateKey||key(),d=db.days?.[k]||{foods:[],health:{steps:0,burn:0,weight:0,water:0},supp:{}};
+ const dt=new Date(k+'T12:00:00'), foods=d.foods||[];
+ const sum=foods.reduce((a,x)=>{a.cal+=+x.cal||0;a.p+=+x.p||0;a.c+=+x.c||0;a.f+=+x.f||0;return a},{cal:0,p:0,c:0,f:0});
+ $('v39SelectedTitle').textContent=dt.toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'});
+ const h=d.health||{};
+ const rows=[
+  ['Calories',`${Math.round(sum.cal)} kcal`],['Protein',`${Math.round(sum.p)} g`],
+  ['Carbs',`${Math.round(sum.c)} g`],['Fat',`${Math.round(sum.f)} g`],
+  ['Burned',`${Math.round(+h.burn||0)} kcal`],['Steps',Math.round(+h.steps||0).toLocaleString()],
+  ['Water',`${Math.round(+h.water||0)} mL`],['Weight',h.weight?`${(+h.weight).toFixed(1)} kg`:'—']
+ ];
+ $('v39SummaryGrid').innerHTML=rows.map(x=>`<div class="v39SummaryMetric"><span>${x[0]}</span><b>${x[1]}</b></div>`).join('');
+}
+function v39RenderCalendar(){
+ const y=v39MonthDate.getFullYear(),m=v39MonthDate.getMonth();
+ $('v39MonthTitle').textContent=new Date(y,m,1).toLocaleDateString(undefined,{month:'long',year:'numeric'});
+ const first=new Date(y,m,1,12),offset=(first.getDay()+6)%7,days=new Date(y,m+1,0).getDate();
+ const prevDays=new Date(y,m,0).getDate(),selected=window.cuttrackSelectedDateKey||key(),today=v39DateKey(new Date());
+ let cells=[];
+ for(let i=0;i<42;i++){
+   let d,other=false;
+   if(i<offset){d=new Date(y,m-1,prevDays-offset+i+1,12);other=true}
+   else if(i>=offset+days){d=new Date(y,m+1,i-offset-days+1,12);other=true}
+   else d=new Date(y,m,i-offset+1,12);
+   const k=v39DateKey(d);
+   cells.push(`<button class="v39CalDay${other?' other':''}${v39HasData(k)?' hasData':''}${k===selected?' selected':''}${k===today?' today':''}" data-v39date="${k}" type="button">${d.getDate()}</button>`);
+ }
+ $('v39CalendarGrid').innerHTML=cells.join('');
+ document.querySelectorAll('[data-v39date]').forEach(b=>b.onclick=()=>{
+   const d=new Date(b.dataset.v39date+'T12:00:00');
+   setSelectedDate(d);window.cuttrackSelectedDateKey=selectedDateKey;
+   v39MonthDate=new Date(d);v39RenderCalendar();v39RenderSummary();
+ });
+ v39RenderSummary();
+}
+$('v39PrevMonth')?.addEventListener('click',()=>{v39MonthDate=new Date(v39MonthDate.getFullYear(),v39MonthDate.getMonth()-1,1,12);v39RenderCalendar()});
+$('v39NextMonth')?.addEventListener('click',()=>{v39MonthDate=new Date(v39MonthDate.getFullYear(),v39MonthDate.getMonth()+1,1,12);v39RenderCalendar()});
+$('v39OpenToday')?.addEventListener('click',()=>show('todayView'));
+
+// Replace Progress's old week/month/supplement rendering when the tab opens.
+const v39Show=show;
+show=function(id){
+ v39Show(id);
+ if(false && id==='progressView'){}
+};
+
 // v40 Progress — weekly/monthly averages + full calendar
 let v40MonthDate=new Date((window.cuttrackSelectedDateKey||key())+'T12:00:00');
 function v40Key(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${dd}`}
 function v40Data(k){return db.days?.[k]||{foods:[],health:{steps:0,burn:0,weight:0,water:0}}}
 function v40Logged(k){const d=db.days?.[k];return !!(d&&((d.foods&&d.foods.length)||+d.health?.steps||+d.health?.burn||+d.health?.water||+d.health?.weight))}
 function v40Food(d){return (d.foods||[]).reduce((a,x)=>{a.cal+=+x.cal||0;a.p+=+x.p||0;a.c+=+x.c||0;a.f+=+x.f||0;return a},{cal:0,p:0,c:0,f:0})}
-function v40Targets(){const val=k=>{const x=db.targets?.[k];return +(x&&typeof x==='object'?x.value:x)||0};return {cal:val('cal'),p:val('p'),c:val('c'),f:val('f')}}
+function v40Targets(){const val=k=>+(db.targets?.[k]?.value??db.targets?.[k]??0)||0;return {cal:val('cal'),p:val('p'),c:val('c'),f:val('f')}}
 function v40Range(keys){
  let n=0,s={cal:0,p:0,c:0,f:0,burn:0,steps:0,water:0,weight:0,weightN:0};
  keys.forEach(k=>{if(!v40Logged(k))return;n++;const d=v40Data(k),f=v40Food(d),h=d.health||{};['cal','p','c','f'].forEach(x=>s[x]+=f[x]);s.burn+=+h.burn||0;s.steps+=+h.steps||0;s.water+=+h.water||0;if(+h.weight){s.weight+=+h.weight;s.weightN++}});
@@ -1340,10 +1426,14 @@ function v40Render(){
  const first=new Date(y,m,1,12),off=(first.getDay()+6)%7,prev=new Date(y,m,0).getDate(),selected=window.cuttrackSelectedDateKey||key(),today=v40Key(new Date());let cells=[];
  for(let i=0;i<42;i++){let d,other=false;if(i<off){d=new Date(y,m-1,prev-off+i+1,12);other=true}else if(i>=off+days){d=new Date(y,m+1,i-off-days+1,12);other=true}else d=new Date(y,m,i-off+1,12);const k=v40Key(d);cells.push(`<button type="button" data-v40date="${k}" class="v40CalDay${other?' other':''}${v40Logged(k)?' hasData':''}${k===selected?' selected':''}${k===today?' today':''}">${d.getDate()}</button>`)}
  $('v40CalendarGrid').innerHTML=cells.join('');
- 
 }
+// One delegated calendar handler: it survives re-renders and avoids creating 42 listeners each time.
+$('v40CalendarGrid')?.addEventListener('click',e=>{
+ const b=e.target.closest('[data-v40date]');if(!b)return;
+ const d=new Date(b.dataset.v40date+'T12:00:00');
+ setSelectedDate(d);window.cuttrackSelectedDateKey=selectedDateKey;v40MonthDate=new Date(d);v40Render();
+});
 $('v40PrevMonth')?.addEventListener('click',()=>{v40MonthDate=new Date(v40MonthDate.getFullYear(),v40MonthDate.getMonth()-1,1,12);v40Render()});
 $('v40NextMonth')?.addEventListener('click',()=>{v40MonthDate=new Date(v40MonthDate.getFullYear(),v40MonthDate.getMonth()+1,1,12);v40Render()});
-$('v40CalendarGrid')?.addEventListener('click',e=>{const b=e.target.closest('[data-v40date]');if(!b)return;const d=new Date(b.dataset.v40date+'T12:00:00');setSelectedDate(d);v40MonthDate=new Date(d);v40Render()});
-
+const v40Show=show;show=function(id){v40Show(id);if(id==='progressView'){v40MonthDate=new Date((window.cuttrackSelectedDateKey||key())+'T12:00:00');v40Render()}};
 </script></body></html>

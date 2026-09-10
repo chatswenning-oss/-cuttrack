@@ -1,16 +1,15 @@
-CutTrack v39
+CutTrack v46 — Stability Rebuild Phase 1
 
-Built from v38.
+Built from the last known interactive baseline (v42), not from broken v45.
 
-Progress redesign:
-- Progress is now the CutTrack Calendar/history screen.
-- Removed Week / Month / Supplements segmented control.
-- Removed dedicated supplement progress tracking.
-- Monthly calendar with previous/next month navigation.
-- Dates containing logged CutTrack data receive a small indicator.
-- Selected date is highlighted.
-- Today's date has a subtle outline.
-- Tapping a date selects that exact same daily record used by Today.
-- Selected-day summary shows Calories, Protein, Carbs, Fat, Burned, Steps, Water and Weight.
-- View day opens Today using the selected calendar date.
-- Existing v38 Today/background/modal fixes retained.
+This build intentionally makes only low-risk core fixes:
+- Preserves all v42 controls and editing handlers.
+- Preserves Goals and reminder presets.
+- Preserves Today design and background.
+- Fixes Progress target-value reading.
+- Uses one delegated click handler for the 42-day calendar grid.
+- Removes delayed v40 Progress rendering.
+- Tapping the Today/date header opens the in-app Progress calendar.
+- Keeps existing cuttrack_v9/localStorage data compatible.
+
+Do not deploy old all.js/background-v15.jpg/background.jpg files with this build.
