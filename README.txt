@@ -1,10 +1,11 @@
-CutTrack v53 — Blurred Background Fill
+CutTrack v54 — Sharp Original Background Fix
 
-Built from v52. Uses the original mountain/snow-path photo only.
-- Sharp original photo at the top, kept in its original proportions.
-- A blurred copy of the same photo fills the portrait screen behind it.
-- No stretched mountain, no blank band, no generated scenery.
-- CutTrack UI and app functionality otherwise unchanged.
+Background-only change from v52:
+- Original mountain photo only
+- No blur anywhere
+- No generated replacement image
+- No stretching/distortion
+- Sharp full-screen fill plus the full original landscape visible sharply at the top
+- App UI/functionality otherwise unchanged
 
-Upload all 6 files to the GitHub repo root and replace existing files.
-Do not delete any other repo files.
+Upload all 6 files to the GitHub repository root and replace existing files. Do not delete anything else.
