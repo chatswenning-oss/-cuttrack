@@ -273,40 +273,32 @@ body.todayMode:before{
  min-height:100%!important;background-size:cover!important;background-position:center top!important
 }
 
-/* v36 — true fixed Today wallpaper layer.
-   The document/cards scroll; this layer never participates in page scrolling. */
+/* v37 — fixed Today wallpaper with explicit non-negative stacking.
+   Wallpaper sits above body paint, app content sits above wallpaper. */
+html,body{min-height:100%;background:#05080b}
 #todayWallpaper{
  display:none;
  position:fixed;
- left:0;top:0;
+ inset:0;
  width:100vw;
  height:100vh;
  height:100dvh;
- z-index:-10;
+ z-index:0;
  pointer-events:none;
- background:#05080b url("cuttrack-v16-bg.jpg") center center / cover no-repeat;
- transform:translateZ(0);
- -webkit-transform:translateZ(0);
+ background-image:
+   linear-gradient(180deg,rgba(0,0,0,.06) 0%,rgba(0,0,0,.04) 28%,rgba(0,0,0,.20) 55%,rgba(0,0,0,.36) 100%),
+   url("cuttrack-v16-bg.jpg");
+ background-size:cover,cover;
+ background-position:center center,center center;
+ background-repeat:no-repeat,no-repeat;
+ transform:translate3d(0,0,0);
+ -webkit-transform:translate3d(0,0,0);
 }
 body.todayMode #todayWallpaper{display:block}
-body.todayMode{
- background:#05080b!important;
- background-image:none!important;
- min-height:100%!important;
-}
-body.todayMode:before{
- content:none!important;
- display:none!important;
- background:none!important;
-}
-body.todayMode:after{
- z-index:-9!important;
- position:fixed!important;
- inset:0!important;
- width:100vw!important;
- height:100vh!important;
- height:100dvh!important;
-}
+body.todayMode{background:#05080b!important;background-image:none!important}
+body.todayMode:before,body.todayMode:after{content:none!important;display:none!important}
+body.todayMode .wrap{position:relative;z-index:1}
+body.todayMode .tabs,body.todayMode .addFloat{z-index:50}
 </style></head><body class="system"><div id="todayWallpaper" aria-hidden="true"></div><div class="wrap">
 <section id="todayView">
 <button class="todayTop dateOpen" id="dateOpenBtn" type="button"><h1 id="dayHeading">Today <span class="todayDrop">⌄</span></h1><div class="todayDate" id="todayDate"></div></button>
