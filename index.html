@@ -476,6 +476,18 @@ body.todayMode .tabs,body.todayMode .addFloat{z-index:50}
 #targetsHubView #targetResult{margin-bottom:18px}
 @media(max-width:390px){.goalsInlinePersonal{padding:17px!important}.goalsInlinePersonal h2{font-size:23px}}
 </style>
+
+<style id="v65GoalsExact">
+/* v65 — compact unified Goals layout matching the approved concept. */
+#targetsHubView .targetsHubCards{gap:14px}
+.v65Personal{padding:16px!important}
+.v65PersonalHead{display:flex;gap:12px;align-items:center;margin-bottom:12px}.v65PersonalHead h2{margin:0 0 2px;font-size:23px}.v65PersonIcon{width:48px;height:48px;flex:0 0 48px;border:1px solid #1597ff;border-radius:15px;display:grid;place-items:center;color:#8dbfff;background:rgba(0,117,255,.10)}.v65PersonIcon svg{width:30px;fill:none;stroke:currentColor;stroke-width:4}
+.v65PersonalGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px 10px}.v65PersonalGrid .field{margin:0!important}.v65PersonalGrid label{font-size:12px!important;margin:0 0 5px 3px}.v65PersonalGrid input,.v65PersonalGrid select{height:48px;padding:0 12px!important;font-size:15px!important;border-radius:14px!important}
+.v65HiddenGoalChips,.v65HiddenImprove{display:none!important}
+.v65TargetsCard{display:block!important;padding:16px!important;text-align:left;cursor:default}.v65TargetsHead{display:flex;align-items:center;gap:12px}.v65TargetsHead .hubIcon{width:48px;height:48px;flex:0 0 48px}.v65TargetsHead .hubCopy{flex:1}.v65TargetsHead .hubCopy b{font-size:23px}.v65TargetsHead .hubCopy span{font-size:14px;margin-top:1px}.v65SetForMe{border:0;border-radius:14px;background:#0a8cff;color:white;font-weight:800;font-size:14px;padding:12px 14px;white-space:nowrap}.v65TargetTiles{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px;margin-top:12px}.v65TargetTile{min-width:0;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.055);border-radius:13px;padding:9px 4px;text-align:center}.v65TargetTile b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v65TargetTile span{display:block;font-size:10px;color:var(--muted);margin-top:2px}.v65TargetTile i{font-style:normal;font-size:16px;display:block;margin-bottom:2px}
+#targetsHubView #targetResult:empty{display:none}.goalsReminderCard{margin-top:0!important}
+@media(max-width:430px){.v65PersonalGrid{grid-template-columns:repeat(3,minmax(0,1fr))}.v65PersonalHead h2{font-size:21px}.v65PersonalHead .small{font-size:12px}.v65TargetsHead .hubCopy b{font-size:21px}.v65SetForMe{padding:11px 12px;font-size:13px}.v65TargetTiles{gap:5px}.v65TargetTile{padding:8px 2px}.v65TargetTile b{font-size:13px}.v65TargetTile span{font-size:9px}}
+</style>
 </head><body class="system"><div id="todayWallpaper" aria-hidden="true"></div><div class="wrap">
 <section id="todayView">
 <button class="todayTop dateOpen" id="dateOpenBtn" type="button"><h1 id="dayHeading">Today <span class="todayDrop">⌄</span></h1><div class="todayDate" id="todayDate"></div></button>
@@ -558,19 +570,24 @@ body.todayMode .tabs,body.todayMode .addFloat{z-index:50}
   <div class="goalsMotto">BETTER HABITS<br>BIGGER RESULTS</div>
  </div>
  <div class="targetsHubCards">
-  <div class="goalsInlinePersonal card">
-   <div class="inlineSectionHead"><div><h2>Personalise CutTrack</h2><div class="muted small">Tell us a bit about you so we can create the best targets for your goals.</div></div></div>
-   <div class="field"><label>Your goals · choose one or more</label><div class="chips" id="goalChips"><button class="chip" data-goal="lose">Lose fat</button><button class="chip" data-goal="maintain">Maintain</button><button class="chip" data-goal="muscle">Build muscle</button><button class="chip" data-goal="performance">Performance</button></div></div>
-   <div class="grid"><div class="field"><label>Age</label><input id="pAge" type="number"></div><div class="field"><label>Sex</label><select id="pSex"><option value="male">Male</option><option value="female">Female</option></select></div><div class="field"><label>Height cm</label><input id="pHeight" type="number"></div><div class="field"><label>Weight kg</label><input id="pWeight" type="number" step=".1"></div></div>
-   <div class="field"><label>Activity</label><select id="pActivity"><option value="1.2">Mostly sedentary</option><option value="1.375">Lightly active</option><option value="1.55" selected>Moderately active</option><option value="1.725">Very active</option></select></div>
-   <details class="accordion inlineImprove"><summary>Improve My Targets <span>＋</span></summary><p class="muted small">Optional details give the target assistant more context.</p><div class="field"><label>Body fat %</label><input id="pBodyfat" type="number" min="3" max="60" placeholder="Skip if unknown"></div><div class="field"><label>Recent weight trend</label><select id="pTrend"><option value="unknown">Not sure</option><option value="losing">Losing weight</option><option value="stable">Weight stable</option><option value="gaining">Gaining weight</option></select></div><div class="field"><label>Exercise sessions / week</label><select id="pSessions"><option>0</option><option>1-3</option><option>4-6</option><option>7+</option></select></div><div class="field"><label>Non-exercise activity</label><select id="pDailyActivity"><option>Mostly sedentary</option><option>Moderately active</option><option>Very active</option></select></div><div class="field"><label>Lifting experience</label><select id="pLifting"><option>None</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></div><div class="field"><label>Cardio experience</label><select id="pCardio"><option>None</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></div><div class="field"><label>Athletic level</label><select id="pAthlete"><option>Exercise regularly</option><option>Athlete</option><option>Professional athlete</option></select></div></details>
+  <div class="goalsInlinePersonal card v65Personal">
+   <div class="v65PersonalHead"><div class="v65PersonIcon" aria-hidden="true"><svg viewBox="0 0 64 64"><circle cx="32" cy="21" r="11"/><path d="M14 53c2-13 9-19 18-19s16 6 18 19"/></svg></div><div><h2>Personalise CutTrack</h2><div class="muted small">Tell us a bit about you so we can create the best targets for your goals.</div></div></div>
+   <div class="v65PersonalGrid">
+    <div class="field"><label>Goal</label><select id="pGoalSelect"><option value="lose">Lose fat</option><option value="maintain">Maintain</option><option value="muscle">Build muscle</option><option value="performance">Performance</option></select></div>
+    <div class="field"><label>Age</label><input id="pAge" type="number"></div>
+    <div class="field"><label>Sex</label><select id="pSex"><option value="male">Male</option><option value="female">Female</option></select></div>
+    <div class="field"><label>Height (cm)</label><input id="pHeight" type="number"></div>
+    <div class="field"><label>Weight (kg)</label><input id="pWeight" type="number" step=".1"></div>
+    <div class="field"><label>Activity</label><select id="pActivity"><option value="1.2">Mostly sedentary</option><option value="1.375">Lightly active</option><option value="1.55" selected>Moderately active</option><option value="1.725">Very active</option></select></div>
+   </div>
+   <div class="chips v65HiddenGoalChips" id="goalChips" aria-hidden="true"><button class="chip" data-goal="lose">Lose fat</button><button class="chip" data-goal="maintain">Maintain</button><button class="chip" data-goal="muscle">Build muscle</button><button class="chip" data-goal="performance">Performance</button></div>
+   <div class="v65HiddenImprove" aria-hidden="true"><input id="pBodyfat" type="number"><select id="pTrend"><option value="unknown">Not sure</option><option value="losing">Losing weight</option><option value="stable">Weight stable</option><option value="gaining">Gaining weight</option></select><select id="pSessions"><option>0</option><option>1-3</option><option>4-6</option><option>7+</option></select><select id="pDailyActivity"><option>Mostly sedentary</option><option>Moderately active</option><option>Very active</option></select><select id="pLifting"><option>None</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select><select id="pCardio"><option>None</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select><select id="pAthlete"><option>Exercise regularly</option><option>Athlete</option><option>Professional athlete</option></select></div>
   </div>
-  <button class="targetsHubCard goalFeatureCard goalTargetsNatural" id="hubMacros" type="button">
-   <div class="hubIcon hubIconNatural" aria-hidden="true"><svg viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"><path d="M12 17h40"/><path d="M12 32h40"/><path d="M12 47h40"/></g><g fill="currentColor"><circle cx="25" cy="17" r="6"/><circle cx="41" cy="32" r="6"/><circle cx="20" cy="47" r="6"/></g></svg></div>
-   <div class="hubCopy"><b>My Targets</b><span>Set and adjust your daily nutrition and activity targets.</span><div class="goalTags"><i>CALORIES</i><i>MACROS</i><i>WATER</i><i>STEPS</i><i>ACTIVITY</i></div></div>
-   <div class="hubChevron">›</div>
-  </button>
-  <button class="primary goalsGenerateInline" id="generateTargets" type="button">Set My Targets For Me</button><div id="targetResult"></div>
+  <div class="targetsHubCard goalFeatureCard goalTargetsNatural v65TargetsCard" id="hubMacros">
+   <div class="v65TargetsHead"><div class="hubIcon hubIconNatural" aria-hidden="true"><svg viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"><path d="M12 17h40"/><path d="M12 32h40"/><path d="M12 47h40"/></g><g fill="currentColor"><circle cx="25" cy="17" r="6"/><circle cx="41" cy="32" r="6"/><circle cx="20" cy="47" r="6"/></g></svg></div><div class="hubCopy"><b>My Targets</b><span>Set and adjust your daily targets.</span></div><button class="v65SetForMe" id="generateTargets" type="button">Set for me</button></div>
+   <div class="v65TargetTiles" id="v65TargetTiles"></div>
+  </div>
+  <div id="targetResult"></div>
   <div class="card goalsReminderCard">
    <div class="goalsReminderHead"><div><h2>Reminders</h2><div class="muted small">Quick reminders to stay on track</div></div><div class="reminderBell" aria-hidden="true">♧</div><div class="reminderMotto">Discipline Today<br>Freedom Tomorrow</div></div>
    <div id="reminderList"></div>
@@ -1146,7 +1163,7 @@ v25RenderTargets();
 // v27 — Targets hub navigation. Today itself is intentionally unchanged.
 $('targetsHubBack')?.addEventListener('click',()=>show('todayView'));
 $('hubAiTarget')?.addEventListener('click',()=>show('targetsHubView'));
-$('hubMacros')?.addEventListener('click',()=>show('targetView'));
+// v65: My Targets card handled below so Set for me stays inline.
 $('targetAssistBtn')?.addEventListener('click',()=>show('targetsHubView'));
 
 // v28 — ONE target source of truth for AI Setup, Macros & Supplements and Today.
@@ -1524,4 +1541,10 @@ function v40Render(){
 $('v40PrevMonth')?.addEventListener('click',()=>{v40MonthDate=new Date(v40MonthDate.getFullYear(),v40MonthDate.getMonth()-1,1,12);v40Render()});
 $('v40NextMonth')?.addEventListener('click',()=>{v40MonthDate=new Date(v40MonthDate.getFullYear(),v40MonthDate.getMonth()+1,1,12);v40Render()});
 const v40Show=show;show=function(id){v40Show(id);if(id==='progressView'){v40MonthDate=new Date((window.cuttrackSelectedDateKey||key())+'T12:00:00');setTimeout(v40Render,0)}};
+
+// v65 unified Goals helpers
+function v65RenderTargetTiles(){const el=$('v65TargetTiles');if(!el)return;const t=db.targets||{};const val=(k,f)=>t[k]?.value??f;el.innerHTML=`<div class="v65TargetTile"><i>🔥</i><b>${Math.round(val('cal',2200))}</b><span>Calories</span></div><div class="v65TargetTile"><i>●</i><b>${Math.round(val('p',180))}g</b><span>Protein</span></div><div class="v65TargetTile"><i>◆</i><b>${Math.round(val('c',200))}g</b><span>Carbs</span></div><div class="v65TargetTile"><i>●</i><b>${Math.round(val('f',70))}g</b><span>Fat</span></div><div class="v65TargetTile"><i>💧</i><b>${(val('water',2700)/1000).toFixed(1)}L</b><span>Water</span></div><div class="v65TargetTile"><i>👟</i><b>${Math.round(val('steps',10000)||10000).toLocaleString()}</b><span>Steps</span></div>`;}
+const v65Goal=$('pGoalSelect');if(v65Goal){v65Goal.onchange=()=>{document.querySelectorAll('#goalChips [data-goal]').forEach(b=>b.classList.toggle('on',b.dataset.goal===v65Goal.value));};setTimeout(()=>{let on=document.querySelector('#goalChips [data-goal].on');if(on)v65Goal.value=on.dataset.goal;else{let b=document.querySelector('#goalChips [data-goal="lose"]');b?.classList.add('on');v65Goal.value='lose';}v65RenderTargetTiles();},0);}
+$('hubMacros')?.addEventListener('click',e=>{if(e.target.closest('#generateTargets'))return;show('targetView')});
+$('generateTargets')?.addEventListener('click',e=>{e.stopPropagation()});
 </script></body></html>
