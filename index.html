@@ -449,6 +449,16 @@ body.todayMode .tabs,body.todayMode .addFloat{z-index:50}
 #repeatPicker .goalGrid{margin:0}
 .reminderDelete{width:100%;min-height:66px;border:0;border-radius:26px;margin:26px 0 10px;background:var(--card);color:#ff453a;font-size:18px}
 @media(max-width:420px){.reminderTimeInput{font-size:42px;width:90%}.reminderAlarmRow{font-size:17px}}
+
+/* v63 — simplified Goals: one natural Targets card + photographic meal reminders. */
+.goalTargetsNatural{min-height:150px!important;background:rgba(18,22,28,.86)!important}
+.goalTargetsNatural:after{display:none!important}
+.hubIconNatural{flex:0 0 66px;width:66px;height:66px;border-radius:20px;display:grid;place-items:center;color:#0a84ff;background:rgba(10,132,255,.10);border:1px solid rgba(10,132,255,.28);box-shadow:none!important}
+.hubIconNatural svg{width:34px;height:34px;filter:none!important}
+.goalMealThumb{padding:0!important;background:#202124!important;overflow:hidden}
+.goalMealThumb img{display:block;width:100%;height:100%;object-fit:cover}
+.targetAssistBtn{width:100%;display:flex;align-items:center;justify-content:space-between;margin:0 0 12px;padding:15px 17px;border-radius:16px;font-weight:700}
+@media(max-width:390px){.hubIconNatural{width:60px;height:60px;flex-basis:60px}.hubIconNatural svg{width:31px;height:31px}}
 </style>
 <style id="v62GoalsPolish">
 /* v62 — Goals visual polish only. Core behaviour/data unchanged. */
@@ -536,14 +546,9 @@ body.todayMode .tabs,body.todayMode .addFloat{z-index:50}
   <div class="goalsMotto">BETTER HABITS<br>BIGGER RESULTS</div>
  </div>
  <div class="targetsHubCards">
-  <button class="targetsHubCard goalFeatureCard goalSmart" id="hubAiTarget" type="button">
-   <div class="hubIcon hubIconSvg" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M36 5 14 35h15l-2 24 23-33H35z" fill="currentColor"/></svg></div>
-   <div class="hubCopy"><b>Smart Goal Builder</b><span>Build personalised goals around your body, lifestyle and results.</span><div class="goalTags"><i>AI POWERED</i><i>PERSONALISED</i><i>REAL RESULTS</i></div></div>
-   <div class="hubChevron">›</div>
-  </button>
-  <button class="targetsHubCard goalFeatureCard goalDaily" id="hubMacros" type="button">
-   <div class="hubIcon hubIconSvg" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="10" y="35" width="10" height="20" rx="2" fill="currentColor"/><rect x="27" y="24" width="10" height="31" rx="2" fill="currentColor"/><rect x="44" y="11" width="10" height="44" rx="2" fill="currentColor"/></svg></div>
-   <div class="hubCopy"><b>Daily Targets</b><span>Set calories, macros, water, steps and activity targets.</span><div class="goalTags"><i>CALORIES</i><i>MACROS</i><i>WATER</i><i>STEPS</i><i>ACTIVITY</i></div></div>
+  <button class="targetsHubCard goalFeatureCard goalTargetsNatural" id="hubMacros" type="button">
+   <div class="hubIcon hubIconNatural" aria-hidden="true"><svg viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"><path d="M12 17h40"/><path d="M12 32h40"/><path d="M12 47h40"/></g><g fill="currentColor"><circle cx="25" cy="17" r="6"/><circle cx="41" cy="32" r="6"/><circle cx="20" cy="47" r="6"/></g></svg></div>
+   <div class="hubCopy"><b>My Targets</b><span>Set your nutrition, water, steps and activity targets all in one place.</span><div class="goalTags"><i>CALORIES</i><i>MACROS</i><i>WATER</i><i>STEPS</i><i>ACTIVITY</i></div></div>
    <div class="hubChevron">›</div>
   </button>
   <div class="card goalsReminderCard">
@@ -553,7 +558,7 @@ body.todayMode .tabs,body.todayMode .addFloat{z-index:50}
   </div>
  </div>
 </section>
-<section id="targetView" class="hidden"><div class="top"><button class="back" data-back="todayView">‹</button><div style="flex:1"><h1 class="sheetTitle">Nutrition &amp; Activity Goals</h1><div class="muted">Turn metrics on or off and tap Edit to customise.</div></div></div><div class="card" id="targetInputs"></div><button class="primary" id="saveTargets">Save Daily Targets</button><div class="customTargetsInline" id="customTargetsInline"></div>
+<section id="targetView" class="hidden"><div class="top"><button class="back" data-back="targetsHubView">‹</button><div style="flex:1"><h1 class="sheetTitle">My Targets</h1><div class="muted">Set the daily targets you want CutTrack to follow.</div></div></div><button class="secondary targetAssistBtn" id="targetAssistBtn" type="button">Set my targets for me <span>›</span></button><div class="card" id="targetInputs"></div><button class="primary" id="saveTargets">Save Targets</button><div class="customTargetsInline" id="customTargetsInline"></div>
 <div class="targetCreateFooter">
   <button class="primary" id="newCustomTargetBtn" type="button">+ Create Custom Target</button>
 </div>
@@ -592,7 +597,7 @@ async function startPhotoMeal(){resetMealDraft();aiCapturePending=true;$('camera
 async function analyseNewMealPhoto(f){if(!f)return;resetMealDraft();let data;try{data=await imageDataFromFile(f)}catch(e){alert('CutTrack could not read that photo.');return}photos=[data];activePhoto=0;updateMealHero();$('aiMealOverlay').classList.remove('hidden');$('aiMealStatus').textContent='Identifying food and estimating nutrition.';if(!CUTTRACK_AI_ENDPOINT){$('aiMealOverlay').classList.add('hidden');show('mealView');setTimeout(()=>alert('AI meal analysis is ready in the app, but the secure AI Worker still needs to be connected. Your photo is loaded so you can enter nutrition manually for now.'),100);return}try{let res=await fetch(CUTTRACK_AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:data})});if(!res.ok)throw new Error('AI service '+res.status);let out=await res.json();if(out.error)throw new Error(out.error);applyAIResult(out);let x=mealDataFromEditor();x.aiEstimated=true;day().foods.push(x);save();$('aiMealOverlay').classList.add('hidden');show('todayView')}catch(e){console.error(e);$('aiMealOverlay').classList.add('hidden');show('mealView');setTimeout(()=>alert('AI analysis could not finish. Your photo is safe and the meal editor is open so you can enter or adjust it manually.'),100)}}
 function renderSettings(){theme();v48Background();$('profileName').textContent=db.profile.name||'Your Profile';for(const id of ['profilePic','editProfilePic'])$(id).innerHTML=db.profile.photo?`<img class="profilePic" src="${db.profile.photo}">`:'👤';renderReminders()}
 function ensurePresetReminders(){const presets=[['Breakfast','08:00'],['Lunch','12:30'],['Dinner','18:30']];let changed=false;presets.forEach(([name,time])=>{let r=db.reminders.find(x=>x.preset===name||x.name===name);if(!r){db.reminders.unshift({preset:name,type:'meal',name,time,days:[0,1,2,3,4,5,6],enabled:false});changed=true}else if(!r.preset){r.preset=name;changed=true}});if(changed)save()}
-function renderReminders(){ensurePresetReminders();let box=$('reminderList');const order={Breakfast:0,Lunch:1,Dinner:2},food={Breakfast:'🥣',Lunch:'🥗',Dinner:'🍽️'};let rows=db.reminders.map((r,i)=>({r,i})).sort((a,b)=>(order[a.r.preset]??99)-(order[b.r.preset]??99));box.innerHTML=rows.map(({r,i})=>{let every=(r.days||[]).length===7?'Every day':(r.days||[]).map(d=>['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d]).join(', '),time=(r.time||'—').replace(/^0(?=\d:)/,'');return `<div class="goalReminderRow"><button class="goalReminderMain" data-editrem="${i}"><span class="goalMealThumb">${food[r.preset]|| (r.type==='supplement'?'💊':'🍴')}</span><span class="goalReminderText"><b>${esc(r.name||(r.type==='meal'?'Meal':'Supplement'))}</b><small>🍴 ${r.type==='meal'?'Meal':'Supplement'}</small><small>◷ ${time}</small><small>↻ ${every}</small></span></button><input class="toggle" data-remtoggle="${i}" type="checkbox" ${r.enabled?'checked':''}><button class="goalReminderChevron" data-editrem="${i}" aria-label="Edit reminder">›</button></div>`}).join('');document.querySelectorAll('[data-editrem]').forEach(b=>b.onclick=()=>openReminder(+b.dataset.editrem));document.querySelectorAll('[data-remtoggle]').forEach(t=>t.onchange=()=>{db.reminders[+t.dataset.remtoggle].enabled=t.checked;save()})}
+function renderReminders(){ensurePresetReminders();let box=$('reminderList');const order={Breakfast:0,Lunch:1,Dinner:2},food={Breakfast:'https://images.unsplash.com/photo-1756457168443-45c3680fc62e?auto=format&fit=crop&q=72&w=500',Lunch:'https://images.unsplash.com/photo-1762631383628-77f92d18b184?auto=format&fit=crop&q=72&w=500',Dinner:'https://images.unsplash.com/photo-1452967712862-0cca1839ff27?auto=format&fit=crop&q=72&w=500'};let rows=db.reminders.map((r,i)=>({r,i})).sort((a,b)=>(order[a.r.preset]??99)-(order[b.r.preset]??99));box.innerHTML=rows.map(({r,i})=>{let every=(r.days||[]).length===7?'Every day':(r.days||[]).map(d=>['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d]).join(', '),time=(r.time||'—').replace(/^0(?=\d:)/,'');return `<div class="goalReminderRow"><button class="goalReminderMain" data-editrem="${i}"><span class="goalMealThumb">${food[r.preset]?`<img src="${food[r.preset]}" alt="">`:(r.type==='supplement'?'💊':'🍴')}</span><span class="goalReminderText"><b>${esc(r.name||(r.type==='meal'?'Meal':'Supplement'))}</b><small>🍴 ${r.type==='meal'?'Meal':'Supplement'}</small><small>◷ ${time}</small><small>↻ ${every}</small></span></button><input class="toggle" data-remtoggle="${i}" type="checkbox" ${r.enabled?'checked':''}><button class="goalReminderChevron" data-editrem="${i}" aria-label="Edit reminder">›</button></div>`}).join('');document.querySelectorAll('[data-editrem]').forEach(b=>b.onclick=()=>openReminder(+b.dataset.editrem));document.querySelectorAll('[data-remtoggle]').forEach(t=>t.onchange=()=>{db.reminders[+t.dataset.remtoggle].enabled=t.checked;save()})}
 let editReminder=null;function openReminder(i=null){editReminder=i;let r=i===null?{type:'meal',name:'',time:'08:00',days:[0,1,2,3,4,5,6],enabled:true}:db.reminders[i];$('reminderHeading').textContent=i===null?'Add Reminder':'Edit Reminder';$('rType').value=r.type||'meal';$('rName').value=r.name||'';$('rTime').value=r.time||'08:00';$('rEnabled').checked=r.enabled!==false;$('rSupplement').innerHTML='<option value="">Choose…</option>'+db.supplements.map((s,j)=>`<option value="${j}">${esc(s.name)}</option>`).join('');$('rSupplement').value=r.supplementIndex??'';document.querySelectorAll('[data-rday]').forEach(b=>b.classList.toggle('on',(r.days||[]).includes(+b.dataset.rday)));$('deleteReminder').classList.toggle('hidden',i===null||!!r.preset);updateReminderType();show('reminderView');closeReminderPickers();updateReminderSummaries();show('reminderView')}
 function updateReminderType(){$('rSuppWrap').classList.toggle('hidden',$('rType').value!=='supplement')}
 function renderTargets(){$('targetInputs').innerHTML=Object.entries(N).map(([k,n])=>`<div class="settingsRow"><div><b>${n[0]}</b><div class="small muted">${k==='water'?'L':n[1]} · ${n[2]==='limit'?'maximum':'goal'} · always tracked</div></div><div style="display:flex;align-items:center;gap:8px"><input id="tv_${k}" type="number" value="${k==='water'?(db.targets[k].value/1000):db.targets[k].value}" step="${k==='water'?'0.1':'any'}" style="width:90px" ${db.targets[k].enabled?'':'disabled'}><input class="toggle" id="te_${k}" type="checkbox" ${db.targets[k].enabled?'checked':''}></div></div>`).join('');Object.keys(N).forEach(k=>$('te_'+k).onchange=()=>{$('tv_'+k).disabled=!$('te_'+k).checked})}
@@ -1122,6 +1127,7 @@ v25RenderTargets();
 $('targetsHubBack')?.addEventListener('click',()=>show('todayView'));
 $('hubAiTarget')?.addEventListener('click',()=>show('personaliseView'));
 $('hubMacros')?.addEventListener('click',()=>show('targetView'));
+$('targetAssistBtn')?.addEventListener('click',()=>show('personaliseView'));
 
 // v28 — ONE target source of truth for AI Setup, Macros & Supplements and Today.
 const V28_KEYMAP={
