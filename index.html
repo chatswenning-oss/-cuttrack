@@ -143,6 +143,35 @@ body.todayMode:after{position:fixed!important;inset:0!important;width:100vw!impo
 .perf .perfTrack{height:7px;background:rgba(142,142,147,.42);border-radius:99px;overflow:hidden;margin-top:auto}
 .perf .perfFill{height:100%;background:var(--blue);border-radius:99px;min-width:0}
 .perf .perfRemain{display:block;color:var(--muted);font-size:12px;margin-top:6px}
+
+/* v22 — one unified Daily Targets list */
+#targetView .card:has(.targetRow),
+#targetView .v19StandardTargets,
+#targetView #v19StandardTargets,
+#targetView #customTargetsInline{
+  margin-top:0!important;
+}
+#targetView #v19StandardTargets,
+#targetView #customTargetsInline{
+  background:transparent!important;
+  border-radius:0!important;
+  padding:0!important;
+}
+#targetView .inlineTargetRow{
+  padding:18px 0!important;
+  margin:0!important;
+  border-top:1px solid var(--line)!important;
+}
+#targetView .targetCreateFooter{
+  margin-top:14px!important;
+  padding-top:0!important;
+  border-top:0!important;
+}
+#targetView .targetCreateFooter .primary{
+  background:transparent!important;
+  color:var(--blue)!important;
+  border:1.5px solid var(--blue)!important;
+}
 </style></head><body class="system"><div class="wrap">
 <section id="todayView">
 <button class="todayTop dateOpen" id="dateOpenBtn" type="button"><h1 id="dayHeading">Today <span class="todayDrop">⌄</span></h1><div class="todayDate" id="todayDate"></div></button>
@@ -376,4 +405,38 @@ document.addEventListener('change',e=>{
 });
 ensureStandardTargetRows();
 renderCustomTargets();
+
+// v22 — unify every target into the original Daily Targets card/list.
+function v22UnifyTargets(){
+  const view=$('targetView');
+  if(!view)return;
+  const std=$('v19StandardTargets');
+  const custom=$('customTargetsInline');
+  const create=document.querySelector('#targetView .targetCreateFooter');
+  const saveBtn=[...view.querySelectorAll('button')].find(b=>(b.textContent||'').trim().includes('Save Daily Targets'));
+  if(!saveBtn)return;
+
+  // Find the original dark target card containing Calories/Protein/Carbs.
+  const core=[...view.querySelectorAll('.card')].find(c=>{
+    const tx=(c.textContent||'');
+    return tx.includes('Calories') && tx.includes('Protein') && tx.includes('Carbs');
+  });
+  if(!core)return;
+
+  // Put every additional standard and custom row inside that same card.
+  if(std && std.parentElement!==core) core.appendChild(std);
+  if(custom && custom.parentElement!==core) core.appendChild(custom);
+
+  // Save is directly after the single target card.
+  const saveWrap=saveBtn.parentElement;
+  if(saveWrap && core.nextElementSibling!==saveWrap) core.after(saveWrap);
+
+  // Create Custom Target is directly after Save.
+  if(create){
+    if(saveWrap && saveWrap.nextElementSibling!==create) saveWrap.after(create);
+  }
+}
+v22UnifyTargets();
+const v22Observer=new MutationObserver(()=>v22UnifyTargets());
+v22Observer.observe(document.body,{childList:true,subtree:true});
 </script></body></html>
