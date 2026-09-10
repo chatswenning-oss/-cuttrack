@@ -190,10 +190,16 @@ body.todayMode:after{position:fixed!important;inset:0!important;width:100vw!impo
 }
 #targetView .switch input:checked + .slider{background:#0a84ff!important}
 #targetView .switch input:checked + .slider:before{transform:translateX(20px)!important}
-#addAllPerformanceBtn{
- width:100%;margin-top:10px;background:rgba(10,132,255,.13);color:#0a84ff;
- border:1.5px solid #0a84ff;border-radius:14px;padding:14px 16px;font-weight:750;font-size:16px
-}
+
+/* v24 — per-target editor */
+#targetView .targetRow,#targetView .inlineTargetRow{cursor:pointer}
+.editTargetCard{max-height:88dvh;overflow:auto}
+.editTargetTop{display:grid;grid-template-columns:70px 1fr 70px;align-items:center;margin-bottom:14px}
+.editTargetTop h3{text-align:center;margin:0}.editTargetTop button{border:0;background:none;color:var(--blue);font-size:16px;text-align:left}
+.editTargetSection{background:rgba(118,118,128,.12);border-radius:16px;padding:14px;margin:10px 0}
+.editTargetSection label{margin:9px 0}.editSwitchRow{display:flex;align-items:center;justify-content:space-between;gap:15px}
+.editSwitchRow b{display:block;font-size:16px}.editSwitchRow small{display:block;color:var(--muted);font-size:12px;margin-top:3px}
+.etSave{width:100%;margin-top:12px}.dangerBtn{width:100%;margin-top:10px;border:1px solid rgba(255,69,58,.55);background:rgba(255,69,58,.10);color:#ff453a;border-radius:14px;padding:14px;font-weight:750;font-size:16px}
 </style></head><body class="system"><div class="wrap">
 <section id="todayView">
 <button class="todayTop dateOpen" id="dateOpenBtn" type="button"><h1 id="dayHeading">Today <span class="todayDrop">⌄</span></h1><div class="todayDate" id="todayDate"></div></button>
@@ -208,6 +214,22 @@ body.todayMode:after{position:fixed!important;inset:0!important;width:100vw!impo
 <div class="glass intakeGlass"><div id="mealList"></div></div>
 </section>
 
+
+<div class="modal hidden" id="editTargetModal">
+ <div class="modalCard editTargetCard">
+  <div class="editTargetTop"><button type="button" id="editTargetBack">‹ Back</button><h3>Edit Target</h3></div>
+  <div class="editTargetSection">
+   <label>Name<input id="etName" disabled></label>
+   <label>Unit<select id="etUnit"><option>kcal</option><option>g</option><option>mg</option><option>mL</option><option>steps</option><option>servings</option><option>times</option><option>custom</option></select></label>
+   <label id="etCustomUnitWrap" class="hidden">Custom unit<input id="etCustomUnit" placeholder="unit"></label>
+   <label>Daily target<input id="etValue" type="number" min="0" step="any"></label>
+  </div>
+  <div class="editTargetSection editSwitchRow"><div><b>Target</b><small>Show goal and progress bar</small></div><label class="switch"><input id="etEnabled" type="checkbox"><span class="slider"></span></label></div>
+  <div class="editTargetSection editSwitchRow"><div><b>Show in Performance</b><small>Add or remove this item from Performance</small></div><label class="switch"><input id="etPerformance" type="checkbox"><span class="slider"></span></label></div>
+  <button class="primary etSave" id="etSave" type="button">Save Changes</button>
+  <button class="dangerBtn hidden" id="etDelete" type="button">Delete Target</button>
+ </div>
+</div>
 <div class="modal hidden" id="customTargetModal">
  <div class="modalCard">
   <h3>Create Custom Target</h3>
@@ -226,7 +248,6 @@ body.todayMode:after{position:fixed!important;inset:0!important;width:100vw!impo
 <section id="mealView" class="hidden"><div class="mealHero" id="mealHero"><img id="mealHeroBg" class="mealHeroBg" alt="Meal photo"><button class="heroBack" id="mealBack">‹</button><button class="heroPhoto" id="heroPhotoBtn">＋</button><span id="photoCount" class="photoCount hidden"></span><div class="heroStats"><div><span>Calories</span><b id="heroCal">0 kcal</b></div><div><span>Protein</span><b id="heroP">0 g</b></div><div><span>Carbs</span><b id="heroC">0 g</b></div><div><span>Fat</span><b id="heroF">0 g</b></div><div><span>Fibre</span><b id="heroFiber">0 g</b></div></div><div id="heroDots" class="heroDots"></div><div class="heroTitle"><h1 id="heroMealName">New Meal</h1><div id="heroSubtitle">Add a photo or enter nutrition manually</div></div></div><input id="cameraInput" type="file" accept="image/*" capture="environment" hidden><input id="libraryInput" type="file" accept="image/*" multiple hidden><div class="mealEditor"><div class="mealSeg"><button id="editMealTab" class="on">Edit Meal</button><button id="nutritionTab">Nutrition Info</button></div><div id="editMealPanel"><div class="field"><label>Meal name</label><input id="mName" placeholder="Meal / item name"></div><div class="grid"><div class="field"><label>Calories</label><input id="mCal" type="number" min="0"></div><div class="field"><label>Protein</label><input id="mP" type="number" min="0" step=".1"></div><div class="field"><label>Carbs</label><input id="mC" type="number" min="0" step=".1"></div><div class="field"><label>Fat</label><input id="mF" type="number" min="0" step=".1"></div><div class="field"><label>Fibre</label><input id="mFiber" type="number" min="0" step=".1"></div></div><details class="accordion"><summary>Add more nutrition details <span>›</span></summary><div class="grid"><div class="field"><label>Water mL</label><input id="mWater" type="number" min="0"></div><div class="field"><label>Sodium mg</label><input id="mSodium" type="number"></div><div class="field"><label>Potassium mg</label><input id="mPotassium" type="number"></div><div class="field"><label>Sugar g</label><input id="mSugar" type="number"></div><div class="field"><label>Saturated fat g</label><input id="mSatfat" type="number"></div><div class="field"><label>Calcium mg</label><input id="mCalcium" type="number"></div><div class="field"><label>Iron mg</label><input id="mIron" type="number"></div><div class="field"><label>Magnesium mg</label><input id="mMagnesium" type="number"></div></div></details></div><div id="nutritionPanel" class="nutritionRead hidden"></div></div><div class="mealActions"><button class="danger" id="deleteMeal">Delete Meal</button><button class="primary" id="saveMeal">Add to Today</button></div><div id="photoSheet" class="photoSheet hidden"><div class="photoSheetBox"><button id="takePhotoBtn">Take Photo</button><button id="choosePhotoBtn">Choose from Photo Library</button><button id="cancelPhotoBtn">Cancel</button></div></div>
 </section>
 <section id="targetView" class="hidden"><div class="top"><button class="back" data-back="todayView">‹</button><div style="flex:1"><h1 class="sheetTitle">Daily Targets</h1><div class="muted">Tracking stays on even without a target.</div></div></div><div class="card" id="targetInputs"></div><button class="primary" id="saveTargets">Save Daily Targets</button><div class="customTargetsInline" id="customTargetsInline"></div>
-<button id="addAllPerformanceBtn" type="button">Add All to Performance</button>
 <div class="targetCreateFooter">
   <button class="primary" id="newCustomTargetBtn" type="button">+ Create Custom Target</button>
 </div>
@@ -497,11 +518,6 @@ function v23RenderAllPerformance(){
    grid.appendChild(el);
  });
 }
-$('addAllPerformanceBtn')?.addEventListener('click',()=>{
- v23AllPerformance=true;localStorage.setItem('cuttrackAllPerformance','1');
- v23RenderAllPerformance();
- $('addAllPerformanceBtn').textContent='Added to Performance ✓';
-});
 
 // Newly-created custom targets already render through renderCustomPerformance.
 // Re-wrap save click so it refreshes Performance immediately after creation.
@@ -513,4 +529,120 @@ if(v23Save){
  },0));
 }
 v23RenderAllPerformance();
+
+// v24 — independent Target and Performance visibility controls.
+const V24_BUILTINS=[
+ ['calories','Calories','kcal'],['protein','Protein','g'],['carbs','Carbs','g'],['fat','Fat','g'],
+ ['fiber','Fibre','g'],['water','Water','mL'],['steps','Steps','steps'],['burned','Burned','kcal'],
+ ['sodium','Sodium','mg'],['potassium','Potassium','mg'],['sugar','Sugar','g'],
+ ['satfat','Saturated Fat','g'],['calcium','Calcium','mg'],['iron','Iron','mg'],['magnesium','Magnesium','mg']
+];
+let v24Prefs={};
+try{v24Prefs=JSON.parse(localStorage.getItem('cuttrackV24TargetPrefs')||'{}')||{}}catch(e){}
+function v24SavePrefs(){localStorage.setItem('cuttrackV24TargetPrefs',JSON.stringify(v24Prefs))}
+function v24Builtin(k){return V24_BUILTINS.find(x=>x[0]===k)}
+function v24State(k){
+ const meta=v24Builtin(k), old=(db.targets&&db.targets[k])||(typeof v19Targets!=='undefined'&&v19Targets[k])||{};
+ const p=v24Prefs[k]||{};
+ return {key:k,name:meta?meta[1]:k,unit:p.unit||meta?.[2]||'',value:p.value??old.value??0,enabled:p.enabled??!!old.enabled,performance:p.performance??false,custom:false}
+}
+function v24Current(k){
+ try{if(typeof totals==='function'){const t=totals();if(t&&Number.isFinite(+t[k]))return +t[k]}}catch(e){}
+ return 0;
+}
+let v24Editing=null;
+function v24OpenTarget(key,customIndex=null){
+ let s;
+ if(customIndex!==null){
+   const t=db.customTargets[customIndex]; if(!t)return;
+   s={key:String(customIndex),name:t.name,unit:t.unit,value:t.value,enabled:t.enabled!==false,performance:t.performance!==false,custom:true,index:customIndex};
+ }else s=v24State(key);
+ v24Editing=s;
+ $('etName').value=s.name;$('etValue').value=s.value;
+ const known=[...$('etUnit').options].some(o=>o.value===s.unit);
+ $('etUnit').value=known?s.unit:'custom';$('etCustomUnit').value=known?'':s.unit;
+ $('etCustomUnitWrap').classList.toggle('hidden',known);
+ $('etEnabled').checked=!!s.enabled;$('etPerformance').checked=!!s.performance;
+ $('etDelete').classList.toggle('hidden',!s.custom);
+ $('editTargetModal').classList.remove('hidden');
+}
+$('editTargetBack')?.addEventListener('click',()=>$('editTargetModal').classList.add('hidden'));
+$('etUnit')?.addEventListener('change',()=>$('etCustomUnitWrap').classList.toggle('hidden',$('etUnit').value!=='custom'));
+function v24RenderPerformance(){
+ const grid=$('perfGrid');if(!grid)return;
+ grid.innerHTML='';
+ V24_BUILTINS.forEach(([k,name,defaultUnit])=>{
+   const s=v24State(k);if(!s.performance)return;
+   const cur=Math.round(v24Current(k)),goal=+s.value||0,pct=goal?Math.max(0,Math.min(100,cur/goal*100)):0,rem=Math.max(0,goal-cur);
+   const el=document.createElement('div');el.className='perf';
+   el.innerHTML=`<b>${name}</b><span class="perfValue">${cur}${s.enabled?` / ${goal}`:''} ${s.unit}</span>${s.enabled?`<div class="perfTrack"><div class="perfFill" style="width:${pct}%"></div></div><small class="perfRemain">${rem} ${s.unit} remaining</small>`:''}`;
+   grid.appendChild(el);
+ });
+ (db.customTargets||[]).forEach((t,i)=>{
+   if(t.performance===false)return;
+   const on=t.enabled!==false,cur=0,goal=+t.value||0,pct=goal?Math.max(0,Math.min(100,cur/goal*100)):0;
+   const el=document.createElement('div');el.className='perf customPerf';
+   el.innerHTML=`<b>${t.name}</b><span class="perfValue">${cur}${on?` / ${goal}`:''} ${t.unit}</span>${on?`<div class="perfTrack"><div class="perfFill" style="width:${pct}%"></div></div><small class="perfRemain">${Math.max(0,goal-cur)} ${t.unit} remaining</small>`:''}`;
+   grid.appendChild(el);
+ });
+}
+$('etSave')?.addEventListener('click',()=>{
+ if(!v24Editing)return;
+ let unit=$('etUnit').value==='custom'?$('etCustomUnit').value.trim():$('etUnit').value;
+ let value=Math.max(0,parseFloat($('etValue').value)||0);
+ if(!unit)return;
+ if(v24Editing.custom){
+   let t=db.customTargets[v24Editing.index];if(!t)return;
+   t.unit=unit;t.value=value;t.enabled=$('etEnabled').checked;t.performance=$('etPerformance').checked;
+   if(typeof saveCustomTargets==='function')saveCustomTargets();
+ }else{
+   v24Prefs[v24Editing.key]={unit,value,enabled:$('etEnabled').checked,performance:$('etPerformance').checked};
+   v24SavePrefs();
+   // mirror target enable/value into legacy state so existing Today calculations remain compatible
+   if(db.targets&&db.targets[v24Editing.key]){db.targets[v24Editing.key].enabled=$('etEnabled').checked;db.targets[v24Editing.key].value=value}
+   if(typeof v19Targets!=='undefined'&&v19Targets[v24Editing.key]){v19Targets[v24Editing.key].enabled=$('etEnabled').checked;v19Targets[v24Editing.key].value=value;if(typeof saveV19Targets==='function')saveV19Targets()}
+   if(typeof save==='function')save();
+ }
+ $('editTargetModal').classList.add('hidden');v24RenderPerformance();
+ if(typeof renderCustomTargets==='function')renderCustomTargets();
+});
+$('etDelete')?.addEventListener('click',()=>{
+ if(!v24Editing?.custom)return;
+ db.customTargets.splice(v24Editing.index,1);
+ if(typeof saveCustomTargets==='function')saveCustomTargets();
+ $('editTargetModal').classList.add('hidden');v24RenderPerformance();
+ if(typeof renderCustomTargets==='function')renderCustomTargets();
+});
+
+// Make every Daily Targets row tappable without breaking its existing switch/input.
+function v24WireRows(){
+ const view=$('targetView');if(!view)return;
+ const rows=[...view.querySelectorAll('.targetRow,.inlineTargetRow')];
+ rows.forEach(row=>{
+   if(row.dataset.v24wired)return;row.dataset.v24wired='1';
+   row.addEventListener('click',e=>{
+     if(e.target.closest('input,select,label.switch,button'))return;
+     const nm=(row.querySelector('b,.targetName')?.textContent||'').trim().toLowerCase();
+     const builtin=V24_BUILTINS.find(x=>x[1].toLowerCase()===nm);
+     if(builtin){v24OpenTarget(builtin[0]);return}
+     const ci=(db.customTargets||[]).findIndex(t=>t.name.toLowerCase()===nm);
+     if(ci>=0)v24OpenTarget(null,ci);
+   });
+ });
+}
+v24WireRows();
+new MutationObserver(v24WireRows).observe(document.body,{childList:true,subtree:true});
+
+// New custom targets default to visible in Performance and remain editable.
+$('ctSave')?.addEventListener('click',()=>setTimeout(()=>{
+ const arr=db.customTargets||[];if(arr.length){
+   const t=arr[arr.length-1];
+   if(t.performance===undefined){t.performance=true;if(t.enabled===undefined)t.enabled=true;if(typeof saveCustomTargets==='function')saveCustomTargets()}
+ }
+ v24WireRows();v24RenderPerformance();
+},0));
+
+// Replace v23 all-performance behavior with v24 individual preferences.
+localStorage.removeItem('cuttrackAllPerformance');
+v24RenderPerformance();
 </script></body></html>
