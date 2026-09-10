@@ -961,4 +961,93 @@ $('personaliseView')?.addEventListener('click',e=>{
 // On startup migrate the existing Today values into Macros & Supplements.
 // This immediately fixes old installs where the two screens had diverged.
 v28SyncFromCanonical();
+
+// v29 — Performance visibility and Target state are fully independent and saved reliably.
+function v29State(k){
+ const s=v24State(k);
+ const pref=v24Prefs[k]||{};
+ return {
+   ...s,
+   enabled: pref.enabled!==undefined ? !!pref.enabled : !!s.enabled,
+   performance: pref.performance!==undefined ? !!pref.performance : !!s.performance
+ };
+}
+
+v24RenderPerformance=function(){
+ const grid=$('perfGrid');if(!grid)return;
+ grid.innerHTML='';
+
+ V26_META.forEach(([k,icon,name])=>{
+   const s=v29State(k);
+   if(!s.performance)return;
+
+   const cur=Math.round(v24Current(k));
+   const goal=+s.value||0;
+   const pct=goal?Math.max(0,Math.min(100,cur/goal*100)):0;
+   const rem=Math.max(0,goal-cur);
+   const el=document.createElement('div');
+   el.className='perf';
+   el.innerHTML=`<b>${name}</b>
+     <span class="perfValue">${cur}${s.enabled?` / ${goal}`:''} ${s.unit}</span>
+     ${s.enabled?`<div class="perfTrack"><div class="perfFill" style="width:${pct}%"></div></div>
+     <small class="perfRemain">${rem} ${s.unit} remaining</small>`:''}`;
+   grid.appendChild(el);
+ });
+
+ (db.customTargets||[]).forEach(t=>{
+   if(t.performance===false)return;
+   const on=t.enabled!==false,cur=0,goal=+t.value||0;
+   const pct=goal?Math.max(0,Math.min(100,cur/goal*100)):0;
+   const el=document.createElement('div');
+   el.className='perf customPerf';
+   el.innerHTML=`<b>${t.name}</b>
+     <span class="perfValue">${cur}${on?` / ${goal}`:''} ${t.unit}</span>
+     ${on?`<div class="perfTrack"><div class="perfFill" style="width:${pct}%"></div></div>
+     <small class="perfRemain">${Math.max(0,goal-cur)} ${t.unit} remaining</small>`:''}`;
+   grid.appendChild(el);
+ });
+};
+
+// Capture Edit Target switches before the existing save/close logic can lose them.
+$('etSave')?.addEventListener('click',()=>{
+ if(!v24Editing)return;
+
+ const enabled=!!$('etEnabled')?.checked;
+ const performance=!!$('etPerformance')?.checked;
+ const value=Math.max(0,+($('etValue')?.value||0));
+ const unit=$('etUnit')?.value||'';
+
+ if(v24Editing.custom){
+   const t=(db.customTargets||[])[v24Editing.index];
+   if(t){
+     t.enabled=enabled;
+     t.performance=performance;
+     t.value=value;
+     t.unit=unit;
+     saveCustomTargets();
+   }
+ }else{
+   const k=v24Editing.key;
+   const old=v24Prefs[k]||{};
+   v24Prefs[k]={...old,enabled,performance,value,unit};
+   v24SavePrefs();
+
+   // Canonical Today target gets value/target state, but Performance remains a separate preference.
+   const ck=v28CanonicalKey(k);
+   if(db.targets&&db.targets[ck]){
+     db.targets[ck].value=value;
+     db.targets[ck].enabled=enabled;
+   }
+   if(typeof save==='function')save();
+ }
+ setTimeout(()=>{
+   if(typeof render==='function')render();
+   v25RenderTargets();
+   v24RenderPerformance();
+ },0);
+},true);
+
+// Whenever Performance is opened/rendered, use the current saved visibility flags.
+$('perfToggle')?.addEventListener('click',()=>setTimeout(v24RenderPerformance,0));
+v24RenderPerformance();
 </script></body></html>
