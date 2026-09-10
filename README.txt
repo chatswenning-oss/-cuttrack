@@ -11,3 +11,6 @@ Changes:
 - No changes to Today, Progress, Health, Profile, AI photo meals, water litres, backgrounds, or cuttrack_v9 storage.
 
 Upload the same app files to the root of the -cuttrack GitHub Pages repository and replace the existing versions.
+
+
+v66: Personalise CutTrack is now a compact summary card on Goals. Tap it to open the full detailed personalisation editor. Existing meal photos and cuttrack_v9 storage are unchanged.
