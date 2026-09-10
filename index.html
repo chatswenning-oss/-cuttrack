@@ -85,9 +85,29 @@ body.todayMode .wrap{min-height:100svh}
   .tabs{width:calc(100% - 18px)!important;padding-right:72px!important}
   .addFloat{right:5px!important}
 }
+
+/* v18 */
+body.todayMode:before{
+ position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;
+ background-attachment:fixed!important;background-size:cover!important;background-position:center center!important;
+ transform:none!important;
+}
+body.todayMode:after{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important}
+.dateOpen{display:block;width:auto;text-align:left;background:none;border:0;color:inherit;padding:0;margin:0 5px;cursor:pointer}
+.dateOpen h1{pointer-events:none}.calendarPicker{position:fixed;left:-9999px;top:-9999px;opacity:0}
+.glanceHead .linkBtn{color:#fff!important;text-shadow:0 1px 10px rgba(0,0,0,.35)}
+.weekDay{cursor:pointer}
+.customTargetBox{margin:18px 0;padding-top:12px;border-top:1px solid var(--line)}
+.customTargetBox .primary{width:100%;margin-top:12px}
+.customTargetRow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.customTargetRow small{display:block;color:var(--muted);margin-top:3px}.customTargetRow button{border:0;background:none;color:#ff453a;font-size:14px}
+.modal{position:fixed;inset:0;z-index:120;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;padding:18px}
+.modal.hidden{display:none}.modalCard{width:min(100%,500px);background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.modalCard h3{margin:0 0 14px;font-size:22px}.modalCard label{display:block;font-size:13px;color:var(--muted);margin:10px 0}.modalCard input,.modalCard select{display:block;width:100%;margin-top:6px}.modalActions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
 </style></head><body class="system"><div class="wrap">
 <section id="todayView">
-<div class="todayTop"><h1>Today <span class="todayDrop">⌄</span></h1><div class="todayDate" id="todayDate"></div></div>
+<button class="todayTop dateOpen" id="dateOpenBtn" type="button"><h1 id="dayHeading">Today <span class="todayDrop">⌄</span></h1><div class="todayDate" id="todayDate"></div></button>
+<input type="date" id="calendarPicker" class="calendarPicker" aria-label="Choose date">
 <div class="weekStrip" id="weekStrip"><button class="weekDay">M</button><button class="weekDay">T</button><button class="weekDay">W</button><button class="weekDay">T</button><button class="weekDay">F</button><button class="weekDay">S</button><button class="weekDay">S</button></div>
 <div class="glanceHead"><div><h2>Today at a glance</h2><div>Nutrition &amp; daily targets</div></div><button class="linkBtn" id="targetSetupBtn">Targets ›</button></div>
 <div class="glass calorieCard" id="calorieMetric"></div>
@@ -97,6 +117,24 @@ body.todayMode .wrap{min-height:100svh}
 <div class="intakeHead"><h2>Today’s intake</h2><span id="loggedCount"></span></div>
 <div class="glass intakeGlass"><div id="mealList"></div></div>
 </section>
+
+<div class="customTargetBox">
+  <div class="sectionTitle">Custom Performance Targets</div>
+  <div class="muted">Create anything you want to track in Performance.</div>
+  <div id="customTargetList"></div>
+  <button class="primary" id="newCustomTargetBtn" type="button">+ Create Custom Target</button>
+</div>
+<div class="modal hidden" id="customTargetModal">
+ <div class="modalCard">
+  <h3>Create Custom Target</h3>
+  <label>Name<input id="ctName" placeholder="e.g. Caffeine"></label>
+  <label>Daily target<input id="ctValue" type="number" min="0" step="any" placeholder="300"></label>
+  <label>Unit<select id="ctUnit"><option>g</option><option>mg</option><option>mL</option><option>kcal</option><option>servings</option><option>times</option><option>custom</option></select></label>
+  <label id="ctCustomUnitWrap" class="hidden">Custom unit<input id="ctCustomUnit" placeholder="unit"></label>
+  <label>Target type<select id="ctType"><option value="goal">Minimum goal</option><option value="limit">Maximum limit</option></select></label>
+  <div class="modalActions"><button id="ctCancel" type="button">Cancel</button><button class="primary" id="ctSave" type="button">Save Target</button></div>
+ </div>
+</div>
 <section id="progressView" class="hidden"><div class="top"><div><h1>Progress</h1><div class="muted">Nutrition, activity & consistency</div></div></div><div class="segment"><button class="seg on" data-range="week">Week</button><button class="seg" data-range="month">Month</button><button class="seg" data-range="supp">Supplements</button></div><div id="progressContent"></div></section>
 <section id="healthView" class="hidden"><div class="top"><div><h1>Health</h1><div class="muted">Body & activity</div></div></div><div class="card"><h2>Today</h2><div class="miniGrid"><div class="mini"><div class="label">💧 Water</div><strong id="hWater">0 mL</strong></div><div class="mini"><div class="label">👟 Steps</div><strong id="hSteps">—</strong></div><div class="mini"><div class="label">🔥 Active</div><strong id="hBurn">—</strong></div><div class="mini"><div class="label">⚖️ Weight</div><strong id="hWeight">—</strong></div></div></div><div class="card"><h2>Manual health data</h2><div class="grid"><div class="field"><label>Steps</label><input id="stepsInput" type="number" min="0"></div><div class="field"><label>Active calories</label><input id="burnInput" type="number" min="0"></div></div><div class="grid"><div class="field"><label>Weight kg</label><input id="weightInput" type="number" min="0" step=".1"></div><div class="field"><label>Water mL</label><input id="waterInput" type="number" min="0"></div></div><button class="primary" id="saveHealth">Save Health Data</button></div><div class="card"><h2>Apple Health</h2><p class="muted">When CutTrack moves to its native iPhone version, this section can sync permitted steps, active energy, workouts, weight and other Health data automatically.</p><button class="secondary" disabled>Connect Apple Health · native app required</button></div></section>
 <section id="settingsView" class="hidden"><div class="top"><div><h1>Settings</h1><div class="muted">Profile, preferences & reminders</div></div></div><div class="card"><div class="row"><div class="row" style="justify-content:flex-start"><div id="profilePic" class="profilePic">👤</div><div><h2 id="profileName">Your Profile</h2><div class="muted small">CutTrack account</div></div></div><button class="linkBtn" id="editProfileBtn">Edit ›</button></div></div><div class="card"><h2>Appearance</h2><div class="appearance"><button data-theme="system">System</button><button data-theme="light">Light</button><button data-theme="dark">Dark</button></div></div><div class="card"><h2>Targets & personalisation</h2><div class="settingsRow"><span>AI Target Setup</span><button class="linkBtn" id="personaliseBtn">Open ›</button></div><div class="settingsRow"><span>Daily Targets</span><button class="linkBtn" id="dailyTargetBtn">Edit ›</button></div><div class="settingsRow"><span>Supplements</span><button class="linkBtn" id="suppSettingsBtn">Manage ›</button></div></div><div class="card"><div class="row"><div><h2>Reminders</h2><div class="muted small">Meals & supplements</div></div><button class="linkBtn" id="addReminderBtn">＋ Add</button></div><div id="reminderList" style="margin-top:12px"></div><div class="notice">Create several meal or supplement reminders. Settings are saved in this prototype; reliable scheduled iPhone notifications will be enabled in the native app/push-notification version.</div></div><div class="card"><h2>Account & data</h2><div class="settingsRow"><span>Sign in with Apple</span><span class="muted">Coming with backend</span></div><div class="settingsRow"><span>Google account</span><span class="muted">Coming with backend</span></div><div class="settingsRow"><span>Cloud sync</span><span class="muted">Local for now</span></div></div></section>
@@ -161,4 +199,69 @@ document.addEventListener('touchend',e=>{
   }
   slideTouch=null;
 },{passive:true});
+
+// v18 — date navigation and custom Performance targets.
+if(!db.customTargets) db.customTargets=[];
+let selectedDateKey = localStorage.getItem('cuttrackSelectedDate') || new Date().toISOString().slice(0,10);
+
+function localISO(d){let y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}
+function setSelectedDate(d){
+  selectedDateKey=localISO(d); localStorage.setItem('cuttrackSelectedDate',selectedDateKey);
+  const today=localISO(new Date());
+  const heading=$('dayHeading');
+  if(heading) heading.innerHTML=(selectedDateKey===today?'Today':d.toLocaleDateString(undefined,{weekday:'long'}))+' <span class="todayDrop">⌄</span>';
+  const td=$('todayDate'); if(td) td.textContent=d.toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'});
+  document.querySelectorAll('.weekDay').forEach((b,i)=>{
+    const now=new Date(), monday=new Date(now); let diff=(now.getDay()+6)%7;
+    monday.setDate(now.getDate()-diff); monday.setHours(12,0,0,0);
+    const x=new Date(monday); x.setDate(monday.getDate()+i);
+    b.classList.toggle('active',localISO(x)===selectedDateKey);
+  });
+  if(typeof render==='function') render();
+}
+function weekDate(i){
+  const now=new Date(); let diff=(now.getDay()+6)%7;
+  const monday=new Date(now); monday.setDate(now.getDate()-diff); monday.setHours(12,0,0,0);
+  monday.setDate(monday.getDate()+i); return monday;
+}
+document.querySelectorAll('.weekDay').forEach((b,i)=>b.addEventListener('click',()=>setSelectedDate(weekDate(i))));
+const picker=$('calendarPicker');
+$('dateOpenBtn')?.addEventListener('click',()=>{
+  picker.value=selectedDateKey;
+  if(picker.showPicker) picker.showPicker(); else picker.click();
+});
+picker?.addEventListener('change',()=>{if(picker.value){let d=new Date(picker.value+'T12:00:00');setSelectedDate(d)}});
+
+function saveCustomTargets(){localStorage.setItem('cuttrackCustomTargets',JSON.stringify(db.customTargets)); if(typeof save==='function') save()}
+try{const c=JSON.parse(localStorage.getItem('cuttrackCustomTargets')||'null');if(Array.isArray(c))db.customTargets=c}catch(e){}
+function renderCustomTargets(){
+ const box=$('customTargetList'); if(!box)return;
+ box.innerHTML=db.customTargets.length?db.customTargets.map((t,i)=>`<div class="customTargetRow"><div><b>${t.name}</b><small>${t.type==='limit'?'Maximum':'Goal'} ${t.value} ${t.unit}</small></div><button data-delct="${i}">Remove</button></div>`).join(''):'<div class="muted" style="padding:12px 0">No custom targets yet.</div>';
+ box.querySelectorAll('[data-delct]').forEach(b=>b.onclick=()=>{db.customTargets.splice(+b.dataset.delct,1);saveCustomTargets();renderCustomTargets();renderCustomPerformance()});
+}
+function renderCustomPerformance(){
+ const pg=$('perfGrid'); if(!pg)return;
+ pg.querySelectorAll('.customPerf').forEach(x=>x.remove());
+ db.customTargets.forEach(t=>{
+   let el=document.createElement('div');el.className='perf customPerf';
+   el.innerHTML=`<b>${t.name}</b><span>0 ${t.unit}${t.value?` / ${t.value} ${t.unit}`:''}</span>`;
+   pg.appendChild(el);
+ });
+}
+$('newCustomTargetBtn')?.addEventListener('click',()=>{$('customTargetModal').classList.remove('hidden')});
+$('ctCancel')?.addEventListener('click',()=>{$('customTargetModal').classList.add('hidden')});
+$('ctUnit')?.addEventListener('change',()=>{$('ctCustomUnitWrap').classList.toggle('hidden',$('ctUnit').value!=='custom')});
+$('ctSave')?.addEventListener('click',()=>{
+ const name=$('ctName').value.trim(), value=parseFloat($('ctValue').value);
+ let unit=$('ctUnit').value==='custom'?$('ctCustomUnit').value.trim():$('ctUnit').value;
+ if(!name || !isFinite(value) || value<0 || !unit)return;
+ db.customTargets.push({id:Date.now(),name,value,unit,type:$('ctType').value});
+ saveCustomTargets();renderCustomTargets();renderCustomPerformance();$('customTargetModal').classList.add('hidden');
+ $('ctName').value='';$('ctValue').value='';$('ctCustomUnit').value='';
+});
+renderCustomTargets();renderCustomPerformance();
+setSelectedDate(new Date(selectedDateKey+'T12:00:00'));
+
+// Make Targets the direct home for Targets & Personalisation.
+$('targetSetupBtn')?.addEventListener('click',()=>{ if(typeof openTargets==='function') openTargets(); });
 </script></body></html>
