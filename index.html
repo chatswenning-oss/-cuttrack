@@ -172,6 +172,28 @@ body.todayMode:after{position:fixed!important;inset:0!important;width:100vw!impo
   color:var(--blue)!important;
   border:1.5px solid var(--blue)!important;
 }
+
+/* v23 — unified iOS switches + Performance controls */
+#targetView .switch{
+ position:relative!important;display:inline-block!important;width:51px!important;height:31px!important;
+ flex:0 0 51px!important
+}
+#targetView .switch input{opacity:0!important;width:0!important;height:0!important;position:absolute!important}
+#targetView .switch .slider{
+ position:absolute!important;inset:0!important;border-radius:999px!important;
+ background:#3a3a3c!important;transition:.2s!important;box-shadow:none!important
+}
+#targetView .switch .slider:before{
+ content:""!important;position:absolute!important;width:27px!important;height:27px!important;
+ left:2px!important;top:2px!important;border-radius:50%!important;background:#fff!important;
+ transition:.2s!important;box-shadow:0 2px 5px rgba(0,0,0,.28)!important
+}
+#targetView .switch input:checked + .slider{background:#0a84ff!important}
+#targetView .switch input:checked + .slider:before{transform:translateX(20px)!important}
+#addAllPerformanceBtn{
+ width:100%;margin-top:10px;background:rgba(10,132,255,.13);color:#0a84ff;
+ border:1.5px solid #0a84ff;border-radius:14px;padding:14px 16px;font-weight:750;font-size:16px
+}
 </style></head><body class="system"><div class="wrap">
 <section id="todayView">
 <button class="todayTop dateOpen" id="dateOpenBtn" type="button"><h1 id="dayHeading">Today <span class="todayDrop">⌄</span></h1><div class="todayDate" id="todayDate"></div></button>
@@ -204,6 +226,7 @@ body.todayMode:after{position:fixed!important;inset:0!important;width:100vw!impo
 <section id="mealView" class="hidden"><div class="mealHero" id="mealHero"><img id="mealHeroBg" class="mealHeroBg" alt="Meal photo"><button class="heroBack" id="mealBack">‹</button><button class="heroPhoto" id="heroPhotoBtn">＋</button><span id="photoCount" class="photoCount hidden"></span><div class="heroStats"><div><span>Calories</span><b id="heroCal">0 kcal</b></div><div><span>Protein</span><b id="heroP">0 g</b></div><div><span>Carbs</span><b id="heroC">0 g</b></div><div><span>Fat</span><b id="heroF">0 g</b></div><div><span>Fibre</span><b id="heroFiber">0 g</b></div></div><div id="heroDots" class="heroDots"></div><div class="heroTitle"><h1 id="heroMealName">New Meal</h1><div id="heroSubtitle">Add a photo or enter nutrition manually</div></div></div><input id="cameraInput" type="file" accept="image/*" capture="environment" hidden><input id="libraryInput" type="file" accept="image/*" multiple hidden><div class="mealEditor"><div class="mealSeg"><button id="editMealTab" class="on">Edit Meal</button><button id="nutritionTab">Nutrition Info</button></div><div id="editMealPanel"><div class="field"><label>Meal name</label><input id="mName" placeholder="Meal / item name"></div><div class="grid"><div class="field"><label>Calories</label><input id="mCal" type="number" min="0"></div><div class="field"><label>Protein</label><input id="mP" type="number" min="0" step=".1"></div><div class="field"><label>Carbs</label><input id="mC" type="number" min="0" step=".1"></div><div class="field"><label>Fat</label><input id="mF" type="number" min="0" step=".1"></div><div class="field"><label>Fibre</label><input id="mFiber" type="number" min="0" step=".1"></div></div><details class="accordion"><summary>Add more nutrition details <span>›</span></summary><div class="grid"><div class="field"><label>Water mL</label><input id="mWater" type="number" min="0"></div><div class="field"><label>Sodium mg</label><input id="mSodium" type="number"></div><div class="field"><label>Potassium mg</label><input id="mPotassium" type="number"></div><div class="field"><label>Sugar g</label><input id="mSugar" type="number"></div><div class="field"><label>Saturated fat g</label><input id="mSatfat" type="number"></div><div class="field"><label>Calcium mg</label><input id="mCalcium" type="number"></div><div class="field"><label>Iron mg</label><input id="mIron" type="number"></div><div class="field"><label>Magnesium mg</label><input id="mMagnesium" type="number"></div></div></details></div><div id="nutritionPanel" class="nutritionRead hidden"></div></div><div class="mealActions"><button class="danger" id="deleteMeal">Delete Meal</button><button class="primary" id="saveMeal">Add to Today</button></div><div id="photoSheet" class="photoSheet hidden"><div class="photoSheetBox"><button id="takePhotoBtn">Take Photo</button><button id="choosePhotoBtn">Choose from Photo Library</button><button id="cancelPhotoBtn">Cancel</button></div></div>
 </section>
 <section id="targetView" class="hidden"><div class="top"><button class="back" data-back="todayView">‹</button><div style="flex:1"><h1 class="sheetTitle">Daily Targets</h1><div class="muted">Tracking stays on even without a target.</div></div></div><div class="card" id="targetInputs"></div><button class="primary" id="saveTargets">Save Daily Targets</button><div class="customTargetsInline" id="customTargetsInline"></div>
+<button id="addAllPerformanceBtn" type="button">Add All to Performance</button>
 <div class="targetCreateFooter">
   <button class="primary" id="newCustomTargetBtn" type="button">+ Create Custom Target</button>
 </div>
@@ -439,4 +462,55 @@ function v22UnifyTargets(){
 v22UnifyTargets();
 const v22Observer=new MutationObserver(()=>v22UnifyTargets());
 v22Observer.observe(document.body,{childList:true,subtree:true});
+
+// v23 — all standard metrics can be shown in Performance; custom targets auto-appear.
+const V23_ALL_PERFORMANCE=[
+ ['calories','Calories','kcal'],['protein','Protein','g'],['carbs','Carbs','g'],['fat','Fat','g'],
+ ['fiber','Fibre','g'],['water','Water','mL'],['steps','Steps','steps'],['burned','Burned','kcal'],
+ ['sodium','Sodium','mg'],['potassium','Potassium','mg'],['sugar','Sugar','g'],
+ ['satfat','Saturated Fat','g'],['calcium','Calcium','mg'],['iron','Iron','mg'],['magnesium','Magnesium','mg']
+];
+let v23AllPerformance=localStorage.getItem('cuttrackAllPerformance')==='1';
+
+function v23TargetState(k){
+ if(db.targets && db.targets[k]) return db.targets[k];
+ if(typeof v19Targets!=='undefined' && v19Targets[k]) return v19Targets[k];
+ return {enabled:false,value:0};
+}
+function v23Current(k){
+ try{
+   if(typeof totals==='function'){const x=totals(); if(x && Number.isFinite(+x[k])) return +x[k]}
+ }catch(e){}
+ return 0;
+}
+function v23RenderAllPerformance(){
+ if(!v23AllPerformance)return;
+ const grid=$('perfGrid'); if(!grid)return;
+ // Standard Performance items already rendered by v21 are retained. Add only missing standard items.
+ const existing=[...grid.querySelectorAll('.perf b')].map(x=>(x.textContent||'').trim().toLowerCase());
+ V23_ALL_PERFORMANCE.forEach(([k,name,unit])=>{
+   if(existing.includes(name.toLowerCase()))return;
+   const st=v23TargetState(k), on=!!st.enabled, goal=+st.value||0, cur=Math.round(v23Current(k));
+   const pct=goal?Math.max(0,Math.min(100,cur/goal*100)):0, rem=Math.max(0,goal-cur);
+   const el=document.createElement('div');el.className='perf v23Perf';
+   el.innerHTML=`<b>${name}</b><span class="perfValue">${cur}${on?` / ${goal}`:''} ${unit}</span>${on?`<div class="perfTrack"><div class="perfFill" style="width:${pct}%"></div></div><small class="perfRemain">${rem} ${unit} remaining</small>`:''}`;
+   grid.appendChild(el);
+ });
+}
+$('addAllPerformanceBtn')?.addEventListener('click',()=>{
+ v23AllPerformance=true;localStorage.setItem('cuttrackAllPerformance','1');
+ v23RenderAllPerformance();
+ $('addAllPerformanceBtn').textContent='Added to Performance ✓';
+});
+
+// Newly-created custom targets already render through renderCustomPerformance.
+// Re-wrap save click so it refreshes Performance immediately after creation.
+const v23Save=$('ctSave');
+if(v23Save){
+ v23Save.addEventListener('click',()=>setTimeout(()=>{
+   if(typeof renderCustomPerformance==='function')renderCustomPerformance();
+   v23RenderAllPerformance();
+ },0));
+}
+v23RenderAllPerformance();
 </script></body></html>
