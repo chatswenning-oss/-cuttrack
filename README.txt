@@ -1,13 +1,14 @@
-CutTrack v59 — Water in Litres
+CutTrack v60 — Alarm-Style Reminders
+Built directly from the stable v59 baseline.
 
-Built directly from v58.
+Changed only the reminder editor:
+- Alarm-style large time control
+- Repeat row opens Mon–Sun day selection
+- Meal / Supplement row replaces Reminder type
+- Name row replaces the old Name field placement
+- Reminder enabled toggle retained
+- Delete Reminder retained
+- No snooze controls
 
-Change only:
-- Water is displayed and entered in litres (L) instead of millilitres (mL).
-- Existing stored water data remains compatible internally in mL, so previous data is not wiped.
-- Examples: 500 mL = 0.5 L, 2700 mL = 2.7 L.
-
-No layout, background, navigation, AI photo flow, or other functionality changes intended.
-Storage key remains cuttrack_v9.
-
+All v59 data/storage, water litres, backgrounds, AI photo meal flow, navigation and other screens remain unchanged.
 Upload all 6 files to the root of the -cuttrack GitHub Pages repo and replace the existing files.
