@@ -1,10 +1,13 @@
-CutTrack v58 — Photo Upload AI Meals
-Built from the v57 AI Photo Meals baseline.
+CutTrack v59 — Water in Litres
 
-Change in v58:
-- Tapping the blue + now opens the image upload/photo library picker instead of forcing the camera.
-- The selected meal photo continues into the same AI nutrition-analysis flow.
-- Existing meal editor, Today, Progress, Health, Profile, Goals, backgrounds, navigation and data storage remain unchanged.
-- Storage key remains cuttrack_v9.
+Built directly from v58.
 
-Upload all 6 files to the root of the -cuttrack GitHub Pages repository and replace the existing versions.
+Change only:
+- Water is displayed and entered in litres (L) instead of millilitres (mL).
+- Existing stored water data remains compatible internally in mL, so previous data is not wiped.
+- Examples: 500 mL = 0.5 L, 2700 mL = 2.7 L.
+
+No layout, background, navigation, AI photo flow, or other functionality changes intended.
+Storage key remains cuttrack_v9.
+
+Upload all 6 files to the root of the -cuttrack GitHub Pages repo and replace the existing files.
