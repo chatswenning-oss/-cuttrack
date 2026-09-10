@@ -247,6 +247,20 @@ body.todayMode:after{position:fixed!important;inset:0!important;width:100vw!impo
 /* v27: target-related navigation now lives behind Today's Targets button */
 #settingsView .settingsCard:has(#personaliseBtn),
 #settingsView .card:has(#personaliseBtn){display:none!important}
+
+/* v30 — stable Today background + tappable Performance */
+body.todayMode::before{
+ content:""!important;position:fixed!important;inset:0!important;z-index:-2!important;
+ background-image:url("cuttrack-v16-bg.jpg")!important;
+ background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important;
+ opacity:1!important;pointer-events:none!important
+}
+body.todayMode{background:#000!important}
+#perfGrid .perf{cursor:pointer}
+#perfGrid .perf:active{transform:scale(.985)}
+.healthTargetTrack{height:7px;background:rgba(142,142,147,.42);border-radius:99px;overflow:hidden;margin-top:8px}
+.healthTargetFill{height:100%;background:var(--blue);border-radius:99px}
+.healthTargetRemain{display:block;color:var(--muted);font-size:12px;margin-top:6px}
 </style></head><body class="system"><div class="wrap">
 <section id="todayView">
 <button class="todayTop dateOpen" id="dateOpenBtn" type="button"><h1 id="dayHeading">Today <span class="todayDrop">⌄</span></h1><div class="todayDate" id="todayDate"></div></button>
@@ -1050,4 +1064,101 @@ $('etSave')?.addEventListener('click',()=>{
 // Whenever Performance is opened/rendered, use the current saved visibility flags.
 $('perfToggle')?.addEventListener('click',()=>setTimeout(v24RenderPerformance,0));
 v24RenderPerformance();
+
+// v30 — persistence + editable Performance cards + target bars for Burned/Steps/Water.
+
+// Never infer Performance visibility from Target state. Saved Performance preference is authoritative.
+function v30PerformanceOn(k){
+ const p=v24Prefs[k];
+ return !!(p && p.performance===true);
+}
+function v30TargetOn(k){
+ const p=v24Prefs[k];
+ if(p && p.enabled!==undefined)return !!p.enabled;
+ const ck=v28CanonicalKey(k),t=db.targets&&db.targets[ck];
+ return !!(t && t.enabled===true);
+}
+
+// Render Performance strictly from saved "Show in Performance".
+v24RenderPerformance=function(){
+ const grid=$('perfGrid');if(!grid)return;
+ grid.innerHTML='';
+ V26_META.forEach(([k,icon,name])=>{
+   if(!v30PerformanceOn(k))return;
+   const s=v24State(k),cur=Math.round(v24Current(k)),goal=+s.value||0,on=v30TargetOn(k);
+   const pct=goal?Math.max(0,Math.min(100,cur/goal*100)):0,rem=Math.max(0,goal-cur);
+   const el=document.createElement('div');el.className='perf';el.dataset.editTarget=k;
+   el.innerHTML=`<b>${name}</b><span class="perfValue">${cur}${on?` / ${goal}`:''} ${s.unit}</span>
+   ${on?`<div class="perfTrack"><div class="perfFill" style="width:${pct}%"></div></div><small class="perfRemain">${rem} ${s.unit} remaining</small>`:''}`;
+   grid.appendChild(el);
+ });
+ (db.customTargets||[]).forEach((t,i)=>{
+   if(t.performance!==true)return;
+   const on=t.enabled===true,cur=0,goal=+t.value||0,pct=goal?Math.max(0,Math.min(100,cur/goal*100)):0;
+   const el=document.createElement('div');el.className='perf customPerf';el.dataset.editCustom=i;
+   el.innerHTML=`<b>${t.name}</b><span class="perfValue">${cur}${on?` / ${goal}`:''} ${t.unit}</span>
+   ${on?`<div class="perfTrack"><div class="perfFill" style="width:${pct}%"></div></div><small class="perfRemain">${Math.max(0,goal-cur)} ${t.unit} remaining</small>`:''}`;
+   grid.appendChild(el);
+ });
+};
+$('perfGrid')?.addEventListener('click',e=>{
+ const card=e.target.closest('.perf');if(!card)return;
+ if(card.dataset.editTarget)v24OpenTarget(card.dataset.editTarget);
+ else if(card.dataset.editCustom!==undefined)v24OpenTarget(null,+card.dataset.editCustom);
+});
+
+// Replace Burned / Steps / Water secondary text with target progress when Target is ON.
+function v30HealthTargets(){
+ const specs=[
+  ['burned','Burned','kcal',()=>Math.round(day().health?.burn||0)],
+  ['steps','Steps','',()=>Math.round(day().health?.steps||0)],
+  ['water','Water','mL',()=>Math.round(day().health?.water||0)]
+ ];
+ specs.forEach(([k,label,fallbackUnit,getCur])=>{
+   const s=v24State(k),on=v30TargetOn(k),goal=+s.value||0,cur=getCur(),unit=s.unit||fallbackUnit;
+   // Locate the existing top glance cell by its visible label.
+   const candidates=[...document.querySelectorAll('#todayView *')];
+   const labelEl=candidates.find(x=>x.children.length===0 && (x.textContent||'').trim().replace(/^[^\w]+/,'').trim()===label);
+   if(!labelEl)return;
+   const cell=labelEl.closest('.mini,.healthMini,.stat,.metric,.third')||labelEl.parentElement;
+   if(!cell)return;
+   let box=cell.querySelector('.v30HealthTarget');
+   if(!box){box=document.createElement('div');box.className='v30HealthTarget';cell.appendChild(box)}
+   if(on){
+     const pct=goal?Math.max(0,Math.min(100,cur/goal*100)):0,rem=Math.max(0,goal-cur);
+     box.innerHTML=`<strong>${cur} / ${goal}${unit?' '+unit:''}</strong><div class="healthTargetTrack"><div class="healthTargetFill" style="width:${pct}%"></div></div><small class="healthTargetRemain">${rem}${unit?' '+unit:''} remaining</small>`;
+     [...cell.children].forEach(ch=>{if(ch!==labelEl&&ch!==box&&!ch.classList.contains('v30Keep'))ch.dataset.v30Old=ch.style.display,ch.style.display='none'});
+     labelEl.style.display='';
+   }else{
+     box.innerHTML=`<strong>${cur}${unit?' '+unit:''}</strong>`;
+     [...cell.children].forEach(ch=>{if(ch!==box&&ch.dataset.v30Old!==undefined){ch.style.display=ch.dataset.v30Old;delete ch.dataset.v30Old}});
+     box.style.display='';
+   }
+ });
+}
+
+// Save editor states explicitly and persist them across reloads.
+$('etSave')?.addEventListener('click',()=>{
+ if(!v24Editing)return;
+ const enabled=!!$('etEnabled')?.checked,performance=!!$('etPerformance')?.checked;
+ if(v24Editing.custom){
+   const t=(db.customTargets||[])[v24Editing.index];
+   if(t){t.enabled=enabled;t.performance=performance;saveCustomTargets()}
+ }else{
+   const k=v24Editing.key;
+   v24Prefs[k]={...(v24Prefs[k]||{}),enabled,performance};
+   v24SavePrefs();
+ }
+ setTimeout(()=>{v24RenderPerformance();v30HealthTargets();if(typeof render==='function')render()},10);
+},true);
+
+// Re-apply stable UI after every app render and when returning to Today.
+const v30Render=render;
+render=function(){v30Render();setTimeout(()=>{v24RenderPerformance();v30HealthTargets()},0)};
+const v30Show=show;
+show=function(id){v30Show(id);if(id==='todayView')setTimeout(()=>{document.body.classList.add('todayMode');v24RenderPerformance();v30HealthTargets()},0)};
+
+// First load: force the correct Today background state if Today is visible.
+if(!$('todayView')?.classList.contains('hidden'))document.body.classList.add('todayMode');
+setTimeout(()=>{v24RenderPerformance();v30HealthTargets()},0);
 </script></body></html>
