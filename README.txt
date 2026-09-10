@@ -1,9 +1,10 @@
-CutTrack v55 — Locked Exact Background
+CutTrack v56 — Blurred Secondary Backgrounds
 
-Built from the stable v49 app baseline.
-- Uses the EXACT portrait background supplied/approved by the user.
-- One continuous image only.
-- No blur, repeat, tiling, generated replacement, or stretching.
-- Existing CutTrack UI and functionality otherwise unchanged.
+Built directly from the locked v55 baseline.
 
-Upload all 6 files to the GitHub repository root and replace the existing files.
+ONLY CHANGE:
+- Today keeps the exact v55 background sharp and unchanged.
+- Progress, Health, Profile and Goals use the exact same background with a blur effect.
+- Goal sub-screens and Edit Profile keep the same blurred background for continuity.
+- No layout, navigation, data, card, button, target, nutrition or functionality changes.
+- Existing cuttrack_v9 storage is unchanged.
