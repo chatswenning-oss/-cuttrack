@@ -104,6 +104,22 @@ body.todayMode:after{position:fixed!important;inset:0!important;width:100vw!impo
 .modal{position:fixed;inset:0;z-index:120;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;padding:18px}
 .modal.hidden{display:none}.modalCard{width:min(100%,500px);background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
 .modalCard h3{margin:0 0 14px;font-size:22px}.modalCard label{display:block;font-size:13px;color:var(--muted);margin:10px 0}.modalCard input,.modalCard select{display:block;width:100%;margin-top:6px}.modalActions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+
+/* v19 — unified Daily Targets */
+.customTargetsInline{margin-top:0}
+.inlineTargetRow{
+ display:grid;grid-template-columns:minmax(0,1fr) 110px 58px;gap:12px;align-items:center;
+ padding:18px 0;border-top:1px solid var(--line)
+}
+.inlineTargetRow .targetName{font-weight:750;font-size:17px}
+.inlineTargetRow .targetMeta{font-size:13px;color:var(--muted);margin-top:4px}
+.inlineTargetRow input[type=number]{width:100%;min-width:0}
+.inlineTargetRow .switch{justify-self:end}
+.inlineTargetRow .removeCT{grid-column:1/-1;border:0;background:none;color:#ff453a;text-align:left;padding:0;font-size:13px}
+.targetCreateFooter{padding:14px 0 4px;border-top:1px solid var(--line)}
+.targetCreateFooter .primary{width:100%}
+.v19StandardTargets{margin-top:0}
+@media(max-width:390px){.inlineTargetRow{grid-template-columns:minmax(0,1fr) 92px 54px;gap:8px}}
 </style></head><body class="system"><div class="wrap">
 <section id="todayView">
 <button class="todayTop dateOpen" id="dateOpenBtn" type="button"><h1 id="dayHeading">Today <span class="todayDrop">⌄</span></h1><div class="todayDate" id="todayDate"></div></button>
@@ -118,12 +134,6 @@ body.todayMode:after{position:fixed!important;inset:0!important;width:100vw!impo
 <div class="glass intakeGlass"><div id="mealList"></div></div>
 </section>
 
-<div class="customTargetBox">
-  <div class="sectionTitle">Custom Performance Targets</div>
-  <div class="muted">Create anything you want to track in Performance.</div>
-  <div id="customTargetList"></div>
-  <button class="primary" id="newCustomTargetBtn" type="button">+ Create Custom Target</button>
-</div>
 <div class="modal hidden" id="customTargetModal">
  <div class="modalCard">
   <h3>Create Custom Target</h3>
@@ -139,7 +149,12 @@ body.todayMode:after{position:fixed!important;inset:0!important;width:100vw!impo
 <section id="healthView" class="hidden"><div class="top"><div><h1>Health</h1><div class="muted">Body & activity</div></div></div><div class="card"><h2>Today</h2><div class="miniGrid"><div class="mini"><div class="label">💧 Water</div><strong id="hWater">0 mL</strong></div><div class="mini"><div class="label">👟 Steps</div><strong id="hSteps">—</strong></div><div class="mini"><div class="label">🔥 Active</div><strong id="hBurn">—</strong></div><div class="mini"><div class="label">⚖️ Weight</div><strong id="hWeight">—</strong></div></div></div><div class="card"><h2>Manual health data</h2><div class="grid"><div class="field"><label>Steps</label><input id="stepsInput" type="number" min="0"></div><div class="field"><label>Active calories</label><input id="burnInput" type="number" min="0"></div></div><div class="grid"><div class="field"><label>Weight kg</label><input id="weightInput" type="number" min="0" step=".1"></div><div class="field"><label>Water mL</label><input id="waterInput" type="number" min="0"></div></div><button class="primary" id="saveHealth">Save Health Data</button></div><div class="card"><h2>Apple Health</h2><p class="muted">When CutTrack moves to its native iPhone version, this section can sync permitted steps, active energy, workouts, weight and other Health data automatically.</p><button class="secondary" disabled>Connect Apple Health · native app required</button></div></section>
 <section id="settingsView" class="hidden"><div class="top"><div><h1>Settings</h1><div class="muted">Profile, preferences & reminders</div></div></div><div class="card"><div class="row"><div class="row" style="justify-content:flex-start"><div id="profilePic" class="profilePic">👤</div><div><h2 id="profileName">Your Profile</h2><div class="muted small">CutTrack account</div></div></div><button class="linkBtn" id="editProfileBtn">Edit ›</button></div></div><div class="card"><h2>Appearance</h2><div class="appearance"><button data-theme="system">System</button><button data-theme="light">Light</button><button data-theme="dark">Dark</button></div></div><div class="card"><h2>Targets & personalisation</h2><div class="settingsRow"><span>AI Target Setup</span><button class="linkBtn" id="personaliseBtn">Open ›</button></div><div class="settingsRow"><span>Daily Targets</span><button class="linkBtn" id="dailyTargetBtn">Edit ›</button></div><div class="settingsRow"><span>Supplements</span><button class="linkBtn" id="suppSettingsBtn">Manage ›</button></div></div><div class="card"><div class="row"><div><h2>Reminders</h2><div class="muted small">Meals & supplements</div></div><button class="linkBtn" id="addReminderBtn">＋ Add</button></div><div id="reminderList" style="margin-top:12px"></div><div class="notice">Create several meal or supplement reminders. Settings are saved in this prototype; reliable scheduled iPhone notifications will be enabled in the native app/push-notification version.</div></div><div class="card"><h2>Account & data</h2><div class="settingsRow"><span>Sign in with Apple</span><span class="muted">Coming with backend</span></div><div class="settingsRow"><span>Google account</span><span class="muted">Coming with backend</span></div><div class="settingsRow"><span>Cloud sync</span><span class="muted">Local for now</span></div></div></section>
 <section id="reminderView" class="hidden"><div class="top"><button class="back" data-back="settingsView">‹</button><div style="flex:1"><h1 class="sheetTitle" id="reminderHeading">Add Reminder</h1><div class="muted">Set a meal or supplement reminder.</div></div></div><div class="card"><div class="field"><label>Reminder type</label><select id="rType"><option value="meal">Meal</option><option value="supplement">Supplement</option></select></div><div class="field"><label>Name</label><input id="rName" placeholder="e.g. Breakfast or Creatine"></div><div class="field" id="rSuppWrap"><label>Choose supplement (optional)</label><select id="rSupplement"></select></div><div class="field"><label>Time</label><input id="rTime" type="time" value="08:00"></div><label class="muted">Days</label><div class="goalGrid" id="rDays" style="margin-top:8px"><button data-rday="1">Mon</button><button data-rday="2">Tue</button><button data-rday="3">Wed</button><button data-rday="4">Thu</button><button data-rday="5">Fri</button><button data-rday="6">Sat</button><button data-rday="0">Sun</button></div><div class="settingsRow" style="margin-top:14px"><span>Reminder enabled</span><input class="toggle" id="rEnabled" type="checkbox" checked></div><button class="primary" id="saveReminder">Save Reminder</button><button class="secondary hidden" id="deleteReminder" style="margin-top:10px">Delete Reminder</button></div></section>
-<section id="mealView" class="hidden"><div class="mealHero" id="mealHero"><img id="mealHeroBg" class="mealHeroBg" alt="Meal photo"><button class="heroBack" id="mealBack">‹</button><button class="heroPhoto" id="heroPhotoBtn">＋</button><span id="photoCount" class="photoCount hidden"></span><div class="heroStats"><div><span>Calories</span><b id="heroCal">0 kcal</b></div><div><span>Protein</span><b id="heroP">0 g</b></div><div><span>Carbs</span><b id="heroC">0 g</b></div><div><span>Fat</span><b id="heroF">0 g</b></div><div><span>Fibre</span><b id="heroFiber">0 g</b></div></div><div id="heroDots" class="heroDots"></div><div class="heroTitle"><h1 id="heroMealName">New Meal</h1><div id="heroSubtitle">Add a photo or enter nutrition manually</div></div></div><input id="cameraInput" type="file" accept="image/*" capture="environment" hidden><input id="libraryInput" type="file" accept="image/*" multiple hidden><div class="mealEditor"><div class="mealSeg"><button id="editMealTab" class="on">Edit Meal</button><button id="nutritionTab">Nutrition Info</button></div><div id="editMealPanel"><div class="field"><label>Meal name</label><input id="mName" placeholder="Meal / item name"></div><div class="grid"><div class="field"><label>Calories</label><input id="mCal" type="number" min="0"></div><div class="field"><label>Protein</label><input id="mP" type="number" min="0" step=".1"></div><div class="field"><label>Carbs</label><input id="mC" type="number" min="0" step=".1"></div><div class="field"><label>Fat</label><input id="mF" type="number" min="0" step=".1"></div><div class="field"><label>Fibre</label><input id="mFiber" type="number" min="0" step=".1"></div></div><details class="accordion"><summary>Add more nutrition details <span>›</span></summary><div class="grid"><div class="field"><label>Water mL</label><input id="mWater" type="number" min="0"></div><div class="field"><label>Sodium mg</label><input id="mSodium" type="number"></div><div class="field"><label>Potassium mg</label><input id="mPotassium" type="number"></div><div class="field"><label>Sugar g</label><input id="mSugar" type="number"></div><div class="field"><label>Saturated fat g</label><input id="mSatfat" type="number"></div><div class="field"><label>Calcium mg</label><input id="mCalcium" type="number"></div><div class="field"><label>Iron mg</label><input id="mIron" type="number"></div><div class="field"><label>Magnesium mg</label><input id="mMagnesium" type="number"></div></div></details></div><div id="nutritionPanel" class="nutritionRead hidden"></div></div><div class="mealActions"><button class="danger" id="deleteMeal">Delete Meal</button><button class="primary" id="saveMeal">Add to Today</button></div><div id="photoSheet" class="photoSheet hidden"><div class="photoSheetBox"><button id="takePhotoBtn">Take Photo</button><button id="choosePhotoBtn">Choose from Photo Library</button><button id="cancelPhotoBtn">Cancel</button></div></div></section>
+<section id="mealView" class="hidden"><div class="mealHero" id="mealHero"><img id="mealHeroBg" class="mealHeroBg" alt="Meal photo"><button class="heroBack" id="mealBack">‹</button><button class="heroPhoto" id="heroPhotoBtn">＋</button><span id="photoCount" class="photoCount hidden"></span><div class="heroStats"><div><span>Calories</span><b id="heroCal">0 kcal</b></div><div><span>Protein</span><b id="heroP">0 g</b></div><div><span>Carbs</span><b id="heroC">0 g</b></div><div><span>Fat</span><b id="heroF">0 g</b></div><div><span>Fibre</span><b id="heroFiber">0 g</b></div></div><div id="heroDots" class="heroDots"></div><div class="heroTitle"><h1 id="heroMealName">New Meal</h1><div id="heroSubtitle">Add a photo or enter nutrition manually</div></div></div><input id="cameraInput" type="file" accept="image/*" capture="environment" hidden><input id="libraryInput" type="file" accept="image/*" multiple hidden><div class="mealEditor"><div class="mealSeg"><button id="editMealTab" class="on">Edit Meal</button><button id="nutritionTab">Nutrition Info</button></div><div id="editMealPanel"><div class="field"><label>Meal name</label><input id="mName" placeholder="Meal / item name"></div><div class="grid"><div class="field"><label>Calories</label><input id="mCal" type="number" min="0"></div><div class="field"><label>Protein</label><input id="mP" type="number" min="0" step=".1"></div><div class="field"><label>Carbs</label><input id="mC" type="number" min="0" step=".1"></div><div class="field"><label>Fat</label><input id="mF" type="number" min="0" step=".1"></div><div class="field"><label>Fibre</label><input id="mFiber" type="number" min="0" step=".1"></div></div><details class="accordion"><summary>Add more nutrition details <span>›</span></summary><div class="grid"><div class="field"><label>Water mL</label><input id="mWater" type="number" min="0"></div><div class="field"><label>Sodium mg</label><input id="mSodium" type="number"></div><div class="field"><label>Potassium mg</label><input id="mPotassium" type="number"></div><div class="field"><label>Sugar g</label><input id="mSugar" type="number"></div><div class="field"><label>Saturated fat g</label><input id="mSatfat" type="number"></div><div class="field"><label>Calcium mg</label><input id="mCalcium" type="number"></div><div class="field"><label>Iron mg</label><input id="mIron" type="number"></div><div class="field"><label>Magnesium mg</label><input id="mMagnesium" type="number"></div></div></details></div><div id="nutritionPanel" class="nutritionRead hidden"></div></div><div class="mealActions"><button class="danger" id="deleteMeal">Delete Meal</button><button class="primary" id="saveMeal">Add to Today</button></div><div id="photoSheet" class="photoSheet hidden"><div class="photoSheetBox"><button id="takePhotoBtn">Take Photo</button><button id="choosePhotoBtn">Choose from Photo Library</button><button id="cancelPhotoBtn">Cancel</button></div></div>
+<div class="customTargetsInline" id="customTargetsInline"></div>
+<div class="targetCreateFooter">
+  <button class="primary" id="newCustomTargetBtn" type="button">+ Create Custom Target</button>
+</div>
+</section>
 <section id="targetView" class="hidden"><div class="top"><button class="back" data-back="todayView">‹</button><div style="flex:1"><h1 class="sheetTitle">Daily Targets</h1><div class="muted">Tracking stays on even without a target.</div></div></div><div class="card" id="targetInputs"></div><button class="primary" id="saveTargets">Save Daily Targets</button></section>
 <section id="personaliseView" class="hidden"><div class="top"><button class="back" data-back="settingsView">‹</button><div style="flex:1"><h1 class="sheetTitle">Personalise CutTrack</h1><div class="muted">Quick setup first. Improve accuracy only if you want.</div></div></div><div class="card"><h2>Quick setup</h2><div class="field"><label>Your goals · choose one or more</label><div class="chips" id="goalChips"><button class="chip" data-goal="lose">Lose fat</button><button class="chip" data-goal="maintain">Maintain</button><button class="chip" data-goal="muscle">Build muscle</button><button class="chip" data-goal="performance">Performance</button></div></div><div class="grid"><div class="field"><label>Age</label><input id="pAge" type="number"></div><div class="field"><label>Sex</label><select id="pSex"><option value="male">Male</option><option value="female">Female</option></select></div><div class="field"><label>Height cm</label><input id="pHeight" type="number"></div><div class="field"><label>Weight kg</label><input id="pWeight" type="number" step=".1"></div></div><div class="field"><label>Activity</label><select id="pActivity"><option value="1.2">Mostly sedentary</option><option value="1.375">Lightly active</option><option value="1.55" selected>Moderately active</option><option value="1.725">Very active</option></select></div></div><details class="accordion"><summary>Improve My Targets <span>＋</span></summary><p class="muted small">Optional details give the target assistant more context.</p><div class="field"><label>Body fat %</label><input id="pBodyfat" type="number" min="3" max="60" placeholder="Skip if unknown"></div><div class="field"><label>Recent weight trend</label><select id="pTrend"><option value="unknown">Not sure</option><option value="losing">Losing weight</option><option value="stable">Weight stable</option><option value="gaining">Gaining weight</option></select></div><div class="field"><label>Exercise sessions / week</label><select id="pSessions"><option>0</option><option>1-3</option><option>4-6</option><option>7+</option></select></div><div class="field"><label>Non-exercise activity</label><select id="pDailyActivity"><option>Mostly sedentary</option><option>Moderately active</option><option>Very active</option></select></div><div class="field"><label>Lifting experience</label><select id="pLifting"><option>None</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></div><div class="field"><label>Cardio experience</label><select id="pCardio"><option>None</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></div><div class="field"><label>Athletic level</label><select id="pAthlete"><option>Exercise regularly</option><option>Athlete</option><option>Professional athlete</option></select></div></details><button class="primary" id="generateTargets">Generate My Targets</button><div id="targetResult"></div></section>
 <section id="suppView" class="hidden"><div class="top"><button class="back" data-back="settingsView">‹</button><div style="flex:1"><h1 class="sheetTitle">Supplements</h1><div class="muted">Track whatever you use.</div></div></div><div class="card"><div id="suppList"></div><h2 style="margin-top:18px">Add supplement</h2><div class="grid"><div class="field"><label>Name</label><input id="sName" placeholder="Creatine"></div><div class="field"><label>Daily target</label><input id="sTarget" type="number" step=".1" placeholder="5"></div><div class="field"><label>Unit</label><select id="sUnit"><option>g</option><option>mg</option><option>mL</option><option>serving</option></select></div><div class="field"><label>Reminder</label><input id="sTime" type="time"></div></div><button class="primary" id="addSupp">Add Supplement</button></div></section>
@@ -264,4 +279,78 @@ setSelectedDate(new Date(selectedDateKey+'T12:00:00'));
 
 // Make Targets the direct home for Targets & Personalisation.
 $('targetSetupBtn')?.addEventListener('click',()=>{ if(typeof openTargets==='function') openTargets(); });
+
+// v19 — every tracked metric appears in Daily Targets.
+// A switch controls only whether a target is active; tracking itself always remains on.
+const V19_STANDARD_TARGETS=[
+ {key:'water',name:'Water',unit:'mL',type:'goal',def:3000},
+ {key:'steps',name:'Steps',unit:'steps',type:'goal',def:10000},
+ {key:'burned',name:'Burned',unit:'kcal',type:'goal',def:500},
+ {key:'sodium',name:'Sodium',unit:'mg',type:'limit',def:2300},
+ {key:'potassium',name:'Potassium',unit:'mg',type:'goal',def:3500},
+ {key:'sugar',name:'Sugar',unit:'g',type:'limit',def:50},
+ {key:'satfat',name:'Saturated Fat',unit:'g',type:'limit',def:20},
+ {key:'calcium',name:'Calcium',unit:'mg',type:'goal',def:1000},
+ {key:'iron',name:'Iron',unit:'mg',type:'goal',def:18},
+ {key:'magnesium',name:'Magnesium',unit:'mg',type:'goal',def:400}
+];
+let v19Targets={};
+try{v19Targets=JSON.parse(localStorage.getItem('cuttrackV19Targets')||'{}')||{}}catch(e){}
+function saveV19Targets(){localStorage.setItem('cuttrackV19Targets',JSON.stringify(v19Targets))}
+function switchMarkup(on,key,custom=false){
+ return `<label class="switch"><input type="checkbox" ${on?'checked':''} data-v19toggle="${key}" data-custom="${custom?'1':'0'}"><span class="slider"></span></label>`;
+}
+function ensureStandardTargetRows(){
+ const inline=$('customTargetsInline'); if(!inline)return;
+ let std=$('v19StandardTargets');
+ if(!std){std=document.createElement('div');std.id='v19StandardTargets';std.className='v19StandardTargets';inline.parentNode.insertBefore(std,inline)}
+ // Avoid duplicating rows already present in the original v18 Daily Targets markup.
+ const pageText=(std.parentElement?.innerText||'').toLowerCase();
+ std.innerHTML=V19_STANDARD_TARGETS.filter(t=>{
+   // Existing core items may already be present; only skip when an existing target label is actually found above injected block.
+   const prior=(std.parentElement?.innerText||'').split('Create Custom Target')[0].toLowerCase();
+   return !new RegExp('(^|\\n)'+t.name.toLowerCase()+'(\\n|$)').test(prior);
+ }).map(t=>{
+   const s=v19Targets[t.key]||{enabled:false,value:t.def};
+   return `<div class="inlineTargetRow">
+    <div><div class="targetName">${t.name}</div><div class="targetMeta">${t.unit} · ${t.type==='limit'?'maximum':'goal'} · always tracked</div></div>
+    <input type="number" min="0" step="any" value="${s.value??t.def}" data-v19value="${t.key}" ${s.enabled?'':'disabled'}>
+    ${switchMarkup(!!s.enabled,t.key)}
+   </div>`;
+ }).join('');
+}
+function renderCustomTargets(){
+ const box=$('customTargetsInline'); if(!box)return;
+ box.innerHTML=(db.customTargets||[]).map((t,i)=>{
+   if(t.enabled===undefined)t.enabled=true;
+   return `<div class="inlineTargetRow">
+    <div><div class="targetName">${t.name}</div><div class="targetMeta">${t.unit} · ${t.type==='limit'?'maximum':'goal'} · custom target</div></div>
+    <input type="number" min="0" step="any" value="${t.value}" data-ctvalue="${i}" ${t.enabled?'':'disabled'}>
+    ${switchMarkup(!!t.enabled,String(i),true)}
+    <button class="removeCT" data-delct="${i}" type="button">Remove ${t.name}</button>
+   </div>`;
+ }).join('');
+ box.querySelectorAll('[data-delct]').forEach(b=>b.onclick=()=>{db.customTargets.splice(+b.dataset.delct,1);saveCustomTargets();renderCustomTargets();renderCustomPerformance()});
+ box.querySelectorAll('[data-ctvalue]').forEach(inp=>inp.onchange=()=>{let t=db.customTargets[+inp.dataset.ctvalue];if(t){t.value=Math.max(0,parseFloat(inp.value)||0);saveCustomTargets();renderCustomPerformance()}});
+}
+document.addEventListener('change',e=>{
+ const el=e.target;
+ if(el.matches('[data-v19toggle]')){
+   if(el.dataset.custom==='1'){
+     const t=db.customTargets[+el.dataset.v19toggle];if(t){t.enabled=el.checked;saveCustomTargets();renderCustomTargets();renderCustomPerformance()}
+   }else{
+     const k=el.dataset.v19toggle;v19Targets[k]=v19Targets[k]||{};
+     v19Targets[k].enabled=el.checked;
+     const val=document.querySelector(`[data-v19value="${k}"]`);
+     if(val){val.disabled=!el.checked;v19Targets[k].value=parseFloat(val.value)||0}
+     saveV19Targets();
+   }
+ }
+ if(el.matches('[data-v19value]')){
+   const k=el.dataset.v19value;v19Targets[k]=v19Targets[k]||{};
+   v19Targets[k].value=Math.max(0,parseFloat(el.value)||0);saveV19Targets();
+ }
+});
+ensureStandardTargetRows();
+renderCustomTargets();
 </script></body></html>
