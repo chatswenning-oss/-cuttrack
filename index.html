@@ -393,8 +393,32 @@ body.todayMode .tabs,body.todayMode .addFloat{z-index:50}
 
 /* v48 — selectable Today backgrounds. UI/functionality otherwise unchanged. */
 
-/* v50: show the complete selected mountain photo instead of cover-cropping it */
-#todayWallpaper{background-size:100% 100%!important;background-position:center top!important;background-repeat:no-repeat!important;}
+/* v51 actual app wallpaper framing: preserve the original landscape photo without stretching.
+   A soft full-screen copy fills the tall phone canvas; the sharp original sits over it at natural aspect ratio. */
+#todayWallpaper{
+  background:none!important;
+  overflow:hidden!important;
+}
+#todayWallpaper::before{
+  content:"";
+  position:absolute;
+  inset:-24px;
+  background-image:linear-gradient(180deg,rgba(0,0,0,.08) 0%,rgba(0,0,0,.06) 30%,rgba(0,0,0,.20) 62%,rgba(0,0,0,.36) 100%),url("cuttrack-v16-bg.jpg");
+  background-size:cover;
+  background-position:center center;
+  background-repeat:no-repeat;
+  filter:blur(18px) saturate(.95);
+  transform:scale(1.06);
+}
+#todayWallpaper::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:linear-gradient(180deg,rgba(0,0,0,.05) 0%,rgba(0,0,0,.03) 32%,rgba(0,0,0,.16) 62%,rgba(0,0,0,.30) 100%),url("cuttrack-v16-bg.jpg");
+  background-size:100% auto;
+  background-position:center top;
+  background-repeat:no-repeat;
+}
 </style></head><body class="system"><div id="todayWallpaper" aria-hidden="true"></div><div class="wrap">
 <section id="todayView">
 <button class="todayTop dateOpen" id="dateOpenBtn" type="button"><h1 id="dayHeading">Today <span class="todayDrop">⌄</span></h1><div class="todayDate" id="todayDate"></div></button>

@@ -1,8 +1,10 @@
-CutTrack v49 — Single Background
+CutTrack v51 — Actual App Background Fix
 
-Built from the working v48 app with one controlled change only:
-- Removed the multi-background selector.
-- Replaced the existing cuttrack-v16-bg.jpg with the selected snowy ridge/trail photo.
-- Today layout, navigation, nutrition, Progress, Health and storage remain unchanged.
+Built directly from the working v49 baseline.
 
-Upload these 6 files to the GitHub repository root.
+- Uses the real original mountain photo.
+- Keeps the original photo aspect ratio (no vertical stretching).
+- Shows the full photo width so the mountain/path composition is visible.
+- Uses a soft copy of the same photo behind it to fill the tall Today screen edge-to-edge.
+- No generated replacement image.
+- No changes to Today cards, navigation, nutrition, Progress, Health, Goals, or cuttrack_v9 data.
