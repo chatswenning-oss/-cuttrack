@@ -1,9 +1,8 @@
-CutTrack v48 — Background Selection
+CutTrack v49 — Single Background
 
-Built directly from the stable v47 Audited baseline.
+Built from the working v48 app with one controlled change only:
+- Removed the multi-background selector.
+- Replaced the existing cuttrack-v16-bg.jpg with the selected snowy ridge/trail photo.
+- Today layout, navigation, nutrition, Progress, Health and storage remain unchanged.
 
-Changes in v48 only:
-- Four selectable Today backgrounds in Profile > Appearance.
-- Queenstown Lake is the default background.
-- Background choice saves locally and remains selected on future launches.
-- Today layout, nutrition, Progress, Health, Goals and navigation are otherwise unchanged.
+Upload these 6 files to the GitHub repository root.
