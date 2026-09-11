@@ -1865,9 +1865,9 @@ body.scenicBlurMode:after,body.mealViewOnly:after{content:none!important;display
 
 
 <style id="v96FixedGutterPager">
-/* v97 — rigid swipe track: viewport width and 16px gutter are frozen for the full gesture. */
+/* v100 — rigid swipe track: geometry is frozen for the full gesture; 32px gutter. */
 .v94PagerPage{
-  position:fixed!important;left:0!important;top:0!important;width:var(--v98-page-width,var(--v97-page-width,100vw))!important;height:100dvh!important;
+  position:fixed!important;left:var(--v100-page-left,0px)!important;top:var(--v100-page-top,0px)!important;width:var(--v98-page-width,var(--v97-page-width,100vw))!important;height:var(--v100-page-height,100dvh)!important;
   overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:none!important;background:transparent!important;
   will-change:transform!important;backface-visibility:hidden!important;-webkit-backface-visibility:hidden!important;
   contain:paint!important;
@@ -1890,28 +1890,28 @@ body.v94Paging{overflow:hidden!important;touch-action:none!important}
   }
   function seamDistance(){
     /* v97: use the width captured at touchstart so Safari cannot change the
-       page pitch while the finger is down. The gutter is always exactly 16px. */
-    return Math.max(1,(g&&g.pageWidth?g.pageWidth:(g&&g.viewportWidth?g.viewportWidth:document.documentElement.clientWidth))+16);
+       page pitch while the finger is down. The gutter is always exactly 32px. */
+    return Math.max(1,(g&&g.pageWidth?g.pageWidth:(g&&g.viewportWidth?g.viewportWidth:document.documentElement.clientWidth))+32);
   }
   function prep(dest,dir){
     const c=document.getElementById(g.id),n=document.getElementById(dest);if(!c||!n)return false;
     refresh(dest);g.dest=dest;g.current=c;g.next=n;g.scrollY=scrollY||0;
-    const rect=c.getBoundingClientRect();g.pageWidth=rect.width;g.pageLeft=rect.left;
+    const rect=c.getBoundingClientRect();g.pageWidth=rect.width;g.pageLeft=rect.left;g.pageTop=rect.top;g.pageHeight=rect.height;
     document.body.classList.add('v94Paging');
     c.classList.add('v94PagerPage');n.classList.remove('hidden');n.classList.add('v94PagerPage');
     c.style.zIndex='12';n.style.zIndex='12';c.style.transition='none';n.style.transition='none';
     c.style.setProperty('--v98-page-width',g.pageWidth+'px');n.style.setProperty('--v98-page-width',g.pageWidth+'px');
-    c.style.left=g.pageLeft+'px';n.style.left=g.pageLeft+'px';
+    [c,n].forEach(el=>{el.style.setProperty('--v100-page-left',g.pageLeft+'px');el.style.setProperty('--v100-page-top',g.pageTop+'px');el.style.setProperty('--v100-page-height',g.pageHeight+'px')});
     g.distance=seamDistance();
     c.style.transform='translate3d(0,0,0)';n.style.transform=dir==='right'?`translate3d(${-g.distance}px,0,0)`:`translate3d(${g.distance}px,0,0)`;
     /* v99: do not copy window scrollY into the fixed swipe page. Doing so
        scrolls the page a second time when the gesture begins, making the
        cards appear to jump upward / grow. Keep both page layers at their
        exact rendered vertical position for the entire horizontal drag. */
-    c.scrollTop=0;n.scrollTop=0;
+    /* Preserve the exact viewport Y position. Do not alter page or window scroll. */
     return true;
   }
-  function clear(el){if(!el)return;el.classList.remove('v94PagerPage');el.style.transition='';el.style.transform='';el.style.zIndex='';el.style.left='';el.style.removeProperty('--v97-page-width');el.style.removeProperty('--v98-page-width')}
+  function clear(el){if(!el)return;el.classList.remove('v94PagerPage');el.style.transition='';el.style.transform='';el.style.zIndex='';el.style.left='';el.style.removeProperty('--v97-page-width');el.style.removeProperty('--v98-page-width');el.style.removeProperty('--v100-page-left');el.style.removeProperty('--v100-page-top');el.style.removeProperty('--v100-page-height')}
   function cleanup(complete){
     if(!g)return;const c=g.current,n=g.next,d=g.dest,y=g.scrollY||0;
     clear(c);clear(n);document.body.classList.remove('v94Paging');
@@ -1921,7 +1921,7 @@ body.v94Paging{overflow:hidden!important;touch-action:none!important}
   }
   document.addEventListener('touchstart',e=>{
     if(e.touches.length!==1||blocked(e.target))return;const id=visible();if(!id)return;
-    const t=e.touches[0];g={id,sx:t.clientX,sy:t.clientY,dx:0,dir:'',horizontal:false,current:null,next:null,dest:null,scrollY:scrollY||0,viewportWidth:document.documentElement.clientWidth,pageWidth:0,pageLeft:0};
+    const t=e.touches[0];g={id,sx:t.clientX,sy:t.clientY,dx:0,dir:'',horizontal:false,current:null,next:null,dest:null,scrollY:scrollY||0,viewportWidth:document.documentElement.clientWidth,pageWidth:0,pageLeft:0,pageTop:0,pageHeight:0};
   },{passive:true,capture:true});
   document.addEventListener('touchmove',e=>{
     if(!g||e.touches.length!==1)return;const t=e.touches[0],mx=t.clientX-g.sx,my=t.clientY-g.sy;
@@ -1949,4 +1949,4 @@ body.v94Paging{overflow:hidden!important;touch-action:none!important}
 })();
 </script>
 
-<!-- v98: preserve each page's original rendered width while swiping, so cards never grow or shrink. The rigid track remains page width + 16px. -->
+<!-- v100: preserve exact rendered X/Y geometry while swiping; rigid track is page width + 32px. -->
