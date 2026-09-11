@@ -1733,3 +1733,75 @@ $('personaliseCard')?.addEventListener('click',()=>show('personaliseView'));$('p
   });
 })();
 </script>
+
+<style id="v90FixedWallpaper">
+/* v90 — one fixed wallpaper across CutTrack. Only page content moves. */
+#todayWallpaper{
+  display:block!important;
+  position:fixed!important;
+  inset:0!important;
+  width:100vw!important;
+  height:100vh!important;
+  height:100dvh!important;
+  z-index:0!important;
+  pointer-events:none!important;
+  filter:none!important;
+  -webkit-filter:none!important;
+  transform:none!important;
+  -webkit-transform:none!important;
+  background-size:cover,cover!important;
+  background-position:center center,center center!important;
+  background-repeat:no-repeat,no-repeat!important;
+}
+body.scenicBlurMode #todayWallpaper{
+  filter:none!important;
+  -webkit-filter:none!important;
+  transform:none!important;
+  -webkit-transform:none!important;
+}
+body.scenicBlurMode:after{content:none!important;display:none!important}
+body .wrap{position:relative;z-index:1}
+body .tabs,body .addFloat{z-index:50}
+#todayView,#progressView,#healthView,#settingsView,#profileView,#targetsHubView,#targetView,#personaliseView,#reminderView,#suppView{
+  will-change:transform;
+}
+</style>
+<script id="v90SmoothFixedWallpaperSwipe">
+// v90 — interactive iOS-style right swipe: move page content over one fixed wallpaper.
+(function(){
+  const routes={targetsHubView:'todayView',personaliseView:'targetsHubView',targetView:'targetsHubView',reminderView:'targetsHubView'};
+  Object.keys(routes).forEach(function(id){
+    const view=document.getElementById(id);if(!view)return;
+    let sx=0,sy=0,dx=0,tracking=false,horizontal=false;
+    function reset(){view.style.transition='transform .18s ease-out';view.style.transform='translate3d(0,0,0)';setTimeout(()=>{view.style.transition='';view.style.transform=''},190)}
+    view.addEventListener('touchstart',function(e){
+      if(e.touches.length!==1)return;
+      const t=e.touches[0];sx=t.clientX;sy=t.clientY;dx=0;tracking=true;horizontal=false;view.style.transition='none';
+    },{passive:true,capture:true});
+    view.addEventListener('touchmove',function(e){
+      if(!tracking||e.touches.length!==1)return;
+      const t=e.touches[0],mx=t.clientX-sx,my=t.clientY-sy;
+      if(!horizontal){
+        if(Math.abs(mx)<8&&Math.abs(my)<8)return;
+        if(mx<=0||Math.abs(mx)<=Math.abs(my)*1.15){tracking=false;reset();return}
+        horizontal=true;
+      }
+      dx=Math.max(0,mx);
+      view.style.transform='translate3d('+dx+'px,0,0)';
+      if(e.cancelable)e.preventDefault();
+    },{passive:false,capture:true});
+    view.addEventListener('touchend',function(e){
+      if(!tracking&&!horizontal)return;
+      if(horizontal){e.stopImmediatePropagation();if(e.cancelable)e.preventDefault()}
+      tracking=false;
+      if(horizontal&&dx>=70){
+        view.style.transition='transform .18s ease-out';
+        view.style.transform='translate3d(105vw,0,0)';
+        setTimeout(function(){view.style.transition='';view.style.transform='';show(routes[id])},180);
+      }else reset();
+      horizontal=false;dx=0;
+    },{passive:false,capture:true});
+    view.addEventListener('touchcancel',function(){tracking=false;horizontal=false;dx=0;reset()},{passive:true,capture:true});
+  });
+})();
+</script>
