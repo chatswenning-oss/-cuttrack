@@ -14,3 +14,6 @@ Upload the same app files to the root of the -cuttrack GitHub Pages repository a
 
 
 v66: Personalise CutTrack is now a compact summary card on Goals. Tap it to open the full detailed personalisation editor. Existing meal photos and cuttrack_v9 storage are unchanged.
+
+
+v68: Today primary targets are Calories, Fat, Burned, Steps and Water. Protein, Carbs and remaining nutrition metrics default to Performance. Water remains displayed in litres.
