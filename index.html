@@ -1656,7 +1656,7 @@ $('personaliseCard')?.addEventListener('click',()=>show('personaliseView'));$('p
 })();
 
 
-// v86: swipe left from My Plan back to Today.
+// v88: swipe right from My Plan back to Today.
 (function(){
   const view=document.getElementById('targetsHubView');
   if(!view)return;
@@ -1669,7 +1669,7 @@ $('personaliseCard')?.addEventListener('click',()=>show('personaliseView'));$('p
     if(!tracking||!e.changedTouches.length)return;
     tracking=false;
     const t=e.changedTouches[0],dx=t.clientX-startX,dy=t.clientY-startY;
-    if(dx<=-70 && Math.abs(dx)>Math.abs(dy)*1.35)show('todayView');
+    if(dx>=70 && Math.abs(dx)>Math.abs(dy)*1.35)show('todayView');
   },{passive:true});
   view.addEventListener('touchcancel',function(){tracking=false},{passive:true});
 })();
