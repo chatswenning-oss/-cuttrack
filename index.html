@@ -1864,17 +1864,17 @@ body.scenicBlurMode:after,body.mealViewOnly:after{content:none!important;display
 </script>
 
 
-<style id="v95ContinuousSpacingPager">
-/* v95 — continuous iPhone-style seam spacing; fixed wallpaper remains underneath. */
+<style id="v96FixedGutterPager">
+/* v96 — full-width pages with a fixed 16px gutter; zero overlap. */
 .v94PagerPage{
   position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;
-  overflow-y:auto!important;overscroll-behavior:none!important;background:transparent!important;
+  overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:none!important;background:transparent!important;
   will-change:transform!important;backface-visibility:hidden!important;-webkit-backface-visibility:hidden!important;
   contain:paint!important;
 }
 body.v94Paging{overflow:hidden!important;touch-action:none!important}
 </style>
-<script id="v95ContinuousSpacingPagerNavigation">
+<script id="v96FixedGutterPagerNavigation">
 (function(){
   const main=['todayView','progressView','healthView','settingsView'];
   const back={targetsHubView:'todayView',personaliseView:'targetsHubView',targetView:'targetsHubView',reminderView:'targetsHubView',mealView:'todayView',profileView:'settingsView',suppView:'settingsView'};
@@ -1889,9 +1889,10 @@ body.v94Paging{overflow:hidden!important;touch-action:none!important}
     const cs=getComputedStyle(w);return {l:parseFloat(cs.paddingLeft)||0,r:parseFloat(cs.paddingRight)||0};
   }
   function seamDistance(c,n){
-    const a=pageInsets(c),b=pageInsets(n),desired=16;
-    const overlap=Math.max(0,Math.min(innerWidth*.12,a.r+b.l-desired));
-    return Math.max(1,innerWidth-overlap);
+    /* v96: two true full-width page viewports with a fixed 16px gutter.
+       Never reduce this below innerWidth — that physically overlaps pages. */
+    const gutter=16;
+    return Math.max(1,innerWidth+gutter);
   }
   function prep(dest,dir){
     const c=document.getElementById(g.id),n=document.getElementById(dest);if(!c||!n)return false;
