@@ -1904,7 +1904,11 @@ body.v94Paging{overflow:hidden!important;touch-action:none!important}
     c.style.left=g.pageLeft+'px';n.style.left=g.pageLeft+'px';
     g.distance=seamDistance();
     c.style.transform='translate3d(0,0,0)';n.style.transform=dir==='right'?`translate3d(${-g.distance}px,0,0)`:`translate3d(${g.distance}px,0,0)`;
-    c.scrollTop=g.scrollY;n.scrollTop=0;
+    /* v99: do not copy window scrollY into the fixed swipe page. Doing so
+       scrolls the page a second time when the gesture begins, making the
+       cards appear to jump upward / grow. Keep both page layers at their
+       exact rendered vertical position for the entire horizontal drag. */
+    c.scrollTop=0;n.scrollTop=0;
     return true;
   }
   function clear(el){if(!el)return;el.classList.remove('v94PagerPage');el.style.transition='';el.style.transform='';el.style.zIndex='';el.style.left='';el.style.removeProperty('--v97-page-width');el.style.removeProperty('--v98-page-width')}
