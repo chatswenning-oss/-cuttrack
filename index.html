@@ -1702,3 +1702,34 @@ $('personaliseCard')?.addEventListener('click',()=>show('personaliseView'));$('p
   pointer-events:none;
 }
 </style>
+
+<style id="v89CompactMacroTargets">
+/* v89 — compact Macro Targets rows only. */
+#targetView #v25MetricList{gap:6px!important;margin:10px 0!important}
+#targetView .v25MetricRow{grid-template-columns:34px minmax(0,1fr) 94px 68px!important;gap:7px!important;border-radius:15px!important;padding:8px 9px!important;min-height:52px!important}
+#targetView .v25Emoji{font-size:22px!important}
+#targetView .v25Name{font-size:15px!important}
+#targetView .v26Value{min-height:36px!important;height:36px!important;font-size:14px!important;padding:6px 8px!important;border-radius:11px!important}
+#targetView .v25Edit{font-size:12px!important;padding:7px 8px!important;min-height:34px!important}
+#targetView .v25Create{margin-top:11px!important;padding:13px!important;font-size:15px!important;border-radius:15px!important}
+</style>
+<script id="v89SubpageSwipeRight">
+// v89 — swipe right from My Plan sub-pages back to My Plan.
+(function(){
+  ['personaliseView','targetView','reminderView'].forEach(function(id){
+    const view=document.getElementById(id);if(!view)return;
+    let startX=0,startY=0,tracking=false;
+    view.addEventListener('touchstart',function(e){
+      if(e.touches.length!==1)return;
+      const t=e.touches[0];startX=t.clientX;startY=t.clientY;tracking=true;
+    },{passive:true});
+    view.addEventListener('touchend',function(e){
+      if(!tracking||!e.changedTouches.length)return;
+      tracking=false;
+      const t=e.changedTouches[0],dx=t.clientX-startX,dy=t.clientY-startY;
+      if(dx>=70 && Math.abs(dx)>Math.abs(dy)*1.35)show('targetsHubView');
+    },{passive:true});
+    view.addEventListener('touchcancel',function(){tracking=false},{passive:true});
+  });
+})();
+</script>
