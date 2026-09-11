@@ -1679,13 +1679,18 @@ $('personaliseCard')?.addEventListener('click',()=>show('personaliseView'));$('p
 /* v101 — the visible page never changes layout mode during a swipe.
    It remains in its exact normal-flow Y position; only translateX changes. */
 .v101PagerCurrent{
-  position:relative!important;
-  left:auto!important;top:auto!important;
-  width:auto!important;height:auto!important;
-  overflow:visible!important;
+  position:fixed!important;
+  left:var(--v100-page-left,0px)!important;
+  top:var(--v100-page-top,0px)!important;
+  width:var(--v98-page-width,var(--v97-page-width,100vw))!important;
+  height:var(--v100-page-height,100dvh)!important;
+  min-width:var(--v98-page-width,var(--v97-page-width,100vw))!important;
+  max-width:var(--v98-page-width,var(--v97-page-width,100vw))!important;
+  overflow-y:auto!important;overflow-x:hidden!important;
   background:transparent!important;
   will-change:transform!important;
   backface-visibility:hidden!important;-webkit-backface-visibility:hidden!important;
+  transform-origin:0 0!important;-webkit-transform-origin:0 0!important;
 }
 </style>
 </body></html>
@@ -1882,6 +1887,7 @@ body.scenicBlurMode:after,body.mealViewOnly:after{content:none!important;display
 /* v100 — rigid swipe track: geometry is frozen for the full gesture; 32px gutter. */
 .v94PagerPage{
   position:fixed!important;left:var(--v100-page-left,0px)!important;top:var(--v100-page-top,0px)!important;width:var(--v98-page-width,var(--v97-page-width,100vw))!important;height:var(--v100-page-height,100dvh)!important;
+  min-width:var(--v98-page-width,var(--v97-page-width,100vw))!important;max-width:var(--v98-page-width,var(--v97-page-width,100vw))!important;box-sizing:border-box!important;zoom:1!important;
   overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:none!important;background:transparent!important;
   will-change:transform!important;backface-visibility:hidden!important;-webkit-backface-visibility:hidden!important;
   contain:paint!important;
@@ -1912,7 +1918,7 @@ body.v94Paging{overflow:hidden!important;touch-action:none!important}
     refresh(dest);g.dest=dest;g.current=c;g.next=n;g.scrollY=scrollY||0;
     const rect=c.getBoundingClientRect();g.pageWidth=rect.width;g.pageLeft=rect.left;g.pageTop=rect.top;g.pageHeight=rect.height;
     document.body.classList.add('v94Paging');
-    c.classList.add('v101PagerCurrent');n.classList.remove('hidden');n.classList.add('v94PagerPage');
+    c.classList.add('v101PagerCurrent','v94PagerPage');n.classList.remove('hidden');n.classList.add('v94PagerPage');
     c.style.zIndex='12';n.style.zIndex='12';c.style.transition='none';n.style.transition='none';
     c.style.setProperty('--v98-page-width',g.pageWidth+'px');n.style.setProperty('--v98-page-width',g.pageWidth+'px');
     [c,n].forEach(el=>{el.style.setProperty('--v100-page-left',g.pageLeft+'px');el.style.setProperty('--v100-page-top',g.pageTop+'px');el.style.setProperty('--v100-page-height',g.pageHeight+'px')});
@@ -1964,3 +1970,5 @@ body.v94Paging{overflow:hidden!important;touch-action:none!important}
 </script>
 
 <!-- v100: preserve exact rendered X/Y geometry while swiping; rigid track is page width + 32px. -->
+
+<!-- v102: incoming and outgoing pages use identical frozen pixel geometry; translateX only, no scale/zoom interpolation. -->
