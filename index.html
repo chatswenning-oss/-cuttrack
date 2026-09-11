@@ -1656,3 +1656,30 @@ $('personaliseCard')?.addEventListener('click',()=>show('personaliseView'));$('p
 })();
 </script>
 </body></html>
+<style id="v77GoalsCloudHaze">
+/* v77 — soft cloud-like contrast haze behind Today > Goals only. */
+.glanceHead #targetSetupBtn{
+  position:relative;
+  isolation:isolate;
+  color:#fff!important;
+  text-shadow:0 1px 8px rgba(0,0,0,.45);
+  padding:7px 3px;
+}
+.glanceHead #targetSetupBtn::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  left:-30px;
+  right:-30px;
+  top:-18px;
+  bottom:-18px;
+  border-radius:50%;
+  background:radial-gradient(ellipse at center,
+    rgba(10,14,20,.48) 0%,
+    rgba(10,14,20,.30) 34%,
+    rgba(10,14,20,.14) 58%,
+    rgba(10,14,20,0) 78%);
+  filter:blur(9px);
+  pointer-events:none;
+}
+</style>
