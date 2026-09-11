@@ -1551,40 +1551,53 @@ function v66RenderPersonalSummary(){const el=$('v66PersonalFacts');if(!el)return
 function v66SavePersonal(){let p={goals:[...document.querySelectorAll('#goalChips [data-goal].on')].map(x=>x.dataset.goal),age:+$('pAge').value||0,sex:$('pSex').value,height:+$('pHeight').value||0,weight:+$('pWeight').value||0,activity:$('pActivity').value,bodyfat:+$('pBodyfat').value||0,trend:$('pTrend').value,sessions:$('pSessions').value,dailyActivity:$('pDailyActivity').value,lifting:$('pLifting').value,cardio:$('pCardio').value,athlete:$('pAthlete').value};db.personal=p;save();v66RenderPersonalSummary();show('targetsHubView');}
 $('personaliseCard')?.addEventListener('click',()=>show('personaliseView'));$('personaliseCard')?.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();show('personaliseView')}});$('savePersonalDetails')?.addEventListener('click',v66SavePersonal);
 </script>
-<script id="v68TodayTargets">
-// v68 — Today hierarchy: Calories/Fat/Burned/Steps/Water are primary targets.
-// Protein, Carbs and the remaining nutrition metrics live in Performance by default.
+<script id="v69TodayTargets">
+// v69 — preserve the original Today order and turn on the requested targets.
+// Order: Calories → Carbs | Fat | Protein → Burned | Steps | Water → Performance.
 (function(){
-  const defaults={calories:2200,fat:70,water:2700,steps:10000,burned:500};
-  const primary=['calories','fat','water','steps','burned'];
-  const performance=['protein','carbs','fiber','sodium','potassium','sugar','calcium','iron','magnesium'];
-
-  primary.forEach(k=>{
-    const old=(typeof v24Prefs!=='undefined'&&v24Prefs[k])||{};
-    const val=(+old.value>0)?+old.value:((typeof v26Value==='function'&&+v26Value(k)>0)?+v26Value(k):defaults[k]);
-    if(typeof v24Prefs!=='undefined')v24Prefs[k]={...old,value:val,enabled:true,performance:false};
+  // Legacy Today targets: keep the original macro card and enable all three targets.
+  const legacyDefaults={cal:2200,c:200,f:70,p:180,water:2700};
+  Object.entries(legacyDefaults).forEach(([k,v])=>{
+    db.targets[k]??={enabled:true,value:v};
+    db.targets[k].enabled=true;
+    if(!(+(db.targets[k].value)>0))db.targets[k].value=v;
   });
-  performance.forEach(k=>{
+
+  // Modern target prefs used by Burned / Steps / Water and Performance.
+  const primary={
+    calories:{value:+db.targets.cal.value||2200,unit:'kcal'},
+    carbs:{value:+db.targets.c.value||200,unit:'g'},
+    fat:{value:+db.targets.f.value||70,unit:'g'},
+    protein:{value:+db.targets.p.value||180,unit:'g'},
+    burned:{value:500,unit:'kcal'},
+    steps:{value:10000,unit:'steps'},
+    water:{value:(+db.targets.water.value||2700)/1000,unit:'L'}
+  };
+  Object.entries(primary).forEach(([k,x])=>{
     const old=(typeof v24Prefs!=='undefined'&&v24Prefs[k])||{};
-    const val=(old.value!==undefined)?old.value:(typeof v26Value==='function'?v26Value(k):0);
-    if(typeof v24Prefs!=='undefined')v24Prefs[k]={...old,value:val,performance:true};
+    let value=+old.value;
+    // Repair the old mL-style Water preference while preserving user-set litre targets.
+    if(k==='water'){
+      if(!(value>0)||value>20)value=x.value;
+    }else if(!(value>0)) value=x.value;
+    if(typeof v24Prefs!=='undefined')v24Prefs[k]={...old,value,unit:x.unit,enabled:true,performance:false};
+  });
+
+  // Detailed nutrition lives in Performance by default. Carbs/protein remain on Today.
+  ['fiber','sodium','potassium','sugar','satfat','calcium','iron','magnesium'].forEach(k=>{
+    const old=(typeof v24Prefs!=='undefined'&&v24Prefs[k])||{};
+    const ck={fiber:'fiber',sodium:'sodium',potassium:'potassium',sugar:'sugar',satfat:'satfat',calcium:'calcium',iron:'iron',magnesium:'magnesium'}[k];
+    const fallback=ck&&db.targets[ck]?+db.targets[ck].value||0:0;
+    const value=(+old.value>0)?+old.value:fallback;
+    if(typeof v24Prefs!=='undefined')v24Prefs[k]={...old,value,performance:true};
   });
   if(typeof v24SavePrefs==='function')v24SavePrefs();
-
-  // Mirror primary target state into the legacy Today target map.
-  const legacy={calories:'cal',fat:'f',water:'water'};
-  Object.entries(legacy).forEach(([modern,k])=>{
-    if(!db.targets[k])return;
-    db.targets[k].enabled=true;
-    const v=+v24Prefs[modern]?.value;
-    if(v>0)db.targets[k].value=v;
-  });
   save();
 
   function apply(){
-    // Main macro card is Fat only; Protein and Carbs are now in Performance.
+    // Restore the exact original macro order: Carbs | Fat | Protein.
     const mg=document.getElementById('macroMetrics');
-    if(mg){mg.innerHTML=macroMini('f');mg.style.gridTemplateColumns='1fr';}
+    if(mg){mg.innerHTML=['c','f','p'].map(macroMini).join('');mg.style.gridTemplateColumns='';}
     v31GlanceTargets?.();
     v24RenderPerformance?.();
   }
