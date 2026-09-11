@@ -526,7 +526,7 @@ body.todayMode .tabs,body.todayMode .addFloat{z-index:50}
 <button class="todayTop dateOpen" id="dateOpenBtn" type="button"><h1 id="dayHeading">Today <span class="todayDrop">⌄</span></h1><div class="todayDate" id="todayDate"></div></button>
 <input type="date" id="calendarPicker" class="calendarPicker" aria-label="Choose date">
 <div class="weekStrip" id="weekStrip"><button class="weekDay">M</button><button class="weekDay">T</button><button class="weekDay">W</button><button class="weekDay">T</button><button class="weekDay">F</button><button class="weekDay">S</button><button class="weekDay">S</button></div>
-<div class="glanceHead"><div><h2>Today at a glance</h2><div>Nutrition &amp; daily targets</div></div><button class="linkBtn" id="targetSetupBtn">Goals ›</button></div>
+<div class="glanceHead"><div><h2>Today at a glance</h2><div>Nutrition &amp; daily targets</div></div><button class="linkBtn" id="targetSetupBtn">My Plan ›</button></div>
 <div class="glass calorieCard" id="calorieMetric"></div>
 <div class="glass macroCard"><div class="macroGrid" id="macroMetrics"></div></div>
 <div class="glass activityCard"><div><span>🔥 Burned</span><b id="glBurn">—</b><small>No data</small></div><div><span>👟 Steps</span><b id="glSteps">—</b><small>No data</small></div><div><span>💧 Water</span><b id="glWater">0 L</b><small>Set a target ›</small></div></div>
@@ -599,16 +599,16 @@ body.todayMode .tabs,body.todayMode .addFloat{z-index:50}
 <section id="targetsHubView" class="view hidden goalsPolish">
  <div class="goalsHero">
   <button class="back" id="targetsHubBack" type="button">‹</button>
-  <div class="goalsHeroCopy"><h1>Goals</h1></div>
+  <div class="goalsHeroCopy"><h1>My Plan</h1></div>
   <div class="goalsMotto">BETTER HABITS<br>BIGGER RESULTS</div>
  </div>
  <div class="targetsHubCards">
   <div class="goalsInlinePersonal card v66PersonalSummary" id="personaliseCard" role="button" tabindex="0">
-   <div class="v66PersonalTop"><div class="v65PersonIcon" aria-hidden="true"><svg viewBox="0 0 64 64"><circle cx="32" cy="21" r="11"/><path d="M14 53c2-13 9-19 18-19s16 6 18 19"/></svg></div><div class="v66PersonalCopy"><h2>Personalise CutTrack</h2><div class="muted small">Tell us about you so we can create the best targets for your goals.</div></div><span class="v66PersonalChev">›</span></div>
+   <div class="v66PersonalTop"><div class="v65PersonIcon" aria-hidden="true"><svg viewBox="0 0 64 64"><circle cx="32" cy="21" r="11"/><path d="M14 53c2-13 9-19 18-19s16 6 18 19"/></svg></div><div class="v66PersonalCopy"><h2>Health Profile</h2><div class="muted small">Tell us about you so we can create the best targets for your goals.</div></div><span class="v66PersonalChev">›</span></div>
    <div class="v66PersonalFacts" id="v66PersonalFacts"></div>
   </div>
   <div class="targetsHubCard goalFeatureCard goalTargetsNatural v65TargetsCard" id="hubMacros">
-   <div class="v65TargetsHead"><div class="hubIcon hubIconNatural" aria-hidden="true"><svg viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"><path d="M12 17h40"/><path d="M12 32h40"/><path d="M12 47h40"/></g><g fill="currentColor"><circle cx="25" cy="17" r="6"/><circle cx="41" cy="32" r="6"/><circle cx="20" cy="47" r="6"/></g></svg></div><div class="hubCopy"><b>My Targets</b><span>Set and adjust your daily targets.</span></div><button class="v65SetForMe" id="generateTargets" type="button">Set for me</button></div>
+   <div class="v65TargetsHead"><div class="hubIcon hubIconNatural" aria-hidden="true"><svg viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"><path d="M12 17h40"/><path d="M12 32h40"/><path d="M12 47h40"/></g><g fill="currentColor"><circle cx="25" cy="17" r="6"/><circle cx="41" cy="32" r="6"/><circle cx="20" cy="47" r="6"/></g></svg></div><div class="hubCopy"><b>Macro Targets</b><span>Set and adjust your daily targets.</span></div><button class="v65SetForMe" id="generateTargets" type="button">Set for me</button></div>
    <div class="v65TargetTiles" id="v65TargetTiles"></div>
   </div>
   <div id="targetResult"></div>
@@ -620,7 +620,7 @@ body.todayMode .tabs,body.todayMode .addFloat{z-index:50}
  </div>
 </section>
 <section id="personaliseView" class="hidden">
-<div class="top"><button class="back" data-back="targetsHubView">‹</button><div style="flex:1"><h1 class="sheetTitle">Personalise CutTrack</h1><div class="muted">Set up your profile and goals for a more personalised experience.</div></div></div>
+<div class="top"><button class="back" data-back="targetsHubView">‹</button><div style="flex:1"><h1 class="sheetTitle">Health Profile</h1><div class="muted">Set up your profile and goals for a more personalised experience.</div></div></div>
 <div class="card v72GoalCard"><h2>Your Goal</h2><div class="muted small">Choose one or more goals to get started.</div><div class="chips v71GoalChips" id="goalChips">
 <button class="chip v71GoalChip" data-goal="lose"><span class="v71GoalIcon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M27 4c1 7-5 10-5 17 0 3 1 5 3 7-1-5 3-9 7-13 5 5 8 11 8 17 0 8-6 13-16 13S8 40 8 32c0-8 5-14 11-20 0 5 2 9 5 11-1-8 3-13 3-19Z"/><path d="M25 43c-5 0-9-3-9-8 0-4 3-8 7-11 0 4 2 7 4 8 0-4 2-7 5-10 3 4 5 8 5 12 0 5-4 9-12 9Z"/></svg></span><span>Cutting</span></button>
 <button class="chip v71GoalChip" data-goal="maintain"><span class="v71GoalIcon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6v34M11 12h26M17 42h14"/><path d="M11 12 5 27h12L11 12Zm26 0-6 15h12l-6-15Z"/><path d="M5 27h12M31 27h12"/></svg></span><span>Maintaining</span></button>
@@ -632,7 +632,7 @@ body.todayMode .tabs,body.todayMode .addFloat{z-index:50}
 <details class="card v72MoreCard"><summary><span class="v72MoreIcon">☷</span><span><b>More Details (Optional)</b><small>Add extra details for even better targets.</small></span><i>⌄</i></summary><div class="v72MoreBody"><div class="v66DetailGrid"><div class="field wide"><label>Body fat %</label><input id="pBodyfat" type="number" placeholder="Skip if unknown"></div><div class="field wide"><label>Recent weight trend</label><select id="pTrend"><option value="unknown">Not sure</option><option value="losing">Losing weight</option><option value="stable">Weight stable</option><option value="gaining">Gaining weight</option></select></div><div class="field wide"><label>Exercise sessions / week</label><select id="pSessions"><option>0</option><option>1-3</option><option>4-6</option><option>7+</option></select></div><div class="field wide"><label>Non-exercise activity</label><select id="pDailyActivity"><option>Mostly sedentary</option><option>Moderately active</option><option>Very active</option></select></div><div class="field wide"><label>Lifting experience</label><select id="pLifting"><option>None</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></div><div class="field wide"><label>Cardio experience</label><select id="pCardio"><option>None</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></div><div class="field wide"><label>Athletic level</label><select id="pAthlete"><option>Exercise regularly</option><option>Athlete</option><option>Professional athlete</option></select></div></div></div></details>
 <button class="primary v72SavePersonal" id="savePersonalDetails" type="button">Save &amp; Continue ›</button>
 </section>
-<section id="targetView" class="hidden"><div class="top"><button class="back" data-back="targetsHubView">‹</button><div style="flex:1"><h1 class="sheetTitle">My Targets</h1><div class="muted">Set the daily targets you want CutTrack to follow.</div></div></div><button class="secondary targetAssistBtn" id="targetAssistBtn" type="button">Set my targets for me <span>›</span></button><div class="card" id="targetInputs"></div><button class="primary" id="saveTargets">Save Targets</button><div class="customTargetsInline" id="customTargetsInline"></div>
+<section id="targetView" class="hidden"><div class="top"><button class="back" data-back="targetsHubView">‹</button><div style="flex:1"><h1 class="sheetTitle">Macro Targets</h1><div class="muted">Set the daily targets you want CutTrack to follow.</div></div></div><button class="secondary targetAssistBtn" id="targetAssistBtn" type="button">Set my targets for me <span>›</span></button><div class="card" id="targetInputs"></div><button class="primary" id="saveTargets">Save Targets</button><div class="customTargetsInline" id="customTargetsInline"></div>
 <div class="targetCreateFooter">
   <button class="primary" id="newCustomTargetBtn" type="button">+ Create Custom Target</button>
 </div>
