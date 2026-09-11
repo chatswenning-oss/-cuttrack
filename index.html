@@ -1674,6 +1674,20 @@ $('personaliseCard')?.addEventListener('click',()=>show('personaliseView'));$('p
   view.addEventListener('touchcancel',function(){tracking=false},{passive:true});
 })();
 </script>
+
+<style id="v101XAxisOnlySwipe">
+/* v101 — the visible page never changes layout mode during a swipe.
+   It remains in its exact normal-flow Y position; only translateX changes. */
+.v101PagerCurrent{
+  position:relative!important;
+  left:auto!important;top:auto!important;
+  width:auto!important;height:auto!important;
+  overflow:visible!important;
+  background:transparent!important;
+  will-change:transform!important;
+  backface-visibility:hidden!important;-webkit-backface-visibility:hidden!important;
+}
+</style>
 </body></html>
 <style id="v77GoalsCloudHaze">
 /* v77 — soft cloud-like contrast haze behind Today > Goals only. */
@@ -1898,7 +1912,7 @@ body.v94Paging{overflow:hidden!important;touch-action:none!important}
     refresh(dest);g.dest=dest;g.current=c;g.next=n;g.scrollY=scrollY||0;
     const rect=c.getBoundingClientRect();g.pageWidth=rect.width;g.pageLeft=rect.left;g.pageTop=rect.top;g.pageHeight=rect.height;
     document.body.classList.add('v94Paging');
-    c.classList.add('v94PagerPage');n.classList.remove('hidden');n.classList.add('v94PagerPage');
+    c.classList.add('v101PagerCurrent');n.classList.remove('hidden');n.classList.add('v94PagerPage');
     c.style.zIndex='12';n.style.zIndex='12';c.style.transition='none';n.style.transition='none';
     c.style.setProperty('--v98-page-width',g.pageWidth+'px');n.style.setProperty('--v98-page-width',g.pageWidth+'px');
     [c,n].forEach(el=>{el.style.setProperty('--v100-page-left',g.pageLeft+'px');el.style.setProperty('--v100-page-top',g.pageTop+'px');el.style.setProperty('--v100-page-height',g.pageHeight+'px')});
@@ -1911,7 +1925,7 @@ body.v94Paging{overflow:hidden!important;touch-action:none!important}
     /* Preserve the exact viewport Y position. Do not alter page or window scroll. */
     return true;
   }
-  function clear(el){if(!el)return;el.classList.remove('v94PagerPage');el.style.transition='';el.style.transform='';el.style.zIndex='';el.style.left='';el.style.removeProperty('--v97-page-width');el.style.removeProperty('--v98-page-width');el.style.removeProperty('--v100-page-left');el.style.removeProperty('--v100-page-top');el.style.removeProperty('--v100-page-height')}
+  function clear(el){if(!el)return;el.classList.remove('v94PagerPage','v101PagerCurrent');el.style.transition='';el.style.transform='';el.style.zIndex='';el.style.left='';el.style.removeProperty('--v97-page-width');el.style.removeProperty('--v98-page-width');el.style.removeProperty('--v100-page-left');el.style.removeProperty('--v100-page-top');el.style.removeProperty('--v100-page-height')}
   function cleanup(complete){
     if(!g)return;const c=g.current,n=g.next,d=g.dest,y=g.scrollY||0;
     clear(c);clear(n);document.body.classList.remove('v94Paging');
