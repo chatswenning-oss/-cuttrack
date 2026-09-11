@@ -1867,7 +1867,7 @@ body.scenicBlurMode:after,body.mealViewOnly:after{content:none!important;display
 <style id="v96FixedGutterPager">
 /* v97 — rigid swipe track: viewport width and 16px gutter are frozen for the full gesture. */
 .v94PagerPage{
-  position:fixed!important;left:0!important;top:0!important;width:var(--v97-page-width,100vw)!important;height:100dvh!important;
+  position:fixed!important;left:0!important;top:0!important;width:var(--v98-page-width,var(--v97-page-width,100vw))!important;height:100dvh!important;
   overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:none!important;background:transparent!important;
   will-change:transform!important;backface-visibility:hidden!important;-webkit-backface-visibility:hidden!important;
   contain:paint!important;
@@ -1891,21 +1891,23 @@ body.v94Paging{overflow:hidden!important;touch-action:none!important}
   function seamDistance(){
     /* v97: use the width captured at touchstart so Safari cannot change the
        page pitch while the finger is down. The gutter is always exactly 16px. */
-    return Math.max(1,(g&&g.viewportWidth?g.viewportWidth:document.documentElement.clientWidth)+16);
+    return Math.max(1,(g&&g.pageWidth?g.pageWidth:(g&&g.viewportWidth?g.viewportWidth:document.documentElement.clientWidth))+16);
   }
   function prep(dest,dir){
     const c=document.getElementById(g.id),n=document.getElementById(dest);if(!c||!n)return false;
     refresh(dest);g.dest=dest;g.current=c;g.next=n;g.scrollY=scrollY||0;
+    const rect=c.getBoundingClientRect();g.pageWidth=rect.width;g.pageLeft=rect.left;
     document.body.classList.add('v94Paging');
     c.classList.add('v94PagerPage');n.classList.remove('hidden');n.classList.add('v94PagerPage');
     c.style.zIndex='12';n.style.zIndex='12';c.style.transition='none';n.style.transition='none';
-    c.style.setProperty('--v97-page-width',g.viewportWidth+'px');n.style.setProperty('--v97-page-width',g.viewportWidth+'px');
+    c.style.setProperty('--v98-page-width',g.pageWidth+'px');n.style.setProperty('--v98-page-width',g.pageWidth+'px');
+    c.style.left=g.pageLeft+'px';n.style.left=g.pageLeft+'px';
     g.distance=seamDistance();
     c.style.transform='translate3d(0,0,0)';n.style.transform=dir==='right'?`translate3d(${-g.distance}px,0,0)`:`translate3d(${g.distance}px,0,0)`;
     c.scrollTop=g.scrollY;n.scrollTop=0;
     return true;
   }
-  function clear(el){if(!el)return;el.classList.remove('v94PagerPage');el.style.transition='';el.style.transform='';el.style.zIndex='';el.style.removeProperty('--v97-page-width')}
+  function clear(el){if(!el)return;el.classList.remove('v94PagerPage');el.style.transition='';el.style.transform='';el.style.zIndex='';el.style.left='';el.style.removeProperty('--v97-page-width');el.style.removeProperty('--v98-page-width')}
   function cleanup(complete){
     if(!g)return;const c=g.current,n=g.next,d=g.dest,y=g.scrollY||0;
     clear(c);clear(n);document.body.classList.remove('v94Paging');
@@ -1915,7 +1917,7 @@ body.v94Paging{overflow:hidden!important;touch-action:none!important}
   }
   document.addEventListener('touchstart',e=>{
     if(e.touches.length!==1||blocked(e.target))return;const id=visible();if(!id)return;
-    const t=e.touches[0];g={id,sx:t.clientX,sy:t.clientY,dx:0,dir:'',horizontal:false,current:null,next:null,dest:null,scrollY:scrollY||0,viewportWidth:document.documentElement.clientWidth};
+    const t=e.touches[0];g={id,sx:t.clientX,sy:t.clientY,dx:0,dir:'',horizontal:false,current:null,next:null,dest:null,scrollY:scrollY||0,viewportWidth:document.documentElement.clientWidth,pageWidth:0,pageLeft:0};
   },{passive:true,capture:true});
   document.addEventListener('touchmove',e=>{
     if(!g||e.touches.length!==1)return;const t=e.touches[0],mx=t.clientX-g.sx,my=t.clientY-g.sy;
@@ -1943,4 +1945,4 @@ body.v94Paging{overflow:hidden!important;touch-action:none!important}
 })();
 </script>
 
-<!-- v97: rigid page pitch keeps the 16px swipe gutter constant for the entire touch gesture. -->
+<!-- v98: preserve each page's original rendered width while swiping, so cards never grow or shrink. The rigid track remains page width + 16px. -->
