@@ -1862,3 +1862,122 @@ body.scenicBlurMode:after,body.mealViewOnly:after{content:none!important;display
   });
 })();
 </script>
+
+
+<style id="v92LivePageReveal">
+/* v92 — iOS-style live page reveal. Both pages stay visible during a swipe. */
+.v92SwipePage{
+  position:fixed!important;
+  inset:0!important;
+  width:100vw!important;
+  height:100dvh!important;
+  overflow-y:auto!important;
+  overscroll-behavior:none!important;
+  background:transparent!important;
+  will-change:transform!important;
+  backface-visibility:hidden!important;
+  -webkit-backface-visibility:hidden!important;
+}
+body.v92Swiping{overflow:hidden!important;touch-action:none!important}
+</style>
+<script id="v92LivePageRevealNavigation">
+// v92 — show the destination page live underneath/beside the current page while swiping.
+(function(){
+  const main=['todayView','progressView','healthView','settingsView'];
+  const back={
+    targetsHubView:'todayView',personaliseView:'targetsHubView',targetView:'targetsHubView',reminderView:'targetsHubView',
+    mealView:'todayView',profileView:'settingsView',suppView:'settingsView'
+  };
+  const ids=['todayView','progressView','healthView','settingsView','profileView','targetsHubView','targetView','personaliseView','reminderView','suppView','mealView'];
+  let g=null;
+  function visible(){return ids.find(id=>{const e=document.getElementById(id);return e&&!e.classList.contains('hidden')})||null}
+  function destination(id,dir){
+    const i=main.indexOf(id);
+    if(i>=0){if(dir==='right'&&i>0)return main[i-1];if(dir==='left'&&i<main.length-1)return main[i+1];return null}
+    return dir==='right'?(back[id]||null):null;
+  }
+  function blocked(el){return !!el.closest('input,textarea,select,[contenteditable="true"],.photoSheet,.mealHero')}
+  function refresh(id){
+    try{
+      if(id==='todayView')renderToday();
+      else if(id==='healthView')renderHealth();
+      else if(id==='settingsView')renderSettings();
+      else if(id==='targetView')renderTargets();
+      else if(id==='personaliseView')loadPersonal();
+      else if(id==='targetsHubView'){loadPersonal();renderReminders();setTimeout(v66RenderPersonalSummary,0)}
+      else if(id==='suppView')renderSupp();
+    }catch(_){ }
+  }
+  function prep(dest,dir){
+    const d=document.getElementById(dest),c=document.getElementById(g.id);if(!d||!c)return false;
+    refresh(dest);
+    g.scrollY=window.scrollY||0;g.dest=dest;g.current=c;g.next=d;
+    document.body.classList.add('v92Swiping');
+    c.classList.add('v92SwipePage');d.classList.remove('hidden');d.classList.add('v92SwipePage');
+    c.style.zIndex='12';d.style.zIndex='11';
+    c.scrollTop=g.scrollY;d.scrollTop=0;
+    c.style.transition='none';d.style.transition='none';
+    if(dir==='right')d.style.transform='translate3d(-24vw,0,0)';
+    else {d.style.zIndex='13';d.style.transform='translate3d(100vw,0,0)'}
+    return true;
+  }
+  function cleanup(keepDest){
+    if(!g)return;
+    const c=g.current,n=g.next,dest=g.dest,old=g.id,oldScroll=g.scrollY||0;
+    [c,n].forEach(el=>{if(!el)return;el.classList.remove('v92SwipePage');el.style.transition='';el.style.transform='';el.style.zIndex=''});
+    document.body.classList.remove('v92Swiping');
+    if(keepDest&&dest){
+      if(c)c.classList.add('hidden');
+      if(n)n.classList.remove('hidden');
+      show(dest);
+    }else{
+      if(n)n.classList.add('hidden');
+      if(c)c.classList.remove('hidden');
+      requestAnimationFrame(()=>window.scrollTo(0,oldScroll));
+    }
+    g=null;
+  }
+  document.addEventListener('touchstart',function(e){
+    if(e.touches.length!==1||blocked(e.target))return;
+    const id=visible();if(!id)return;
+    const t=e.touches[0];g={id,sx:t.clientX,sy:t.clientY,dx:0,dir:'',horizontal:false,current:null,next:null,dest:null,scrollY:window.scrollY||0};
+  },{passive:true,capture:true});
+  document.addEventListener('touchmove',function(e){
+    if(!g||e.touches.length!==1)return;
+    const t=e.touches[0],mx=t.clientX-g.sx,my=t.clientY-g.sy;
+    if(!g.horizontal){
+      if(Math.abs(mx)<10&&Math.abs(my)<10)return;
+      if(Math.abs(mx)<=Math.abs(my)*1.18){g=null;return}
+      const dir=mx>0?'right':'left',dest=destination(g.id,dir);
+      if(!dest){g=null;return}
+      g.dir=dir;g.horizontal=true;if(!prep(dest,dir)){g=null;return}
+    }
+    g.dx=mx;
+    const w=Math.max(1,window.innerWidth),p=Math.min(1,Math.abs(mx)/w);
+    if(g.dir==='right'){
+      const x=Math.max(0,mx);g.current.style.transform='translate3d('+x+'px,0,0)';
+      g.next.style.transform='translate3d('+(-24+24*p)+'vw,0,0)';
+    }else{
+      const x=Math.min(0,mx);g.current.style.transform='translate3d('+(x*.28)+'px,0,0)';
+      g.next.style.transform='translate3d('+(w+x)+'px,0,0)';
+    }
+    if(e.cancelable)e.preventDefault();e.stopImmediatePropagation();
+  },{passive:false,capture:true});
+  document.addEventListener('touchend',function(e){
+    if(!g||!g.horizontal)return;
+    e.stopImmediatePropagation();if(e.cancelable)e.preventDefault();
+    const complete=Math.abs(g.dx)>=Math.max(70,window.innerWidth*.22),c=g.current,n=g.next,dir=g.dir;
+    c.style.transition='transform .24s cubic-bezier(.22,.61,.36,1)';
+    n.style.transition='transform .24s cubic-bezier(.22,.61,.36,1)';
+    if(complete){
+      if(dir==='right'){c.style.transform='translate3d(100vw,0,0)';n.style.transform='translate3d(0,0,0)'}
+      else{c.style.transform='translate3d(-24vw,0,0)';n.style.transform='translate3d(0,0,0)'}
+      setTimeout(()=>cleanup(true),245);
+    }else{
+      c.style.transform='translate3d(0,0,0)';n.style.transform=dir==='right'?'translate3d(-24vw,0,0)':'translate3d(100vw,0,0)';
+      setTimeout(()=>cleanup(false),245);
+    }
+  },{passive:false,capture:true});
+  document.addEventListener('touchcancel',function(){if(!g||!g.horizontal){g=null;return}const c=g.current,n=g.next,dir=g.dir;c.style.transition=n.style.transition='transform .2s ease-out';c.style.transform='translate3d(0,0,0)';n.style.transform=dir==='right'?'translate3d(-24vw,0,0)':'translate3d(100vw,0,0)';setTimeout(()=>cleanup(false),205)},{passive:true,capture:true});
+})();
+</script>
