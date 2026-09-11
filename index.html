@@ -88,7 +88,7 @@ body.todayMode .wrap{min-height:100svh}
 
 /* v18 */
 body.todayMode:before{
- position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;
+ position:fixed!important;left:0!important;top:0!important;width:var(--v97-page-width,100vw)!important;height:100dvh!important;
  background-attachment:fixed!important;background-size:cover!important;background-position:center center!important;
  transform:none!important;
 }
@@ -1810,7 +1810,7 @@ body .tabs,body .addFloat{z-index:50}
 /* v91 — one permanent CutTrack wallpaper beneath every screen. */
 html,body{background:#05080b!important;background-image:none!important}
 body:before,body:after{background-image:none!important}
-#todayWallpaper{display:block!important;position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;z-index:0!important;pointer-events:none!important;filter:none!important;-webkit-filter:none!important;transform:none!important;-webkit-transform:none!important;background-size:cover,cover!important;background-position:center center,center center!important;background-repeat:no-repeat,no-repeat!important}
+#todayWallpaper{display:block!important;position:fixed!important;left:0!important;top:0!important;width:var(--v97-page-width,100vw)!important;height:100dvh!important;z-index:0!important;pointer-events:none!important;filter:none!important;-webkit-filter:none!important;transform:none!important;-webkit-transform:none!important;background-size:cover,cover!important;background-position:center center,center center!important;background-repeat:no-repeat,no-repeat!important}
 body.scenicBlurMode #todayWallpaper,body.mealViewOnly #todayWallpaper{display:block!important;filter:none!important;-webkit-filter:none!important;transform:none!important;-webkit-transform:none!important}
 body.scenicBlurMode:after,body.mealViewOnly:after{content:none!important;display:none!important}
 #todayView,#progressView,#healthView,#settingsView,#profileView,#targetsHubView,#targetView,#personaliseView,#reminderView,#suppView,#mealView{position:relative;z-index:1;will-change:transform;background-color:transparent!important}
@@ -1865,9 +1865,9 @@ body.scenicBlurMode:after,body.mealViewOnly:after{content:none!important;display
 
 
 <style id="v96FixedGutterPager">
-/* v96 — full-width pages with a fixed 16px gutter; zero overlap. */
+/* v97 — rigid swipe track: viewport width and 16px gutter are frozen for the full gesture. */
 .v94PagerPage{
-  position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;
+  position:fixed!important;left:0!important;top:0!important;width:var(--v97-page-width,100vw)!important;height:100dvh!important;
   overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:none!important;background:transparent!important;
   will-change:transform!important;backface-visibility:hidden!important;-webkit-backface-visibility:hidden!important;
   contain:paint!important;
@@ -1888,11 +1888,10 @@ body.v94Paging{overflow:hidden!important;touch-action:none!important}
     const w=el&&el.querySelector('.wrap');if(!w)return {l:16,r:16};
     const cs=getComputedStyle(w);return {l:parseFloat(cs.paddingLeft)||0,r:parseFloat(cs.paddingRight)||0};
   }
-  function seamDistance(c,n){
-    /* v96: two true full-width page viewports with a fixed 16px gutter.
-       Never reduce this below innerWidth — that physically overlaps pages. */
-    const gutter=16;
-    return Math.max(1,innerWidth+gutter);
+  function seamDistance(){
+    /* v97: use the width captured at touchstart so Safari cannot change the
+       page pitch while the finger is down. The gutter is always exactly 16px. */
+    return Math.max(1,(g&&g.viewportWidth?g.viewportWidth:document.documentElement.clientWidth)+16);
   }
   function prep(dest,dir){
     const c=document.getElementById(g.id),n=document.getElementById(dest);if(!c||!n)return false;
@@ -1900,12 +1899,13 @@ body.v94Paging{overflow:hidden!important;touch-action:none!important}
     document.body.classList.add('v94Paging');
     c.classList.add('v94PagerPage');n.classList.remove('hidden');n.classList.add('v94PagerPage');
     c.style.zIndex='12';n.style.zIndex='12';c.style.transition='none';n.style.transition='none';
-    g.distance=seamDistance(c,n);
+    c.style.setProperty('--v97-page-width',g.viewportWidth+'px');n.style.setProperty('--v97-page-width',g.viewportWidth+'px');
+    g.distance=seamDistance();
     c.style.transform='translate3d(0,0,0)';n.style.transform=dir==='right'?`translate3d(${-g.distance}px,0,0)`:`translate3d(${g.distance}px,0,0)`;
     c.scrollTop=g.scrollY;n.scrollTop=0;
     return true;
   }
-  function clear(el){if(!el)return;el.classList.remove('v94PagerPage');el.style.transition='';el.style.transform='';el.style.zIndex=''}
+  function clear(el){if(!el)return;el.classList.remove('v94PagerPage');el.style.transition='';el.style.transform='';el.style.zIndex='';el.style.removeProperty('--v97-page-width')}
   function cleanup(complete){
     if(!g)return;const c=g.current,n=g.next,d=g.dest,y=g.scrollY||0;
     clear(c);clear(n);document.body.classList.remove('v94Paging');
@@ -1915,7 +1915,7 @@ body.v94Paging{overflow:hidden!important;touch-action:none!important}
   }
   document.addEventListener('touchstart',e=>{
     if(e.touches.length!==1||blocked(e.target))return;const id=visible();if(!id)return;
-    const t=e.touches[0];g={id,sx:t.clientX,sy:t.clientY,dx:0,dir:'',horizontal:false,current:null,next:null,dest:null,scrollY:scrollY||0};
+    const t=e.touches[0];g={id,sx:t.clientX,sy:t.clientY,dx:0,dir:'',horizontal:false,current:null,next:null,dest:null,scrollY:scrollY||0,viewportWidth:document.documentElement.clientWidth};
   },{passive:true,capture:true});
   document.addEventListener('touchmove',e=>{
     if(!g||e.touches.length!==1)return;const t=e.touches[0],mx=t.clientX-g.sx,my=t.clientY-g.sy;
@@ -1942,3 +1942,5 @@ body.v94Paging{overflow:hidden!important;touch-action:none!important}
   document.addEventListener('touchcancel',()=>finish(true),{passive:true,capture:true});
 })();
 </script>
+
+<!-- v97: rigid page pitch keeps the 16px swipe gutter constant for the entire touch gesture. -->
