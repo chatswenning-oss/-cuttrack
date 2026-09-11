@@ -506,6 +506,11 @@ body.todayMode .tabs,body.todayMode .addFloat{z-index:50}
 .v71GoalChip.on .v71GoalIcon{filter:none}
 @media(max-width:390px){.v71GoalChips{gap:6px!important}.v71GoalChip{font-size:10px!important;padding:9px 2px!important}.v71GoalIcon{font-size:24px}}
 </style>
+
+<style id="v72PersonaliseExact">
+#personaliseView .v72GoalCard,#personaliseView .v72AboutCard,#personaliseView .v72MoreCard{background:rgba(22,24,28,.84)!important;border:1px solid rgba(255,255,255,.10)!important;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+#personaliseView .v72GoalCard{padding:18px;margin-bottom:14px}#personaliseView .v72GoalCard h2,#personaliseView .v72AboutCard h2{margin:0 0 4px}.v72MultiHint{text-align:center;color:var(--muted);font-size:11px;margin-top:9px}.v72AboutCard{padding:18px;margin-bottom:14px}.v72MoreCard{padding:0!important;margin-bottom:14px}.v72MoreCard summary{list-style:none;display:flex;align-items:center;gap:12px;padding:17px 18px;cursor:pointer}.v72MoreCard summary::-webkit-details-marker{display:none}.v72MoreCard summary span:nth-child(2){flex:1}.v72MoreCard summary b{display:block;font-size:18px}.v72MoreCard summary small{display:block;color:var(--muted);margin-top:3px}.v72MoreCard summary i{font-style:normal;font-size:25px}.v72MoreIcon{width:44px;height:44px;border:1px solid rgba(255,255,255,.14);border-radius:14px;display:grid;place-items:center;font-size:25px}.v72MoreBody{padding:0 18px 18px}.v72SavePersonal{margin:0 0 18px;width:100%;font-size:18px}.v72GoalChip.on{border-color:#0a84ff!important;color:#0a84ff!important;background:rgba(6,32,57,.88)!important}.v72GoalChip.on .v71GoalIcon{filter:none!important}
+</style>
 </head><body class="system"><div id="todayWallpaper" aria-hidden="true"></div><div class="wrap">
 <section id="todayView">
 <button class="todayTop dateOpen" id="dateOpenBtn" type="button"><h1 id="dayHeading">Today <span class="todayDrop">⌄</span></h1><div class="todayDate" id="todayDate"></div></button>
@@ -604,13 +609,19 @@ body.todayMode .tabs,body.todayMode .addFloat{z-index:50}
   </div>
  </div>
 </section>
-<section id="personaliseView" class="hidden"><div class="top"><button class="back" data-back="targetsHubView">‹</button><div style="flex:1"><h1 class="sheetTitle">Personalise CutTrack</h1><div class="muted">Add as much detail as you want for more personalised targets.</div></div></div><div class="card v66DetailCard"><h2>About You</h2><div class="muted small">Your basics and your main goals.</div><div class="v66GoalLabel muted">Your goal · choose one</div><div class="chips v71GoalChips" id="goalChips">
+<section id="personaliseView" class="hidden">
+<div class="top"><button class="back" data-back="targetsHubView">‹</button><div style="flex:1"><h1 class="sheetTitle">Personalise CutTrack</h1><div class="muted">Set up your profile and goals for a more personalised experience.</div></div></div>
+<div class="card v72GoalCard"><h2>Your Goal</h2><div class="muted small">Choose one or more goals to get started.</div><div class="chips v71GoalChips" id="goalChips">
 <button class="chip v71GoalChip" data-goal="lose"><span class="v71GoalIcon">🔥</span><span>Cutting</span></button>
 <button class="chip v71GoalChip" data-goal="maintain"><span class="v71GoalIcon">⚖️</span><span>Maintaining</span></button>
 <button class="chip v71GoalChip" data-goal="muscle"><span class="v71GoalIcon">💪</span><span>Bulking</span></button>
 <button class="chip v71GoalChip" data-goal="leanbulk"><span class="v71GoalIcon">🏋️</span><span>Lean bulk</span></button>
 <button class="chip v71GoalChip" data-goal="performance"><span class="v71GoalIcon">🏃</span><span>Performance</span></button>
-</div><div class="v66DetailGrid" style="margin-top:16px"><div class="field"><label>Age</label><input id="pAge" type="number"></div><div class="field"><label>Sex</label><select id="pSex"><option value="male">Male</option><option value="female">Female</option></select></div><div class="field"><label>Height cm</label><input id="pHeight" type="number"></div><div class="field"><label>Weight kg</label><input id="pWeight" type="number" step=".1"></div><div class="field wide"><label>Activity</label><select id="pActivity"><option value="1.2">Mostly sedentary</option><option value="1.375">Lightly active</option><option value="1.55">Moderately active</option><option value="1.725">Very active</option></select></div></div><div class="v66Improve"><h3>Improve My Targets</h3><div class="muted small">Optional details give the target assistant more context.</div><div class="v66DetailGrid" style="margin-top:14px"><div class="field wide"><label>Body fat %</label><input id="pBodyfat" type="number" placeholder="Skip if unknown"></div><div class="field wide"><label>Recent weight trend</label><select id="pTrend"><option value="unknown">Not sure</option><option value="losing">Losing weight</option><option value="stable">Weight stable</option><option value="gaining">Gaining weight</option></select></div><div class="field wide"><label>Exercise sessions / week</label><select id="pSessions"><option>0</option><option>1-3</option><option>4-6</option><option>7+</option></select></div><div class="field wide"><label>Non-exercise activity</label><select id="pDailyActivity"><option>Mostly sedentary</option><option>Moderately active</option><option>Very active</option></select></div><div class="field wide"><label>Lifting experience</label><select id="pLifting"><option>None</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></div><div class="field wide"><label>Cardio experience</label><select id="pCardio"><option>None</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></div><div class="field wide"><label>Athletic level</label><select id="pAthlete"><option>Exercise regularly</option><option>Athlete</option><option>Professional athlete</option></select></div></div></div><button class="primary v66SavePersonal" id="savePersonalDetails" type="button">Save Details</button></div></section>
+</div><div class="v72MultiHint">You can select multiple goals.</div></div>
+<div class="card v66DetailCard v72AboutCard"><h2>About You</h2><div class="muted small">Your basics to calculate better targets.</div><div class="v66DetailGrid" style="margin-top:16px"><div class="field"><label>Age</label><input id="pAge" type="number" placeholder="e.g. 22"></div><div class="field"><label>Sex</label><select id="pSex"><option value="male">Male</option><option value="female">Female</option></select></div><div class="field"><label>Height (cm)</label><input id="pHeight" type="number" placeholder="e.g. 178"></div><div class="field"><label>Weight (kg)</label><input id="pWeight" type="number" step=".1" placeholder="e.g. 80"></div><div class="field wide"><label>Activity Level</label><select id="pActivity"><option value="1.2">Mostly sedentary</option><option value="1.375">Lightly active</option><option value="1.55">Moderately active</option><option value="1.725">Very active</option></select></div></div></div>
+<details class="card v72MoreCard"><summary><span class="v72MoreIcon">☷</span><span><b>More Details (Optional)</b><small>Add extra details for even better targets.</small></span><i>⌄</i></summary><div class="v72MoreBody"><div class="v66DetailGrid"><div class="field wide"><label>Body fat %</label><input id="pBodyfat" type="number" placeholder="Skip if unknown"></div><div class="field wide"><label>Recent weight trend</label><select id="pTrend"><option value="unknown">Not sure</option><option value="losing">Losing weight</option><option value="stable">Weight stable</option><option value="gaining">Gaining weight</option></select></div><div class="field wide"><label>Exercise sessions / week</label><select id="pSessions"><option>0</option><option>1-3</option><option>4-6</option><option>7+</option></select></div><div class="field wide"><label>Non-exercise activity</label><select id="pDailyActivity"><option>Mostly sedentary</option><option>Moderately active</option><option>Very active</option></select></div><div class="field wide"><label>Lifting experience</label><select id="pLifting"><option>None</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></div><div class="field wide"><label>Cardio experience</label><select id="pCardio"><option>None</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></div><div class="field wide"><label>Athletic level</label><select id="pAthlete"><option>Exercise regularly</option><option>Athlete</option><option>Professional athlete</option></select></div></div></div></details>
+<button class="primary v72SavePersonal" id="savePersonalDetails" type="button">Save &amp; Continue ›</button>
+</section>
 <section id="targetView" class="hidden"><div class="top"><button class="back" data-back="targetsHubView">‹</button><div style="flex:1"><h1 class="sheetTitle">My Targets</h1><div class="muted">Set the daily targets you want CutTrack to follow.</div></div></div><button class="secondary targetAssistBtn" id="targetAssistBtn" type="button">Set my targets for me <span>›</span></button><div class="card" id="targetInputs"></div><button class="primary" id="saveTargets">Save Targets</button><div class="customTargetsInline" id="customTargetsInline"></div>
 <div class="targetCreateFooter">
   <button class="primary" id="newCustomTargetBtn" type="button">+ Create Custom Target</button>
@@ -1622,6 +1633,16 @@ $('personaliseCard')?.addEventListener('click',()=>show('personaliseView'));$('p
   const oldRender=renderToday;
   renderToday=function(){oldRender();apply();};
   apply();
+})();
+</script>
+
+<script id="v72MultiGoal">
+(function(){
+ const chips=document.getElementById('goalChips');
+ if(chips)chips.addEventListener('click',function(e){
+   const b=e.target.closest('[data-goal]'); if(!b)return;
+   e.preventDefault(); e.stopImmediatePropagation(); b.classList.toggle('on');
+ },true);
 })();
 </script>
 </body></html>
