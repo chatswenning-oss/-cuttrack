@@ -1,4 +1,4 @@
-CutTrack v69 — Original Today Order + Targets
+CutTrack v70 — Original Today Order + Targets
 
 Changes from v68:
 - Restored Today order exactly: Calories → Carbs | Fat | Protein → Burned | Steps | Water → Performance.
@@ -11,3 +11,5 @@ Changes from v68:
 - Detailed nutrition targets remain in Performance by default.
 - No other layout changes intended.
 - Existing cuttrack_v9 data remains compatible.
+
+V70: Improved contrast for the Goals motto; removed the Reminders clover icon and blue underline only.
