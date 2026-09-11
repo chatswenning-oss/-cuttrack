@@ -1805,3 +1805,60 @@ body .tabs,body .addFloat{z-index:50}
   });
 })();
 </script>
+
+<style id="v91GlobalWallpaper">
+/* v91 — one permanent CutTrack wallpaper beneath every screen. */
+html,body{background:#05080b!important;background-image:none!important}
+body:before,body:after{background-image:none!important}
+#todayWallpaper{display:block!important;position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;z-index:0!important;pointer-events:none!important;filter:none!important;-webkit-filter:none!important;transform:none!important;-webkit-transform:none!important;background-size:cover,cover!important;background-position:center center,center center!important;background-repeat:no-repeat,no-repeat!important}
+body.scenicBlurMode #todayWallpaper,body.mealViewOnly #todayWallpaper{display:block!important;filter:none!important;-webkit-filter:none!important;transform:none!important;-webkit-transform:none!important}
+body.scenicBlurMode:after,body.mealViewOnly:after{content:none!important;display:none!important}
+#todayView,#progressView,#healthView,#settingsView,#profileView,#targetsHubView,#targetView,#personaliseView,#reminderView,#suppView,#mealView{position:relative;z-index:1;will-change:transform;background-color:transparent!important}
+.wrap{position:relative;z-index:1;background:transparent!important}
+</style>
+<script id="v91GlobalSmoothNavigation">
+// v91 — interactive page swipes everywhere while the wallpaper never moves.
+(function(){
+  const main=['todayView','progressView','healthView','settingsView'];
+  const back={
+    targetsHubView:'todayView',personaliseView:'targetsHubView',targetView:'targetsHubView',reminderView:'targetsHubView',
+    mealView:'todayView',profileView:'settingsView',suppView:'settingsView'
+  };
+  const ids=['todayView','progressView','healthView','settingsView','profileView','targetsHubView','targetView','personaliseView','reminderView','suppView','mealView'];
+  function destination(id,dir){
+    const i=main.indexOf(id);
+    if(i>=0){if(dir==='right'&&i>0)return main[i-1];if(dir==='left'&&i<main.length-1)return main[i+1];return null}
+    return dir==='right'?back[id]||null:null;
+  }
+  function blocked(el){return !!el.closest('input,textarea,select,[contenteditable="true"],.photoSheet')}
+  ids.forEach(function(id){
+    const view=document.getElementById(id);if(!view)return;
+    let sx=0,sy=0,dx=0,tracking=false,horizontal=false,dir='';
+    function clear(){view.style.transition='';view.style.transform='';tracking=false;horizontal=false;dx=0;dir=''}
+    function snap(){view.style.transition='transform .18s ease-out';view.style.transform='translate3d(0,0,0)';setTimeout(clear,190)}
+    view.addEventListener('touchstart',function(e){
+      if(e.touches.length!==1||blocked(e.target))return;
+      const t=e.touches[0];sx=t.clientX;sy=t.clientY;dx=0;tracking=true;horizontal=false;dir='';view.style.transition='none';
+    },{passive:true,capture:true});
+    view.addEventListener('touchmove',function(e){
+      if(!tracking||e.touches.length!==1)return;
+      const t=e.touches[0],mx=t.clientX-sx,my=t.clientY-sy;
+      if(!horizontal){
+        if(Math.abs(mx)<8&&Math.abs(my)<8)return;
+        if(Math.abs(mx)<=Math.abs(my)*1.15){tracking=false;snap();return}
+        dir=mx>0?'right':'left';
+        if(!destination(id,dir)){tracking=false;snap();return}
+        horizontal=true;
+      }
+      dx=mx;view.style.transform='translate3d('+dx+'px,0,0)';if(e.cancelable)e.preventDefault();
+    },{passive:false,capture:true});
+    view.addEventListener('touchend',function(e){
+      if(!horizontal){tracking=false;return}
+      e.stopImmediatePropagation();if(e.cancelable)e.preventDefault();
+      const dest=destination(id,dir),complete=Math.abs(dx)>=70;
+      if(complete&&dest){view.style.transition='transform .18s ease-out';view.style.transform='translate3d('+(dir==='right'?'105vw':'-105vw')+',0,0)';setTimeout(function(){clear();show(dest)},180)}else snap();
+    },{passive:false,capture:true});
+    view.addEventListener('touchcancel',snap,{passive:true,capture:true});
+  });
+})();
+</script>
