@@ -1864,8 +1864,8 @@ body.scenicBlurMode:after,body.mealViewOnly:after{content:none!important;display
 </script>
 
 
-<style id="v94InstagramPager">
-/* v94 — Instagram-style pager: two full pages remain edge-to-edge while one fixed wallpaper stays underneath. */
+<style id="v95ContinuousSpacingPager">
+/* v95 — continuous iPhone-style seam spacing; fixed wallpaper remains underneath. */
 .v94PagerPage{
   position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;
   overflow-y:auto!important;overscroll-behavior:none!important;background:transparent!important;
@@ -1874,7 +1874,7 @@ body.scenicBlurMode:after,body.mealViewOnly:after{content:none!important;display
 }
 body.v94Paging{overflow:hidden!important;touch-action:none!important}
 </style>
-<script id="v94InstagramPagerNavigation">
+<script id="v95ContinuousSpacingPagerNavigation">
 (function(){
   const main=['todayView','progressView','healthView','settingsView'];
   const back={targetsHubView:'todayView',personaliseView:'targetsHubView',targetView:'targetsHubView',reminderView:'targetsHubView',mealView:'todayView',profileView:'settingsView',suppView:'settingsView'};
@@ -1884,13 +1884,23 @@ body.v94Paging{overflow:hidden!important;touch-action:none!important}
   function destination(id,dir){const i=main.indexOf(id);if(i>=0){if(dir==='right'&&i>0)return main[i-1];if(dir==='left'&&i<main.length-1)return main[i+1];return null}return dir==='right'?(back[id]||null):null}
   function blocked(el){return !!el.closest('input,textarea,select,[contenteditable="true"],.photoSheet,.mealHero')}
   function refresh(id){try{if(id==='todayView')renderToday();else if(id==='healthView')renderHealth();else if(id==='settingsView')renderSettings();else if(id==='targetView')renderTargets();else if(id==='personaliseView')loadPersonal();else if(id==='targetsHubView'){loadPersonal();renderReminders();setTimeout(v66RenderPersonalSummary,0)}else if(id==='suppView')renderSupp()}catch(_){}}
+  function pageInsets(el){
+    const w=el&&el.querySelector('.wrap');if(!w)return {l:16,r:16};
+    const cs=getComputedStyle(w);return {l:parseFloat(cs.paddingLeft)||0,r:parseFloat(cs.paddingRight)||0};
+  }
+  function seamDistance(c,n){
+    const a=pageInsets(c),b=pageInsets(n),desired=16;
+    const overlap=Math.max(0,Math.min(innerWidth*.12,a.r+b.l-desired));
+    return Math.max(1,innerWidth-overlap);
+  }
   function prep(dest,dir){
     const c=document.getElementById(g.id),n=document.getElementById(dest);if(!c||!n)return false;
     refresh(dest);g.dest=dest;g.current=c;g.next=n;g.scrollY=scrollY||0;
     document.body.classList.add('v94Paging');
     c.classList.add('v94PagerPage');n.classList.remove('hidden');n.classList.add('v94PagerPage');
     c.style.zIndex='12';n.style.zIndex='12';c.style.transition='none';n.style.transition='none';
-    c.style.transform='translate3d(0,0,0)';n.style.transform=dir==='right'?'translate3d(-100vw,0,0)':'translate3d(100vw,0,0)';
+    g.distance=seamDistance(c,n);
+    c.style.transform='translate3d(0,0,0)';n.style.transform=dir==='right'?`translate3d(${-g.distance}px,0,0)`:`translate3d(${g.distance}px,0,0)`;
     c.scrollTop=g.scrollY;n.scrollTop=0;
     return true;
   }
@@ -1914,18 +1924,18 @@ body.v94Paging{overflow:hidden!important;touch-action:none!important}
       const dir=mx>0?'right':'left',dest=destination(g.id,dir);if(!dest){g=null;return}
       g.dir=dir;g.horizontal=true;if(!prep(dest,dir)){g=null;return}
     }
-    const w=Math.max(1,innerWidth);g.dx=g.dir==='right'?Math.max(0,Math.min(w,mx)):Math.min(0,Math.max(-w,mx));
+    const d=Math.max(1,g.distance||innerWidth);g.dx=g.dir==='right'?Math.max(0,Math.min(d,mx)):Math.min(0,Math.max(-d,mx));
     const x=g.dx;
     g.current.style.transform=`translate3d(${x}px,0,0)`;
-    g.next.style.transform=`translate3d(${g.dir==='right'?x-w:x+w}px,0,0)`;
+    g.next.style.transform=`translate3d(${g.dir==='right'?x-d:x+d}px,0,0)`;
     if(e.cancelable)e.preventDefault();e.stopImmediatePropagation();
   },{passive:false,capture:true});
   function finish(cancel){
     if(!g||!g.horizontal){g=null;return}
-    const complete=!cancel&&Math.abs(g.dx)>=Math.max(70,innerWidth*.22),c=g.current,n=g.next,dir=g.dir,w=Math.max(1,innerWidth);
+    const d=Math.max(1,g.distance||innerWidth),complete=!cancel&&Math.abs(g.dx)>=Math.max(70,d*.22),c=g.current,n=g.next,dir=g.dir;
     const ease='transform .25s cubic-bezier(.22,.61,.36,1)';c.style.transition=ease;n.style.transition=ease;
-    if(complete){c.style.transform=`translate3d(${dir==='right'?w:-w}px,0,0)`;n.style.transform='translate3d(0,0,0)';setTimeout(()=>cleanup(true),255)}
-    else{c.style.transform='translate3d(0,0,0)';n.style.transform=`translate3d(${dir==='right'?-w:w}px,0,0)`;setTimeout(()=>cleanup(false),255)}
+    if(complete){c.style.transform=`translate3d(${dir==='right'?d:-d}px,0,0)`;n.style.transform='translate3d(0,0,0)';setTimeout(()=>cleanup(true),255)}
+    else{c.style.transform='translate3d(0,0,0)';n.style.transform=`translate3d(${dir==='right'?-d:d}px,0,0)`;setTimeout(()=>cleanup(false),255)}
   }
   document.addEventListener('touchend',e=>{if(!g||!g.horizontal)return;e.stopImmediatePropagation();if(e.cancelable)e.preventDefault();finish(false)},{passive:false,capture:true});
   document.addEventListener('touchcancel',()=>finish(true),{passive:true,capture:true});
