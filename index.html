@@ -1693,6 +1693,101 @@ $('personaliseCard')?.addEventListener('click',()=>show('personaliseView'));$('p
   transform-origin:0 0!important;-webkit-transform-origin:0 0!important;
 }
 </style>
+
+
+<style id="v103SeamlessTrack">
+/* v103 — do not re-layout a live page during a swipe. The existing .wrap keeps
+   its exact normal dimensions; only translateX changes. The incoming page is a
+   visual twin rendered in its own correctly-sized shell. */
+body.v103Paging{overflow:hidden!important}
+body.v103Paging>.wrap{will-change:transform!important;transform-origin:0 0!important}
+.v103Incoming{
+  position:fixed!important;z-index:11!important;top:0!important;
+  width:100vw!important;height:100dvh!important;overflow:hidden!important;
+  pointer-events:none!important;transform-origin:0 0!important;
+  will-change:transform!important;background:transparent!important;
+  box-sizing:border-box!important;
+}
+.v103Incoming .v103Inner{
+  box-sizing:border-box!important;margin:0 auto!important;
+  width:100%!important;min-height:100dvh!important;
+  color:#f5f5f7;--bg:#000;--card:#1c1c1e;--card2:#2c2c2e;
+  --text:#f5f5f7;--muted:#98989f;--line:#353539;--track:#3a3a3c;
+}
+.v103Incoming.v103Today .v103Inner{
+  max-width:430px!important;padding:48px 22px 142px!important;
+  color:#fff;--text:#fff;--muted:#b3b3bb;--line:rgba(255,255,255,.10);--track:rgba(181,190,207,.27);
+}
+.v103Incoming.v103Standard .v103Inner{max-width:560px!important;padding:24px 16px 110px!important}
+@media(max-width:390px){.v103Incoming.v103Today .v103Inner{padding-left:16px!important;padding-right:16px!important}}
+.v103Incoming .hidden{display:none!important}
+</style>
+<script id="v103SeamlessTrackNavigation">
+(function(){
+  const main=['todayView','progressView','healthView','settingsView'];
+  const back={targetsHubView:'todayView',personaliseView:'targetsHubView',targetView:'targetsHubView',reminderView:'targetsHubView',mealView:'todayView',profileView:'settingsView',suppView:'settingsView'};
+  const ids=['todayView','progressView','healthView','settingsView','profileView','targetsHubView','targetView','personaliseView','reminderView','suppView','mealView'];
+  const GAP=32;
+  let g=null;
+  function visible(){return ids.find(id=>{const e=document.getElementById(id);return e&&!e.classList.contains('hidden')})||null}
+  function destination(id,dir){const i=main.indexOf(id);if(i>=0){if(dir==='right'&&i>0)return main[i-1];if(dir==='left'&&i<main.length-1)return main[i+1];return null}return dir==='right'?(back[id]||null):null}
+  function blocked(el){return !!el.closest('input,textarea,select,[contenteditable="true"],.photoSheet,.mealHero,.modal')}
+  function refresh(id){try{if(id==='todayView')renderToday();else if(id==='healthView')renderHealth();else if(id==='settingsView')renderSettings();else if(id==='targetView')renderTargets();else if(id==='personaliseView')loadPersonal();else if(id==='targetsHubView'){loadPersonal();renderReminders();setTimeout(v66RenderPersonalSummary,0)}else if(id==='suppView')renderSupp()}catch(_){}}
+  function makeIncoming(dest,dir){
+    refresh(dest);
+    const src=document.getElementById(dest);if(!src)return null;
+    const shell=document.createElement('div');
+    shell.className='v103Incoming '+(dest==='todayView'?'v103Today':'v103Standard');
+    const inner=document.createElement('div');inner.className='v103Inner';
+    const clone=src.cloneNode(true);clone.classList.remove('hidden');
+    inner.appendChild(clone);shell.appendChild(inner);document.body.appendChild(shell);
+    const pitch=window.innerWidth+GAP;
+    shell.style.left=(dir==='right'?-pitch:pitch)+'px';
+    shell.style.transform='translate3d(0,0,0)';
+    return shell;
+  }
+  function resetStyles(){
+    const wrap=document.querySelector('body>.wrap');
+    if(wrap){wrap.style.transition='';wrap.style.transform='';}
+    if(g&&g.incoming)g.incoming.remove();
+    document.body.classList.remove('v103Paging');
+  }
+  function complete(to){resetStyles();g=null;if(to)show(to)}
+  document.addEventListener('touchstart',function(e){
+    if(e.touches.length!==1||blocked(e.target))return;
+    const id=visible();if(!id)return;const t=e.touches[0];
+    g={id:id,sx:t.clientX,sy:t.clientY,dx:0,dir:'',dest:null,horizontal:false,incoming:null,pitch:window.innerWidth+GAP};
+  },{passive:true,capture:true});
+  document.addEventListener('touchmove',function(e){
+    if(!g||e.touches.length!==1)return;const t=e.touches[0],mx=t.clientX-g.sx,my=t.clientY-g.sy;
+    if(!g.horizontal){
+      if(Math.abs(mx)<10&&Math.abs(my)<10)return;
+      if(Math.abs(mx)<=Math.abs(my)*1.18){g=null;return}
+      const dir=mx>0?'right':'left',dest=destination(g.id,dir);if(!dest){g=null;return}
+      g.dir=dir;g.dest=dest;g.horizontal=true;g.pitch=window.innerWidth+GAP;
+      g.incoming=makeIncoming(dest,dir);if(!g.incoming){g=null;return}
+      document.body.classList.add('v103Paging');
+      const wrap=document.querySelector('body>.wrap');if(wrap)wrap.style.transition='none';
+    }
+    const p=g.pitch;g.dx=g.dir==='right'?Math.max(0,Math.min(p,mx)):Math.min(0,Math.max(-p,mx));
+    const wrap=document.querySelector('body>.wrap');if(wrap)wrap.style.transform='translate3d('+g.dx+'px,0,0)';
+    g.incoming.style.transform='translate3d('+g.dx+'px,0,0)';
+    if(e.cancelable)e.preventDefault();e.stopImmediatePropagation();
+  },{passive:false,capture:true});
+  function finish(cancel){
+    if(!g||!g.horizontal){g=null;return}
+    const wrap=document.querySelector('body>.wrap'),p=g.pitch,done=!cancel&&Math.abs(g.dx)>=Math.max(70,p*.22);
+    const end=done?(g.dir==='right'?p:-p):0;
+    const ease='transform .25s cubic-bezier(.22,.61,.36,1)';
+    if(wrap){wrap.style.transition=ease;wrap.style.transform='translate3d('+end+'px,0,0)'}
+    if(g.incoming){g.incoming.style.transition=ease;g.incoming.style.transform='translate3d('+end+'px,0,0)'}
+    const dest=g.dest;setTimeout(function(){complete(done?dest:null)},255);
+  }
+  document.addEventListener('touchend',function(e){if(!g||!g.horizontal)return;e.stopImmediatePropagation();if(e.cancelable)e.preventDefault();finish(false)},{passive:false,capture:true});
+  document.addEventListener('touchcancel',function(){finish(true)},{passive:true,capture:true});
+})();
+</script>
+
 </body></html>
 <style id="v77GoalsCloudHaze">
 /* v77 — soft cloud-like contrast haze behind Today > Goals only. */
@@ -1894,7 +1989,7 @@ body.scenicBlurMode:after,body.mealViewOnly:after{content:none!important;display
 }
 body.v94Paging{overflow:hidden!important;touch-action:none!important}
 </style>
-<script id="v96FixedGutterPagerNavigation">
+<script id="v96FixedGutterPagerNavigation" type="application/x-cuttrack-disabled">
 (function(){
   const main=['todayView','progressView','healthView','settingsView'];
   const back={targetsHubView:'todayView',personaliseView:'targetsHubView',targetView:'targetsHubView',reminderView:'targetsHubView',mealView:'todayView',profileView:'settingsView',suppView:'settingsView'};
